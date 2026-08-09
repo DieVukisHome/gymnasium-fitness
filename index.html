@@ -1,0 +1,4187 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gymnasium Fitness</title>
+<!-- Erzeugt von tools/bauen.js am 2026-08-09. Nicht direkt bearbeiten —
+     Änderungen gehören in index.html und data/*.js. -->
+
+<!-- Als App auf den Home-Bildschirm: iPad und iPhone starten dann ohne
+     Safari-Leisten, mit eigenem Symbol. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gym Fitness">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f1424">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<style>
+:root{
+  --bg:#0f1424; --card:#1a2138; --card2:#232c48; --line:#2f3a5c;
+  --txt:#eef1f8; --dim:#94a0c0;
+  --de:#7aa2f7; --en:#f7a072; --ok:#4ade80; --no:#f87171;
+  --gold:#fbbf24; --r:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);
+  font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  overscroll-behavior-y:contain}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
+#app{max-width:640px;margin:0 auto;padding:14px 14px 40px;min-height:100vh}
+
+/* ---------- Kopfzeile ---------- */
+.hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.hdr h1{font-size:19px;margin:0;flex:1;letter-spacing:-.3px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;
+  padding:5px 11px;font-size:13px;font-weight:600;white-space:nowrap}
+.chip.fire{color:var(--gold)}
+.bar{height:8px;background:var(--card);border-radius:99px;overflow:hidden;margin:6px 0 18px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--de),var(--ok));
+  border-radius:99px;transition:width .5s}
+
+/* ---------- Karten ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;margin-bottom:12px}
+.card h2{margin:0 0 4px;font-size:17px}
+.card p.sub{margin:0;color:var(--dim);font-size:14px}
+
+/* ---------- Wegkarte ---------- */
+.day{display:flex;align-items:center;gap:12px;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:9px;
+  transition:transform .12s}
+.day:active{transform:scale(.985)}
+.day.locked{opacity:.42}
+.day.done{border-color:#2c5c46}
+.dnum{width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;
+  font-weight:700;background:var(--card2);font-size:15px}
+.day.done .dnum{background:var(--ok);color:#06301b}
+.day.today .dnum{background:var(--de);color:#0a1024;box-shadow:0 0 0 4px rgba(122,162,247,.2)}
+.dinfo{flex:1;min-width:0}
+.dinfo b{display:block;font-size:15px}
+.dinfo span{color:var(--dim);font-size:13px;display:block;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.tags{display:flex;gap:5px;margin-top:4px}
+.tag{font-size:11px;padding:2px 7px;border-radius:99px;font-weight:600}
+.tag.de{background:rgba(122,162,247,.18);color:var(--de)}
+.tag.en{background:rgba(247,160,114,.18);color:var(--en)}
+
+/* ---------- Buttons ---------- */
+.btn{display:block;width:100%;padding:15px;border-radius:14px;font-weight:700;
+  background:var(--de);color:#0a1024;text-align:center;font-size:16px}
+.btn:disabled{opacity:.35;cursor:default}
+.btn.ghost{background:var(--card2);color:var(--txt);border:1px solid var(--line)}
+.btn.ok{background:var(--ok);color:#06301b}
+.btn.sm{padding:10px;font-size:14px}
+.row{display:flex;gap:9px}
+.row>*{flex:1}
+
+/* ---------- Übungen ---------- */
+.q{font-size:18px;font-weight:600;margin:0 0 4px;line-height:1.4}
+.opt{display:block;width:100%;text-align:left;background:var(--card2);
+  border:2px solid var(--line);border-radius:13px;padding:14px;margin-bottom:9px;
+  transition:.12s;font-size:16px}
+.opt:active{transform:scale(.99)}
+.opt.sel{border-color:var(--de)}
+.opt.good{border-color:var(--ok);background:rgba(74,222,128,.13)}
+.opt.bad{border-color:var(--no);background:rgba(248,113,113,.13)}
+input[type=text],textarea{width:100%;background:var(--card2);border:2px solid var(--line);
+  border-radius:13px;padding:14px;color:var(--txt);font:inherit;outline:none}
+input[type=text]:focus,textarea:focus{border-color:var(--de)}
+textarea{resize:vertical;min-height:66px}
+.uml{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.uml button{background:var(--card2);border:1px solid var(--line);border-radius:9px;
+  padding:8px 13px;font-size:17px;min-width:44px}
+
+/* Wort-Chips: Ordnen, Antippen, Fehlersuche */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip2{background:var(--card2);border:2px solid var(--line);border-radius:11px;
+  padding:10px 13px;font-size:16px}
+.chip2.sel{border-color:var(--de);background:rgba(122,162,247,.15)}
+.chip2.good{border-color:var(--ok);background:rgba(74,222,128,.15)}
+.chip2.bad{border-color:var(--no);background:rgba(248,113,113,.15)}
+.chip2.used{opacity:.25}
+.slot{min-height:54px;background:var(--card2);border:2px dashed var(--line);
+  border-radius:13px;padding:9px;display:flex;flex-wrap:wrap;gap:7px;align-items:flex-start}
+
+/* Körbe (Sortieren) */
+.buckets{display:flex;gap:8px;margin-top:12px}
+.bucket{flex:1;background:var(--card2);border:2px dashed var(--line);border-radius:13px;
+  padding:9px;min-height:96px}
+.bucket.act{border-color:var(--de)}
+.bucket b{display:block;font-size:12px;color:var(--dim);margin-bottom:7px;text-align:center}
+.bucket .chip2{width:100%;text-align:center;padding:7px;font-size:14px;margin-bottom:6px}
+
+/* Paare */
+.pairs{display:flex;gap:9px}
+.pairs>div{flex:1}
+
+/* Rückmeldung */
+.fb{border-radius:13px;padding:13px;margin-top:12px;font-size:15px}
+.fb.good{background:rgba(74,222,128,.12);border:1px solid var(--ok)}
+.fb.bad{background:rgba(248,113,113,.12);border:1px solid var(--no)}
+.fb b{display:block;margin-bottom:3px}
+.strat{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.12);
+  font-size:14px;color:var(--dim)}
+
+/* Diktat */
+.dict-sent{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.dict-sent button{background:var(--card2);border:1px solid var(--line);border-radius:11px;
+  padding:11px 15px;font-size:15px;white-space:nowrap}
+.diff{background:var(--card2);border-radius:11px;padding:12px;margin-top:9px;
+  line-height:2.1;font-size:16px}
+.lsatz{font-size:18px;line-height:2.4;margin:12px 0}
+input.gap{display:inline-block;width:auto;min-width:90px;padding:5px 9px;
+  border-radius:8px;border:2px solid var(--de);background:var(--card2);
+  font:inherit;font-size:17px;color:var(--txt);text-align:center}
+.tonhinweis{background:rgba(251,191,36,.12);border:1px solid var(--gold);
+  border-radius:11px;padding:11px;margin-bottom:10px;font-size:15px}
+.w-ok{color:var(--ok)}
+.w-typo{color:var(--gold);text-decoration:underline wavy}
+.w-bad{color:var(--no);font-weight:700}
+.w-bad small{color:var(--ok);font-weight:400}
+
+/* Sonstiges */
+.badge{display:flex;gap:11px;align-items:center;background:var(--card2);
+  border-radius:13px;padding:11px;margin-bottom:8px}
+.badge.off{opacity:.3}
+.badge i{font-size:26px;font-style:normal}
+.badge b{display:block;font-size:15px}
+.badge span{color:var(--dim);font-size:13px}
+.banner{background:linear-gradient(135deg,#3b2f6b,#2a3a6b);border:1px solid #5b4fa8;
+  border-radius:var(--r);padding:15px;margin-bottom:12px}
+.wk{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;
+  border-bottom:1px solid var(--line)}
+.wk:last-child{border:none}
+.wk b{font-weight:600}
+.mini{height:6px;width:70px;background:var(--card2);border-radius:99px;overflow:hidden;
+  align-self:center}
+.mini>i{display:block;height:100%;border-radius:99px}
+.center{text-align:center}
+.big{font-size:46px;margin:6px 0}
+.muted{color:var(--dim);font-size:14px}
+.hidden{display:none}
+
+/* ---------- Lernkarten ---------- */
+.lk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px 17px;margin-bottom:12px;min-height:210px}
+.lk .kicker{color:var(--de);font-size:12px;font-weight:700;letter-spacing:.9px;
+  text-transform:uppercase;margin-bottom:7px}
+.lk h2{margin:0 0 11px;font-size:21px;line-height:1.3;letter-spacing:-.3px}
+.lk p{margin:0 0 12px;font-size:16px;line-height:1.6}
+.merke{background:rgba(122,162,247,.13);border-left:3px solid var(--de);
+  border-radius:9px;padding:11px 13px;font-size:16px}
+.merke b{color:var(--de)}
+.bsp{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);
+  font-size:15px;align-items:baseline}
+.bsp:last-child{border:none}
+.bsp .l{flex:0 0 42%;color:var(--dim)}
+.bsp .r{flex:1}
+.wrd{display:flex;align-items:center;gap:11px;background:var(--card2);
+  border-radius:11px;padding:11px 13px;margin-bottom:7px;width:100%;text-align:left}
+.wrd b{font-size:17px;flex:0 0 42%}
+.wrd span{color:var(--dim);font-size:14px;flex:1}
+.wrd i{font-style:normal;opacity:.55}
+.probe-a{background:rgba(74,222,128,.12);border:1px solid var(--ok);
+  border-radius:11px;padding:13px;margin-top:11px}
+.dots{display:flex;gap:6px;justify-content:center;margin:14px 0 4px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line);display:block}
+.dots i.on{background:var(--de);width:20px;border-radius:99px}
+
+/* ---------- Overlay „Nochmal erklären" ---------- */
+.ovl{position:fixed;inset:0;background:rgba(8,11,20,.82);z-index:50;
+  display:flex;align-items:flex-end;justify-content:center;padding:14px}
+.ovl>div{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;max-width:620px;width:100%;max-height:86vh;overflow:auto}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* ── data/regeln.js ── */
+/* Gymnasium Fitness — Regel-Taxonomie
+ *
+ * Jede Übungsaufgabe verweist über `rules` auf eine oder mehrere dieser Regeln.
+ * Der adaptive Loop rechnet ausschließlich auf dieser Ebene: Mastery, Schwächen,
+ * Wiederholung und die Wochenanalyse beziehen sich immer auf eine Regel-ID.
+ *
+ * Felder:
+ *   id        eindeutige Regel-ID, dreistufig: fach.bereich.regel
+ *   fach      "de" | "en"
+ *   bereich   Gruppierung für Auswertungen und Reports
+ *   name      Klartext für Kind und Elternreport
+ *   introDay  Tag im 21-Tage-Plan, ab dem die Regel als "eingeführt" gilt.
+ *             Vorher zählen Fehler NICHT als Schwäche.
+ *   strategie kurzer Merksatz, wird bei Fehlern eingeblendet
+ */
+
+const REGELN = [
+
+  /* ===================== DEUTSCH — Wortarten ===================== */
+  { id: "de.gr.wortart.nomen", fach: "de", bereich: "Wortarten", introDay: 1,
+    name: "Nomen erkennen",
+    strategie: "Vor ein Nomen passt ein Artikel: der, die, das." },
+  { id: "de.gr.wortart.artikel", fach: "de", bereich: "Wortarten", introDay: 1,
+    name: "Artikel (Begleiter)",
+    strategie: "Bestimmt: der, die, das. Unbestimmt: ein, eine." },
+  { id: "de.gr.wortart.verb", fach: "de", bereich: "Wortarten", introDay: 1,
+    name: "Verben erkennen",
+    strategie: "Ein Verb sagt, was jemand tut. Man kann es beugen: ich laufe, du läufst." },
+  { id: "de.gr.wortart.adjektiv", fach: "de", bereich: "Wortarten", introDay: 2,
+    name: "Adjektive erkennen",
+    strategie: "Ein Adjektiv sagt, WIE etwas ist. Frage: Wie ist es?" },
+  { id: "de.gr.adjektiv.steigerung", fach: "de", bereich: "Wortarten", introDay: 2,
+    name: "Adjektive steigern",
+    strategie: "schnell – schneller – am schnellsten. Achtung bei gut, viel, gern." },
+  { id: "de.gr.wortart.pronomen", fach: "de", bereich: "Wortarten", introDay: 3,
+    name: "Pronomen (Fürwörter)",
+    strategie: "Ein Pronomen steht STATT eines Nomens: Anna → sie." },
+  { id: "de.gr.wortart.praeposition", fach: "de", bereich: "Wortarten", introDay: 3,
+    name: "Präpositionen (Vorwörter)",
+    strategie: "Präpositionen sagen, wo oder wann etwas ist: auf, unter, vor, nach." },
+
+  /* ===================== DEUTSCH — Nomen und Fälle ===================== */
+  { id: "de.gr.nomen.faelle", fach: "de", bereich: "Fälle", introDay: 4,
+    name: "Die vier Fälle",
+    strategie: "1. Fall: Wer oder was? · 2. Fall: Wessen? · 3. Fall: Wem? · 4. Fall: Wen oder was?" },
+  { id: "de.gr.nomen.plural", fach: "de", bereich: "Fälle", introDay: 4,
+    name: "Mehrzahl bilden",
+    strategie: "Die Mehrzahl hilft auch beim Rechtschreiben: Hund → Hunde." },
+
+  /* ===================== DEUTSCH — Satzglieder ===================== */
+  { id: "de.gr.satzglied.subjekt", fach: "de", bereich: "Satzglieder", introDay: 8,
+    name: "Subjekt",
+    strategie: "Frage: Wer oder was tut etwas?" },
+  { id: "de.gr.satzglied.praedikat", fach: "de", bereich: "Satzglieder", introDay: 8,
+    name: "Prädikat",
+    strategie: "Das Prädikat ist das gebeugte Verb. Frage: Was tut das Subjekt?" },
+  { id: "de.gr.satzglied.objekt3", fach: "de", bereich: "Satzglieder", introDay: 9,
+    name: "Objekt im 3. Fall",
+    strategie: "Frage: Wem? — Ich gebe DER FREUNDIN das Buch." },
+  { id: "de.gr.satzglied.objekt4", fach: "de", bereich: "Satzglieder", introDay: 9,
+    name: "Objekt im 4. Fall",
+    strategie: "Frage: Wen oder was? — Ich gebe der Freundin DAS BUCH." },
+  { id: "de.gr.satzglied.adverbial", fach: "de", bereich: "Satzglieder", introDay: 10,
+    name: "Adverbiale Bestimmung",
+    strategie: "Frage: Wann? Wo? Wie? Warum?" },
+  { id: "de.gr.satzglied.verschiebeprobe", fach: "de", bereich: "Satzglieder", introDay: 8,
+    name: "Verschiebeprobe",
+    strategie: "Was man gemeinsam verschieben kann, ist EIN Satzglied." },
+
+  /* ===================== DEUTSCH — Zeitformen ===================== */
+  { id: "de.gr.zeit.praesens", fach: "de", bereich: "Zeitformen", introDay: 11,
+    name: "Präsens (Gegenwart)",
+    strategie: "Jetzt gerade: ich gehe." },
+  { id: "de.gr.zeit.praeteritum", fach: "de", bereich: "Zeitformen", introDay: 11,
+    name: "Präteritum (Mitvergangenheit)",
+    strategie: "Erzählzeit: ich ging, ich machte." },
+  { id: "de.gr.zeit.praeteritum-stark", fach: "de", bereich: "Zeitformen", introDay: 13,
+    name: "Starke Verben im Präteritum",
+    strategie: "Bei starken Verben ändert sich der Selbstlaut: gehen → ging, trinken → trank." },
+  { id: "de.gr.zeit.perfekt", fach: "de", bereich: "Zeitformen", introDay: 12,
+    name: "Perfekt (Vergangenheit)",
+    strategie: "haben oder sein + Partizip: ich bin gegangen." },
+  { id: "de.gr.zeit.plusquamperfekt", fach: "de", bereich: "Zeitformen", introDay: 12,
+    name: "Plusquamperfekt (Vorvergangenheit)",
+    strategie: "hatte oder war + Partizip: ich war gegangen. Das Vor-Vorher." },
+  { id: "de.gr.zeit.futur", fach: "de", bereich: "Zeitformen", introDay: 13,
+    name: "Futur (Zukunft)",
+    strategie: "werden + Grundform: ich werde gehen." },
+
+  /* ===================== DEUTSCH — Rechtschreibung ===================== */
+  // introDay 1: Volksschulstoff, der zum Gymnasium-Start vorausgesetzt wird.
+  // Wird deshalb von Anfang an mitgemessen — das ist die eigentliche Diagnose.
+  { id: "de.rs.gross-klein.nomen", fach: "de", bereich: "Rechtschreibung", introDay: 1,
+    name: "Nomen großschreiben",
+    strategie: "Artikelprobe: Passt der, die oder das davor? Dann groß." },
+  { id: "de.rs.gross-klein.satzanfang", fach: "de", bereich: "Rechtschreibung", introDay: 1,
+    name: "Satzanfang großschreiben",
+    strategie: "Nach Punkt, Rufzeichen und Fragezeichen geht es groß weiter." },
+  // Das ist der neue Teil: Nominalisierung wird erst an Tag 5 eingeführt.
+  { id: "de.rs.gross-klein.nominalisierung", fach: "de", bereich: "Rechtschreibung", introDay: 5,
+    name: "Nominalisierung",
+    strategie: "Aus Verben und Adjektiven werden Nomen: das Laufen, das Schöne." },
+  { id: "de.rs.auslaut", fach: "de", bereich: "Rechtschreibung", introDay: 6,
+    name: "Auslautverhärtung (b/p, d/t, g/k)",
+    strategie: "Verlängern! Hun_ → Hunde → Hund." },
+  { id: "de.rs.umlaut-ableitung", fach: "de", bereich: "Rechtschreibung", introDay: 6,
+    name: "ä und äu ableiten",
+    strategie: "Ableiten! Bl_tter → Blatt → Blätter. H_user → Haus → Häuser." },
+  { id: "de.rs.doppelkonsonant", fach: "de", bereich: "Rechtschreibung", introDay: 6,
+    name: "Doppelter Mitlaut",
+    strategie: "Kurz gesprochener Selbstlaut → doppelter Mitlaut: Sonne, Ratte." },
+  { id: "de.rs.dehnung", fach: "de", bereich: "Rechtschreibung", introDay: 6,
+    name: "Lange Selbstlaute (h, ie, Doppelvokal)",
+    strategie: "Lang gesprochen → oft Dehnungs-h, ie oder doppelter Selbstlaut: Zahl, Biene, Boot." },
+  { id: "de.rs.s-ss-ss", fach: "de", bereich: "Rechtschreibung", introDay: 16,
+    name: "s, ss oder ß",
+    strategie: "Kurzer Selbstlaut → ss (Fluss). Langer Selbstlaut → ß (Straße)." },
+  { id: "de.rs.das-dass", fach: "de", bereich: "Rechtschreibung", introDay: 16,
+    name: "das oder dass",
+    strategie: "Ersatzprobe: Passt dieses, jenes oder welches? Dann das mit einem s." },
+  { id: "de.rs.merkwoerter", fach: "de", bereich: "Rechtschreibung", introDay: 6,
+    name: "Merkwörter",
+    strategie: "Manche Wörter muss man sich einfach merken: Vater, viel, Vogel." },
+  { id: "de.rs.wortfamilie", fach: "de", bereich: "Rechtschreibung", introDay: 6,
+    name: "Wortfamilien nutzen",
+    strategie: "Verwandte Wörter helfen: fahren, Fahrt, Fahrrad." },
+
+  /* ===================== DEUTSCH — Zeichensetzung ===================== */
+  { id: "de.zs.satzschluss", fach: "de", bereich: "Zeichensetzung", introDay: 5,
+    name: "Satzschlusszeichen",
+    strategie: "Punkt, Fragezeichen oder Rufzeichen — je nachdem, was der Satz will." },
+  { id: "de.zs.woertliche-rede", fach: "de", bereich: "Zeichensetzung", introDay: 15,
+    name: "Wörtliche Rede",
+    strategie: "Begleitsatz vorne: Doppelpunkt, dann Anführungszeichen. Anna sagt: „Ich komme.“" },
+  { id: "de.zs.komma-aufzaehlung", fach: "de", bereich: "Zeichensetzung", introDay: 16,
+    name: "Komma bei Aufzählung",
+    strategie: "Zwischen die Glieder ein Komma — vor „und“ steht keines." },
+  { id: "de.zs.komma-satzverbindung", fach: "de", bereich: "Zeichensetzung", introDay: 16,
+    name: "Komma bei Satzverbindungen",
+    strategie: "Vor weil, dass, wenn, obwohl steht ein Komma." },
+
+  /* ===================== DEUTSCH — Texte und Lesen ===================== */
+  { id: "de.txt.erzaehlung", fach: "de", bereich: "Texte", introDay: 17,
+    name: "Erzählung aufbauen",
+    strategie: "Einleitung, Hauptteil mit Höhepunkt, Schluss." },
+  { id: "de.txt.beschreibung", fach: "de", bereich: "Texte", introDay: 19,
+    name: "Beschreiben",
+    strategie: "Vom Großen zum Kleinen, sachlich, im Präsens." },
+  { id: "de.txt.lesestrategie", fach: "de", bereich: "Texte", introDay: 20,
+    name: "Lesestrategien",
+    strategie: "Überfliegen, Fragen stellen, Schlüsselwörter markieren, zusammenfassen." },
+  { id: "de.txt.diktat", fach: "de", bereich: "Texte", introDay: 4,
+    name: "Diktat schreiben",
+    strategie: "Erst zuhören, dann schreiben, am Schluss nochmal durchlesen." },
+
+  /* ===================== ENGLISCH — Grammatik ===================== */
+  { id: "en.gr.to-be", fach: "en", bereich: "Grammar", introDay: 2,
+    name: "to be — am, is, are",
+    strategie: "I am · you are · he/she/it is · we/you/they are." },
+  { id: "en.gr.to-be.negation", fach: "en", bereich: "Grammar", introDay: 2,
+    name: "to be verneinen",
+    strategie: "not dahinter: I am not, she isn't, they aren't." },
+  { id: "en.gr.pronouns", fach: "en", bereich: "Grammar", introDay: 3,
+    name: "Personalpronomen",
+    strategie: "I, you, he, she, it, we, you, they." },
+  { id: "en.gr.have-got", fach: "en", bereich: "Grammar", introDay: 4,
+    name: "have got / has got",
+    strategie: "he, she, it → has got. Alle anderen → have got." },
+  { id: "en.gr.plural", fach: "en", bereich: "Grammar", introDay: 6,
+    name: "Plural",
+    strategie: "meist +s. Nach s, x, ch, sh → +es. Konsonant + y → ies." },
+  { id: "en.gr.articles", fach: "en", bereich: "Grammar", introDay: 6,
+    name: "a oder an",
+    strategie: "Vor Vokal-KLANG steht an: an apple, an hour — aber a university." },
+  { id: "en.gr.this-that", fach: "en", bereich: "Grammar", introDay: 6,
+    name: "this, that, these, those",
+    strategie: "Nah: this/these. Weit weg: that/those." },
+  { id: "en.gr.present-simple", fach: "en", bereich: "Grammar", introDay: 8,
+    name: "Present Simple",
+    strategie: "Für Gewohnheiten: I play football every day." },
+  { id: "en.gr.present-simple.3rd-s", fach: "en", bereich: "Grammar", introDay: 9,
+    name: "3. Person Singular -s",
+    strategie: "he, she, it — das s muss mit!" },
+  { id: "en.gr.do-does", fach: "en", bereich: "Grammar", introDay: 10,
+    name: "Fragen und Verneinung mit do/does",
+    strategie: "Does she play? — Nach does steht die Grundform, ohne s." },
+  { id: "en.gr.question-words", fach: "en", bereich: "Grammar", introDay: 11,
+    name: "Fragewörter",
+    strategie: "who, what, where, when, why, how." },
+  { id: "en.gr.present-continuous", fach: "en", bereich: "Grammar", introDay: 15,
+    name: "Present Continuous",
+    strategie: "am/is/are + Verb-ing — was gerade jetzt passiert." },
+  { id: "en.gr.simple-vs-continuous", fach: "en", bereich: "Grammar", introDay: 16,
+    name: "Simple oder Continuous?",
+    strategie: "every day, always → Simple. now, at the moment → Continuous." },
+  { id: "en.gr.possessive", fach: "en", bereich: "Grammar", introDay: 17,
+    name: "Besitz: my, your, 's",
+    strategie: "Anna's bike — der Apostroph zeigt, wem es gehört." },
+  { id: "en.gr.can", fach: "en", bereich: "Grammar", introDay: 19,
+    name: "can und can't",
+    strategie: "Nach can steht die Grundform: She can swim." },
+  { id: "en.gr.word-order", fach: "en", bereich: "Grammar", introDay: 2,
+    name: "Satzbau",
+    strategie: "Subjekt – Verb – Objekt. Im Englischen fast immer in dieser Reihenfolge." },
+
+  /* ===================== ENGLISCH — Schreibung ===================== */
+  { id: "en.sp.spelling", fach: "en", bereich: "Spelling", introDay: 1,
+    name: "Englische Rechtschreibung",
+    strategie: "Englisch schreibt man anders, als man es spricht. Wortbild einprägen." },
+  { id: "en.sp.alphabet", fach: "en", bereich: "Spelling", introDay: 1,
+    name: "Alphabet und Buchstabieren",
+    strategie: "A wie in „name“, E wie in „see“, I wie in „my“." },
+
+  /* ===================== ENGLISCH — Wortschatz ===================== */
+  { id: "en.voc.zahlen", fach: "en", bereich: "Vocabulary", introDay: 1,
+    name: "Zahlen",
+    strategie: "13–19 enden auf -teen, 20–90 auf -ty." },
+  { id: "en.voc.schule", fach: "en", bereich: "Vocabulary", introDay: 5,
+    name: "Wortfeld Schule",
+    strategie: "" },
+  { id: "en.voc.familie", fach: "en", bereich: "Vocabulary", introDay: 5,
+    name: "Wortfeld Familie",
+    strategie: "" },
+  { id: "en.voc.zuhause", fach: "en", bereich: "Vocabulary", introDay: 12,
+    name: "Wortfeld Zuhause",
+    strategie: "" },
+  { id: "en.voc.essen", fach: "en", bereich: "Vocabulary", introDay: 12,
+    name: "Wortfeld Essen",
+    strategie: "" },
+  { id: "en.voc.tiere", fach: "en", bereich: "Vocabulary", introDay: 12,
+    name: "Wortfeld Tiere",
+    strategie: "" },
+  { id: "en.voc.zeit", fach: "en", bereich: "Vocabulary", introDay: 13,
+    name: "Uhrzeit, Wochentage, Datum",
+    strategie: "" },
+  { id: "en.voc.hobbys", fach: "en", bereich: "Vocabulary", introDay: 18,
+    name: "Wortfeld Hobbys",
+    strategie: "" },
+  { id: "en.voc.koerper", fach: "en", bereich: "Vocabulary", introDay: 18,
+    name: "Wortfeld Körper",
+    strategie: "" },
+  { id: "en.voc.wetter", fach: "en", bereich: "Vocabulary", introDay: 18,
+    name: "Wortfeld Wetter",
+    strategie: "" },
+  { id: "en.lesen", fach: "en", bereich: "Reading", introDay: 20,
+    name: "Leseverstehen",
+    strategie: "Erst überfliegen, dann die Fragen lesen, dann gezielt suchen." }
+];
+
+/* Schneller Zugriff nach ID */
+const REGEL_MAP = Object.fromEntries(REGELN.map(r => [r.id, r]));
+
+</script>
+<script>
+/* ── data/lernkarten.js ── */
+/* Gymnasium Fitness — Lernkarten
+ *
+ * Die Lernphase VOR den Übungen. Erst erklären, dann abprüfen.
+ * Pro Lektion 3–5 Karten, rund 2 Minuten.
+ *
+ * Kartentypen:
+ *   regel      Kurze Erklärung + optionaler Merksatz
+ *   beispiele  Zweispaltige Beispielzeilen (links → rechts)
+ *   woerter    Vokabelvorschau mit Sprachausgabe
+ *   probe      Ungewertete Probeaufgabe — Brücke zu den Übungen.
+ *              Zählt NICHT auf die Mastery ein.
+ *
+ * `rules` an einer Karte macht sie über den Button „Nochmal erklären"
+ * aus einer falsch beantworteten Übung heraus auffindbar.
+ */
+
+const LERNKARTEN = {
+
+/* ════════════════════════ DEUTSCH ════════════════════════ */
+
+"de-l1": [
+  { typ: "regel", rules: ["de.gr.wortart.nomen", "de.gr.wortart.verb"],
+    titel: "Wörter haben Aufgaben",
+    text: "Jedes Wort hat im Satz eine Aufgabe. Danach teilt man Wörter in <b>Wortarten</b> ein. Heute lernst du die drei wichtigsten kennen.",
+    merke: "Nomen · Verb · Artikel" },
+
+  { typ: "beispiele", rules: ["de.gr.wortart.nomen", "de.gr.wortart.artikel"],
+    titel: "Nomen — Dinge, Lebewesen, Gefühle",
+    hinweis: "Vor ein Nomen passt immer <b>der</b>, <b>die</b> oder <b>das</b>. Das ist die Artikelprobe.",
+    zeilen: [["der", "Hund"], ["die", "Blume"], ["das", "Haus"], ["die", "Freude"]] },
+
+  { typ: "regel", rules: ["de.rs.gross-klein.nomen"],
+    titel: "Die Artikelprobe",
+    text: "Du bist unsicher, ob ein Wort ein Nomen ist? Setz <b>der</b>, <b>die</b> oder <b>das</b> davor. Passt es, ist es ein Nomen — und wird <b>großgeschrieben</b>.",
+    merke: "der Baum ✓ · der schnell ✗" },
+
+  { typ: "beispiele", rules: ["de.gr.wortart.verb"],
+    titel: "Verben — was jemand tut",
+    hinweis: "Die Grundform endet fast immer auf <b>-en</b>. Verben kann man beugen.",
+    zeilen: [["laufen", "ich laufe, du läufst"], ["singen", "ich singe, du singst"],
+             ["denken", "ich denke, du denkst"]] },
+
+  { typ: "regel", rules: ["de.rs.gross-klein.satzanfang"],
+    titel: "Groß geht es auch am Satzanfang los",
+    text: "Das kennst du schon aus der Volksschule: Das <b>erste Wort</b> eines Satzes wird großgeschrieben — egal welche Wortart es ist. Wir üben es trotzdem mit, weil es beim schnellen Schreiben leicht untergeht.",
+    merke: "<b>D</b>er Bruder spielt gern <b>F</b>ußball." },
+
+  { typ: "probe", rules: ["de.gr.wortart.nomen"],
+    frage: "Welches Wort ist ein Nomen? <b>Katze · schnell · springen</b>",
+    antwort: "Katze",
+    erklaerung: "Artikelprobe: <b>die</b> Katze ✓ — aber „der schnell“ und „das springen“ gehen nicht." }
+],
+
+"de-l2": [
+  { typ: "regel", rules: ["de.gr.wortart.adjektiv"],
+    titel: "Adjektive — die Wie-Wörter",
+    text: "Ein Adjektiv sagt, <b>wie</b> etwas ist. Du findest es mit der Frage: Wie ist es?",
+    merke: "Wie ist der Baum? → alt, groß, knorrig" },
+
+  { typ: "beispiele", rules: ["de.gr.wortart.adjektiv"],
+    titel: "So sehen Adjektive aus",
+    zeilen: [["Der Hund ist …", "klein, laut, müde"], ["Die Jause war …", "lecker, salzig"],
+             ["Das Zimmer wirkt …", "gemütlich, hell"]] },
+
+  { typ: "regel", rules: ["de.gr.adjektiv.steigerung"],
+    titel: "Adjektive vergleichen",
+    text: "Adjektive haben <b>drei Stufen</b>: Grundstufe, Mehrstufe (<b>-er</b>) und Höchststufe (<b>am …sten</b>).",
+    merke: "schnell — schneller — am schnellsten" },
+
+  { typ: "beispiele", rules: ["de.gr.adjektiv.steigerung"],
+    titel: "Achtung, Ausnahmen!",
+    hinweis: "Diese vier musst du auswendig können — sie folgen keiner Regel.",
+    zeilen: [["gut", "besser — am besten"], ["viel", "mehr — am meisten"],
+             ["gern", "lieber — am liebsten"], ["hoch", "höher — am höchsten"]] },
+
+  { typ: "regel", rules: ["de.gr.adjektiv.steigerung"],
+    titel: "als, nicht wie",
+    text: "Beim Vergleichen heißt es <b>größer als</b> — nicht „größer wie“. Das ist ein Fehler, den auch viele Erwachsene machen.",
+    merke: "Lisa ist größer <b>als</b> Mia. ✓" },
+
+  { typ: "probe", rules: ["de.gr.adjektiv.steigerung"],
+    frage: "Steigere: <b>laut</b>",
+    antwort: "laut — lauter — am lautesten",
+    erklaerung: "Mehrstufe mit <b>-er</b>, Höchststufe mit <b>am …sten</b>." }
+],
+
+"de-l3": [
+  { typ: "regel", rules: ["de.gr.wortart.pronomen"],
+    titel: "Pronomen — Wörter als Platzhalter",
+    text: "Ein Pronomen steht <b>statt</b> eines Nomens. So musst du nicht ständig denselben Namen wiederholen.",
+    merke: "Anna kommt. <b>Sie</b> bringt Kuchen mit." },
+
+  { typ: "beispiele", rules: ["de.gr.wortart.pronomen"],
+    titel: "Welches Pronomen für welches Nomen?",
+    hinweis: "Der Artikel verrät dir das Pronomen.",
+    zeilen: [["der Vater", "er"], ["die Mutter", "sie"], ["das Kind", "es"],
+             ["die Eltern", "sie (Mehrzahl)"]] },
+
+  { typ: "regel", rules: ["de.gr.wortart.praeposition"],
+    titel: "Präpositionen — kleine Wörter, große Wirkung",
+    text: "Präpositionen sagen, <b>wo</b> oder <b>wann</b> etwas ist. Sie stehen meistens vor einem Nomen.",
+    merke: "auf · unter · vor · hinter · neben · zwischen · nach · während" },
+
+  { typ: "beispiele", rules: ["de.gr.wortart.praeposition"],
+    titel: "Ein Wort verändert alles",
+    hinweis: "Nur die Präposition ändert sich — und der Ball liegt woanders.",
+    zeilen: [["Der Ball liegt", "<b>auf</b> dem Tisch"], ["Der Ball liegt", "<b>unter</b> dem Tisch"],
+             ["Der Ball liegt", "<b>neben</b> dem Tisch"]] },
+
+  { typ: "probe", rules: ["de.gr.wortart.pronomen"],
+    frage: "Ersetze das Nomen: „<b>Der Lehrer</b> erklärt die Aufgabe.“",
+    antwort: "Er erklärt die Aufgabe.",
+    erklaerung: "„der Lehrer“ → männlich, Einzahl → <b>er</b>." }
+],
+
+"de-l4": [
+  { typ: "regel", rules: ["de.gr.nomen.faelle"],
+    titel: "Die vier Fälle",
+    text: "Ein Nomen verändert seine Form, je nachdem welche Aufgabe es im Satz hat. Diese Formen heißen <b>Fälle</b>. Zu jedem Fall gehört eine Frage.",
+    merke: "Wer? — Wessen? — Wem? — Wen?" },
+
+  { typ: "beispiele", rules: ["de.gr.nomen.faelle"],
+    titel: "Alle vier am Beispiel „der Hund“",
+    zeilen: [["1. Fall — Wer oder was?", "<b>der Hund</b> bellt"],
+             ["2. Fall — Wessen?", "das Futter <b>des Hundes</b>"],
+             ["3. Fall — Wem?", "ich gebe <b>dem Hund</b> Futter"],
+             ["4. Fall — Wen oder was?", "ich rufe <b>den Hund</b>"]] },
+
+  { typ: "regel", rules: ["de.gr.nomen.faelle"],
+    titel: "Der wichtigste Trick",
+    text: "3. und 4. Fall werden am häufigsten verwechselt. Stell einfach die Frage — die verrät dir den Fall sofort.",
+    merke: "Wem? → 3. Fall · Wen oder was? → 4. Fall" },
+
+  { typ: "beispiele", rules: ["de.gr.nomen.plural"],
+    titel: "Die Mehrzahl — und wozu sie noch gut ist",
+    hinweis: "Die Mehrzahl hilft dir später auch beim Rechtschreiben: Sie macht hörbar, ob am Wortende ein <b>d</b> oder ein <b>t</b> steht.",
+    zeilen: [["das Haus", "die Häuser"], ["der Wald", "die Wälder"],
+             ["das Kind", "die Kinder"], ["der Hund", "die Hunde"]] },
+
+  { typ: "beispiele", rules: ["de.gr.nomen.faelle"],
+    titel: "Beide Fälle in einem Satz",
+    hinweis: "„Ich gebe dem Kind den Ball.“ — frag der Reihe nach:",
+    zeilen: [["Wem gebe ich?", "<b>dem Kind</b> → 3. Fall"],
+             ["Was gebe ich?", "<b>den Ball</b> → 4. Fall"]] },
+
+  { typ: "probe", rules: ["de.gr.nomen.faelle"],
+    frage: "In welchem Fall steht <b>der Freundin</b>? „Ich schreibe der Freundin einen Brief.“",
+    antwort: "3. Fall",
+    erklaerung: "Wem schreibe ich? — der Freundin. Frage „Wem?“ → 3. Fall." }
+],
+
+"de-l5": [
+  { typ: "regel", rules: ["de.rs.gross-klein.nomen", "de.rs.gross-klein.satzanfang"],
+    titel: "Was wird großgeschrieben?",
+    text: "Großgeschrieben werden <b>Nomen</b> und der <b>Satzanfang</b>. Alles andere klein. Klingt einfach — die Tücke steckt in den getarnten Nomen.",
+    merke: "Artikelprobe: der/die/das davor? → groß" },
+
+  { typ: "beispiele", rules: ["de.zs.satzschluss"],
+    titel: "Und wo hört der Satz auf?",
+    hinweis: "Das Satzschlusszeichen verrät, was der Satz will. Danach geht es <b>groß</b> weiter.",
+    zeilen: [["Der Satz erzählt etwas.", "Punkt <b>.</b>"],
+             ["Der Satz fragt etwas?", "Fragezeichen <b>?</b>"],
+             ["Der Satz ruft oder befiehlt!", "Rufzeichen <b>!</b>"]] },
+
+  { typ: "regel", rules: ["de.rs.gross-klein.nominalisierung"],
+    titel: "Getarnte Nomen",
+    text: "Aus Verben und Adjektiven können <b>Nomen</b> werden. Dann werden sie großgeschrieben, obwohl sie eigentlich Tätigkeitswörter sind.",
+    merke: "ich laufe → <b>das Laufen</b>" },
+
+  { typ: "beispiele", rules: ["de.rs.gross-klein.nominalisierung"],
+    titel: "Diese Signalwörter verraten es",
+    hinweis: "Steht eines dieser Wörter davor, geht es groß weiter.",
+    zeilen: [["das", "das <b>S</b>chwimmen"], ["beim", "beim <b>L</b>esen"],
+             ["zum", "zum <b>S</b>pielen"], ["vom", "vom <b>W</b>einen"],
+             ["am", "am <b>A</b>nfang"]] },
+
+  { typ: "beispiele", rules: ["de.rs.gross-klein.nominalisierung"],
+    titel: "Dasselbe Wort, zweimal anders",
+    zeilen: [["Wir <b>essen</b> um zwölf.", "klein — Verb"],
+             ["Beim <b>Essen</b> reden wir nicht.", "groß — Nomen"],
+             ["Sie <b>singt</b> gern.", "klein — Verb"],
+             ["Das <b>Singen</b> macht Spaß.", "groß — Nomen"]] },
+
+  { typ: "probe", rules: ["de.rs.gross-klein.nominalisierung"],
+    frage: "Groß oder klein? „Beim (radfahren) trage ich einen Helm.“",
+    antwort: "Beim Radfahren — groß",
+    erklaerung: "„beim“ ist ein Signalwort. Danach wird nominalisiert, also großgeschrieben." }
+],
+
+"de-l6": [
+  { typ: "regel", rules: ["de.rs.auslaut"],
+    titel: "Strategie 1: Verlängern",
+    text: "Am Wortende klingen <b>b, d, g</b> oft wie <b>p, t, k</b>. Man hört den Unterschied nicht. Lösung: das Wort verlängern — dann hörst du es.",
+    merke: "Hun_ → die <b>Hunde</b> → also Hun<b>d</b>" },
+
+  { typ: "beispiele", rules: ["de.rs.auslaut"],
+    titel: "Verlängern in Aktion",
+    zeilen: [["Ber_", "die Ber<b>g</b>e → Berg"], ["Kor_", "die Kör<b>b</b>e → Korb"],
+             ["Kin_", "die Kin<b>d</b>er → Kind"], ["Wal_", "die Wäl<b>d</b>er → Wald"]] },
+
+  { typ: "regel", rules: ["de.rs.umlaut-ableitung"],
+    titel: "Strategie 2: Ableiten",
+    text: "Bei <b>ä</b> und <b>äu</b> hilft das verwandte Wort. Findest du ein Wort mit <b>a</b> oder <b>au</b>, dann schreibst du ä oder äu.",
+    merke: "Bl<b>ä</b>tter ← das Bl<b>a</b>tt" },
+
+  { typ: "beispiele", rules: ["de.rs.umlaut-ableitung"],
+    titel: "Ableiten in Aktion",
+    zeilen: [["H<b>äu</b>ser", "← das H<b>au</b>s"], ["B<b>äu</b>me", "← der B<b>au</b>m"],
+             ["W<b>ä</b>lder", "← der W<b>a</b>ld"], ["k<b>ä</b>lter", "← k<b>a</b>lt"]] },
+
+  { typ: "beispiele", rules: ["de.rs.doppelkonsonant", "de.rs.dehnung", "de.rs.wortfamilie"],
+    titel: "Kurz oder lang gesprochen?",
+    hinweis: "Hör auf den Selbstlaut vor dem Mitlaut — er verrät dir die Schreibweise.",
+    zeilen: [["kurz gesprochen", "doppelter Mitlaut: So<b>nn</b>e, Ra<b>tt</b>e"],
+             ["lang gesprochen", "Dehnungs-h: Za<b>h</b>l, fa<b>h</b>ren"],
+             ["lang gesprochen", "ie: B<b>ie</b>ne, l<b>ie</b>ben"],
+             ["im Zweifel", "verwandtes Wort suchen: Fahrrad ← fahren"]] },
+
+  { typ: "regel", rules: ["de.rs.merkwoerter"],
+    titel: "Und die, die man einfach wissen muss",
+    text: "Manche Wörter klingen nach <b>f</b>, werden aber mit <b>v</b> geschrieben. Da hilft keine Strategie — das sind Merkwörter.",
+    merke: "<b>V</b>ater · <b>v</b>iel · <b>v</b>ier · <b>V</b>ogel · <b>v</b>on · <b>v</b>or" },
+
+  { typ: "probe", rules: ["de.rs.auslaut"],
+    frage: "Wie schreibst du „das Kin_“?",
+    antwort: "Kind",
+    erklaerung: "Verlängern: die Kin<b>d</b>er — also mit <b>d</b>." }
+],
+
+/* ════════════════════════ ENGLISCH ════════════════════════ */
+
+"en-l1": [
+  { typ: "regel", rules: ["en.sp.spelling"],
+    titel: "Englisch schreibt man anders, als man es spricht",
+    text: "Du kennst viele englische Wörter schon vom Hören. Ab jetzt zählt auch die <b>Schreibweise</b> — und die ist oft überraschend.",
+    merke: "Gesprochen „frend“, geschrieben <b>friend</b>." },
+
+  { typ: "woerter", rules: ["en.sp.spelling"],
+    titel: "Schau dir das Wortbild genau an",
+    hinweis: "Tippe auf ein Wort, um es zu hören.",
+    woerter: [{ en: "friend", de: "Freund/in" }, { en: "because", de: "weil" },
+              { en: "colour", de: "Farbe" }, { en: "beautiful", de: "schön" },
+              { en: "school", de: "Schule" }] },
+
+  { typ: "regel", rules: ["en.voc.zahlen"],
+    titel: "13 oder 30? Der Klassiker",
+    text: "Zahlen von 13 bis 19 enden auf <b>-teen</b>. Die Zehnerzahlen 20 bis 90 enden auf <b>-ty</b>. Verwechseln ist der häufigste Fehler überhaupt.",
+    merke: "thir<b>teen</b> = 13 · thir<b>ty</b> = 30" },
+
+  { typ: "woerter", rules: ["en.voc.zahlen"],
+    titel: "Die wichtigsten Zahlen",
+    woerter: [{ en: "twelve", de: "12" }, { en: "thirteen", de: "13" },
+              { en: "twenty", de: "20" }, { en: "thirty", de: "30" },
+              { en: "forty", de: "40 — ohne u!" }, { en: "a hundred", de: "100" }] },
+
+  { typ: "beispiele", rules: ["en.sp.alphabet"],
+    titel: "Buchstabieren auf Englisch",
+    hinweis: "„How do you spell that?“ — die Buchstaben heißen anders als im Deutschen.",
+    zeilen: [["A", "wie in „name“ — ey"], ["E", "wie in „see“ — ie"],
+             ["I", "wie in „my“ — ay"], ["G", "dschie"], ["J", "dschey"], ["Y", "wey"]] },
+
+  { typ: "probe", rules: ["en.sp.spelling"],
+    frage: "Wie schreibt man „Freund“ auf Englisch?",
+    antwort: "friend",
+    erklaerung: "Das <b>i</b> kommt vor dem <b>e</b> — auch wenn man es nicht hört." }
+],
+
+"en-l2": [
+  { typ: "regel", rules: ["en.gr.to-be"],
+    titel: "to be — das wichtigste Verb",
+    text: "<b>to be</b> heißt „sein“. Es kommt in fast jedem Satz vor — und es hat drei verschiedene Formen. Wenn das sitzt, sitzt sehr viel.",
+    merke: "am · is · are" },
+
+  { typ: "beispiele", rules: ["en.gr.to-be"],
+    titel: "Alle Formen auf einen Blick",
+    hinweis: "Nur <b>I</b> bekommt „am“. Nur <b>he, she, it</b> bekommen „is“. Alles andere: „are“.",
+    zeilen: [["I", "<b>am</b>"], ["you", "<b>are</b>"], ["he / she / it", "<b>is</b>"],
+             ["we / you / they", "<b>are</b>"]] },
+
+  { typ: "beispiele", rules: ["en.gr.to-be"],
+    titel: "Die Kurzformen",
+    hinweis: "Im Gespräch benutzt man fast immer die Kurzform.",
+    zeilen: [["I am", "I'm"], ["you are", "you're"], ["she is", "she's"],
+             ["it is", "it's"], ["they are", "they're"]] },
+
+  { typ: "regel", rules: ["en.gr.to-be.negation"],
+    titel: "Verneinen mit not",
+    text: "Das <b>not</b> kommt <b>hinter</b> die Form von to be — nicht davor. Im Deutschen ist das anders, deshalb passieren hier viele Fehler.",
+    merke: "She <b>is not</b> happy. → She <b>isn't</b> happy." },
+
+  { typ: "probe", rules: ["en.gr.to-be"],
+    frage: "Ergänze: My parents ___ at home.",
+    antwort: "are",
+    erklaerung: "„parents“ ist Mehrzahl — und alles außer I, he, she, it bekommt <b>are</b>." }
+],
+
+"en-l3": [
+  { typ: "beispiele", rules: ["en.gr.pronouns"],
+    titel: "Die Personalpronomen",
+    zeilen: [["I", "ich"], ["you", "du / ihr / Sie"], ["he", "er"], ["she", "sie"],
+             ["it", "es"], ["we", "wir"], ["they", "sie (Mehrzahl)"]] },
+
+  { typ: "regel", rules: ["en.gr.pronouns"],
+    titel: "Tiere und Dinge sind „it“",
+    text: "Im Deutschen heißt es „<b>der</b> Hund“ und „<b>die</b> Blume“. Im Englischen sind Tiere und Gegenstände fast immer <b>it</b>.",
+    merke: "The dog is big. → <b>It</b> is big." },
+
+  { typ: "regel", rules: ["en.gr.word-order"],
+    titel: "Die feste Satzstellung",
+    text: "Englische Sätze folgen fast immer der Reihenfolge <b>Subjekt – Verb – Objekt</b>. Anders als im Deutschen kannst du sie nicht umstellen.",
+    merke: "<b>I</b> (wer) <b>play</b> (was tut) <b>football</b> (womit)" },
+
+  { typ: "beispiele", rules: ["en.gr.word-order"],
+    titel: "Deutsch dreht um — Englisch nicht",
+    hinweis: "Im Deutschen rutscht das Verb nach vorn. Im Englischen bleibt es hinter dem Subjekt.",
+    zeilen: [["Morgen <b>gehe ich</b> ins Kino.", "Tomorrow <b>I go</b> to the cinema."],
+             ["Oft <b>lese ich</b> Bücher.", "I <b>often read</b> books."]] },
+
+  { typ: "probe", rules: ["en.gr.word-order"],
+    frage: "Bring in die richtige Reihenfolge: <b>cat · a · She · has</b>",
+    antwort: "She has a cat.",
+    erklaerung: "Subjekt (She) – Verb (has) – Objekt (a cat)." }
+],
+
+"en-l4": [
+  { typ: "regel", rules: ["en.gr.have-got"],
+    titel: "have got — besitzen",
+    text: "Mit <b>have got</b> sagst du, dass dir etwas gehört oder dass du etwas hast. Es gibt nur zwei Formen — und eine einzige Regel.",
+    merke: "he, she, it → das <b>has</b> muss mit!" },
+
+  { typ: "beispiele", rules: ["en.gr.have-got"],
+    titel: "Wer bekommt was?",
+    zeilen: [["I / you / we / they", "<b>have got</b>"], ["he / she / it", "<b>has got</b>"],
+             ["my dog", "<b>has got</b> — ein Tier ist „it“"],
+             ["my friends", "<b>have got</b> — Mehrzahl"]] },
+
+  { typ: "beispiele", rules: ["en.gr.have-got"],
+    titel: "Verneinen und fragen",
+    hinweis: "Achtung: kein <b>do</b> oder <b>does</b> — das kommt erst bei anderen Verben.",
+    zeilen: [["Verneinung", "I <b>haven't</b> got · she <b>hasn't</b> got"],
+             ["Frage", "<b>Have</b> you got …? · <b>Has</b> she got …?"],
+             ["Kurzform", "I've got · she's got"]] },
+
+  { typ: "probe", rules: ["en.gr.have-got"],
+    frage: "Ergänze: My sister ___ got a new bike.",
+    antwort: "has",
+    erklaerung: "„my sister“ = she → <b>has got</b>." }
+],
+
+"en-l5": [
+  { typ: "woerter", rules: ["en.voc.schule"],
+    titel: "Wortfeld Schule",
+    hinweis: "Tippe auf ein Wort, um es zu hören.",
+    woerter: [{ en: "timetable", de: "Stundenplan" }, { en: "homework", de: "Hausübung" },
+              { en: "subject", de: "Unterrichtsfach" }, { en: "break", de: "Pause" },
+              { en: "teacher", de: "Lehrer/in" }, { en: "pencil", de: "Bleistift" },
+              { en: "rubber", de: "Radiergummi" }, { en: "exercise book", de: "Heft" }] },
+
+  { typ: "woerter", rules: ["en.voc.familie"],
+    titel: "Wortfeld Familie",
+    woerter: [{ en: "sister", de: "Schwester" }, { en: "brother", de: "Bruder" },
+              { en: "aunt", de: "Tante" }, { en: "uncle", de: "Onkel" },
+              { en: "cousin", de: "Cousine / Cousin" }, { en: "grandparents", de: "Großeltern" },
+              { en: "daughter", de: "Tochter" }, { en: "parents", de: "Eltern" }] },
+
+  { typ: "regel", rules: ["en.voc.schule", "en.sp.spelling"],
+    titel: "Vorsicht, Stolperfallen",
+    text: "Ein paar dieser Wörter schreibt man ganz anders, als man sie spricht. Präg dir das Wortbild ein — beim Diktat zählt jeder Buchstabe.",
+    merke: "ex<b>erc</b>ise · d<b>augh</b>ter · c<b>ou</b>sin" },
+
+  { typ: "probe", rules: ["en.voc.schule"],
+    frage: "Was bedeutet <b>to be late</b>?",
+    antwort: "zu spät kommen",
+    erklaerung: "Wörtlich „spät sein“ — im Deutschen sagt man „zu spät kommen“." }
+],
+
+"en-l6": [
+  { typ: "regel", rules: ["en.gr.plural"],
+    titel: "Plural — meistens nur ein s",
+    text: "Die Mehrzahl bildest du fast immer mit <b>-s</b>. Es gibt nur zwei Sonderfälle, die du dir merken musst.",
+    merke: "one book → two book<b>s</b>" },
+
+  { typ: "beispiele", rules: ["en.gr.plural"],
+    titel: "Die zwei Sonderfälle",
+    zeilen: [["nach s, x, ch, sh → <b>-es</b>", "box → box<b>es</b> · bus → bus<b>es</b>"],
+             ["Konsonant + y → <b>-ies</b>", "city → cit<b>ies</b> · baby → bab<b>ies</b>"],
+             ["Aber: Vokal + y → nur -s", "boy → boy<b>s</b>"]] },
+
+  { typ: "beispiele", rules: ["en.gr.plural"],
+    titel: "Und die Wilden",
+    hinweis: "Diese folgen keiner Regel — auswendig lernen.",
+    zeilen: [["child", "children"], ["mouse", "mice"], ["foot", "feet"],
+             ["man", "men"], ["woman", "women"]] },
+
+  { typ: "regel", rules: ["en.gr.articles"],
+    titel: "a oder an? Es zählt der Klang",
+    text: "<b>an</b> steht vor einem Vokal<b>klang</b> — nicht einfach vor einem Vokal-Buchstaben. Deshalb heißt es <b>an hour</b> (das h ist stumm), aber <b>a university</b> (klingt wie „juniversity“).",
+    merke: "an apple · an egg · an hour — a school · a university" },
+
+  { typ: "beispiele", rules: ["en.gr.this-that"],
+    titel: "this, that, these, those",
+    hinweis: "Zwei Fragen: nah oder weit? einer oder mehrere?",
+    zeilen: [["nah, Einzahl", "<b>this</b> book"], ["nah, Mehrzahl", "<b>these</b> books"],
+             ["weit, Einzahl", "<b>that</b> book"], ["weit, Mehrzahl", "<b>those</b> books"]] },
+
+  { typ: "probe", rules: ["en.gr.plural"],
+    frage: "Plural von <b>city</b>?",
+    antwort: "cities",
+    erklaerung: "Konsonant + y → das y wird zu <b>ies</b>." }
+]
+
+};
+
+</script>
+<script>
+/* ── data/deutsch.js ── */
+/* Gymnasium Fitness — Deutsch: Lektionen
+ *
+ * Aufgabentypen:
+ *   mc        Multiple Choice          opts[] mit {t, miss?}
+ *   type      Eingabe tippen           answer, alt[]
+ *   sort      In Körbe einsortieren    buckets[], words[{w, b}]
+ *   tap       Wort im Satz antippen    tokens[], correctIndex
+ *   tf        Richtig/Falsch           statement, answer(bool)
+ *   order     Wörter ordnen            words[], solution[]
+ *   match     Paare zuordnen           pairs[[a,b]]
+ *   diktat    Diktat                   sentences[], mode
+ *   fehler    Fehlerdiktat             tokens[], wrongIndexes{idx: richtig}
+ *
+ * Pflichtfeld bei jeder Aufgabe: rules[] — sonst greift der adaptive Loop nicht.
+ * `miss` an einer falschen Option benennt den Denkfehler dahinter.
+ */
+
+const LEKTIONEN_DE = {
+
+  /* ===================== LEKTION 1 ===================== */
+  "de-l1": {
+    nr: 1, titel: "Wortarten I: Nomen, Artikel, Verb",
+    intro: "Nomen, Artikel und Verben — die drei Wortarten, die du am häufigsten brauchst.",
+    items: [
+      { id: "de-01-01", type: "mc", rules: ["de.gr.wortart.nomen"],
+        prompt: "Welches Wort ist ein Nomen?",
+        correct: "Freundschaft",
+        opts: [{ t: "Freundschaft" },
+               { t: "freundlich", miss: "adjektiv-als-nomen" },
+               { t: "befreunden", miss: "verb-als-nomen" },
+               { t: "sehr", miss: "adverb-als-nomen" }] },
+
+      { id: "de-01-02", type: "sort", rules: ["de.gr.wortart.nomen", "de.gr.wortart.verb"],
+        prompt: "Sortiere die Wörter nach Wortart.",
+        buckets: ["Nomen", "Verb"],
+        words: [{ w: "Schule", b: "Nomen" }, { w: "lachen", b: "Verb" },
+                { w: "Katze", b: "Nomen" }, { w: "singen", b: "Verb" },
+                { w: "Freude", b: "Nomen" }, { w: "träumen", b: "Verb" }] },
+
+      { id: "de-01-03", type: "mc", rules: ["de.gr.wortart.artikel"],
+        prompt: "Welcher Artikel gehört zu „Mädchen“?",
+        correct: "das",
+        opts: [{ t: "das" }, { t: "die", miss: "genus-natuerliches-geschlecht" },
+               { t: "der", miss: "genus-raten" }] },
+
+      { id: "de-01-04", type: "tap", rules: ["de.gr.wortart.verb"],
+        prompt: "Tippe das Verb an.",
+        tokens: ["Der", "kleine", "Hund", "bellt", "laut"],
+        correctIndex: 3 },
+
+      { id: "de-01-05", type: "type", rules: ["de.gr.wortart.verb"],
+        prompt: "Wie heißt die Grundform (Nennform) von „sie liefen“?",
+        answer: "laufen", caseSensitive: false,
+        hint: "Grundformen enden meistens auf -en." },
+
+      { id: "de-01-06", type: "tf", rules: ["de.gr.wortart.nomen"],
+        prompt: "Richtig oder falsch?",
+        statement: "Vor jedes Nomen kann man der, die oder das setzen.",
+        answer: true,
+        erklaerung: "Genau — das ist die Artikelprobe, dein wichtigster Test." },
+
+      { id: "de-01-07", type: "mc", rules: ["de.gr.wortart.verb"],
+        prompt: "In welchem Satz steckt KEIN Verb?",
+        correct: "Ein wunderschöner Sommertag am See.",
+        opts: [{ t: "Ein wunderschöner Sommertag am See." },
+               { t: "Anna schwimmt im See.", miss: "verb-uebersehen" },
+               { t: "Der Tag ist schön.", miss: "sein-nicht-als-verb" }] },
+
+      { id: "de-01-08", type: "sort", rules: ["de.gr.wortart.artikel"],
+        prompt: "Bestimmter oder unbestimmter Artikel?",
+        buckets: ["bestimmt", "unbestimmt"],
+        words: [{ w: "der", b: "bestimmt" }, { w: "eine", b: "unbestimmt" },
+                { w: "das", b: "bestimmt" }, { w: "ein", b: "unbestimmt" },
+                { w: "die", b: "bestimmt" }] },
+
+      { id: "de-01-09", type: "tap", rules: ["de.gr.wortart.nomen"],
+        prompt: "Tippe das Nomen an.",
+        tokens: ["Wir", "fahren", "morgen", "ans", "Meer"],
+        correctIndex: 4 },
+
+      { id: "de-01-10", type: "mc", rules: ["de.gr.wortart.nomen", "de.rs.gross-klein.nomen"],
+        prompt: "Welcher Satz ist richtig geschrieben?",
+        correct: "Meine Schwester liest ein Buch.",
+        opts: [{ t: "Meine Schwester liest ein Buch." },
+               { t: "Meine schwester liest ein buch.", miss: "nomen-klein" },
+               { t: "Meine Schwester Liest ein Buch.", miss: "verb-gross" }] },
+
+      /* ---- Stufe 1: Wiedererkennen ---- */
+
+      { id: "de-01-11", type: "mc", rules: ["de.gr.wortart.nomen"],
+        prompt: "Welches Wort ist KEIN Nomen?",
+        correct: "gemütlich",
+        opts: [{ t: "gemütlich" }, { t: "Gemütlichkeit", miss: "endung-keit-uebersehen" },
+               { t: "Sessel", miss: "nomen-nicht-erkannt" }, { t: "Wohnung", miss: "nomen-nicht-erkannt" }] },
+
+      { id: "de-01-12", type: "mc", rules: ["de.gr.wortart.artikel"],
+        prompt: "Welcher Artikel gehört zu „Buch“?",
+        correct: "das",
+        opts: [{ t: "das" }, { t: "der", miss: "genus-raten" }, { t: "die", miss: "genus-raten" }] },
+
+      { id: "de-01-13", type: "mc", rules: ["de.gr.wortart.artikel"],
+        prompt: "Welcher Artikel gehört zu „Jause“?",
+        correct: "die",
+        opts: [{ t: "die" }, { t: "der", miss: "genus-raten" }, { t: "das", miss: "genus-raten" }] },
+
+      { id: "de-01-14", type: "tf", rules: ["de.gr.wortart.verb"],
+        prompt: "Richtig oder falsch?",
+        statement: "Die Grundform eines Verbs endet fast immer auf -en.",
+        answer: true,
+        erklaerung: "Ja: laufen, singen, denken, lesen. Nur wenige enden auf -n, etwa „sammeln“." },
+
+      { id: "de-01-15", type: "tf", rules: ["de.rs.gross-klein.nomen"],
+        prompt: "Richtig oder falsch?",
+        statement: "Verben werden im Deutschen großgeschrieben.",
+        answer: false,
+        erklaerung: "Nein, Verben schreibt man klein. Nur wenn sie zu Nomen werden — „das Laufen“ — geht es groß." },
+
+      { id: "de-01-16", type: "match", rules: ["de.gr.wortart.artikel", "de.gr.wortart.nomen"],
+        prompt: "Welcher Artikel gehört zu welchem Nomen?",
+        pairs: [["___ Fahrrad", "das"], ["___ Schule", "die"], ["___ Garten", "der"]] },
+
+      { id: "de-01-17", type: "match", rules: ["de.gr.wortart.verb"],
+        prompt: "Ordne der gebeugten Form die Grundform zu.",
+        pairs: [["du singst", "singen"], ["wir lasen", "lesen"],
+                ["sie ist gegangen", "gehen"], ["ich schrieb", "schreiben"]] },
+
+      { id: "de-01-18", type: "sort", rules: ["de.gr.wortart.nomen", "de.gr.wortart.verb", "de.gr.wortart.artikel"],
+        prompt: "Sortiere nach Wortart.",
+        buckets: ["Nomen", "Verb", "Artikel"],
+        words: [{ w: "Fenster", b: "Nomen" }, { w: "springen", b: "Verb" }, { w: "eine", b: "Artikel" },
+                { w: "Gedanke", b: "Nomen" }, { w: "lachen", b: "Verb" }, { w: "der", b: "Artikel" }] },
+
+      { id: "de-01-19", type: "sort", rules: ["de.rs.gross-klein.nomen"],
+        prompt: "Groß oder klein geschrieben?",
+        buckets: ["groß", "klein"],
+        words: [{ w: "Hoffnung", b: "groß" }, { w: "hoffen", b: "klein" },
+                { w: "Bewegung", b: "groß" }, { w: "bewegen", b: "klein" },
+                { w: "Wunsch", b: "groß" }, { w: "wünschen", b: "klein" }] },
+
+      { id: "de-01-20", type: "mc", rules: ["de.gr.wortart.nomen"],
+        prompt: "Auch Gefühle sind Nomen. Welches Wort gehört dazu?",
+        correct: "Angst",
+        opts: [{ t: "Angst" }, { t: "ängstlich", miss: "adjektiv-als-nomen" },
+               { t: "sich fürchten", miss: "verb-als-nomen" }] },
+
+      /* ---- Stufe 2: Anwenden ---- */
+
+      { id: "de-01-21", type: "tap", rules: ["de.gr.wortart.nomen"],
+        prompt: "Tippe das Nomen an.",
+        tokens: ["Am", "Sonntag", "schlafen", "wir", "lange"],
+        correctIndex: 1 },
+
+      { id: "de-01-22", type: "tap", rules: ["de.gr.wortart.verb"],
+        prompt: "Tippe das Verb an.",
+        tokens: ["Die", "Sonne", "scheint", "heute", "sehr", "hell"],
+        correctIndex: 2 },
+
+      { id: "de-01-23", type: "tap", rules: ["de.gr.wortart.artikel"],
+        prompt: "Tippe den Artikel an.",
+        tokens: ["Gestern", "hat", "das", "Kind", "gemalt"],
+        correctIndex: 2 },
+
+      { id: "de-01-24", type: "tap", rules: ["de.gr.wortart.nomen", "de.rs.gross-klein.nomen"],
+        prompt: "Ein Wort ist falsch geschrieben. Tippe es an.",
+        tokens: ["Meine", "freundin", "kommt", "am", "Nachmittag"],
+        correctIndex: 1 },
+
+      { id: "de-01-25", type: "tap", rules: ["de.gr.wortart.verb"],
+        prompt: "In diesem Satz stehen zwei Verben. Tippe das gebeugte an.",
+        tokens: ["Ich", "will", "heute", "schwimmen"],
+        correctIndex: 1 },
+
+      { id: "de-01-26", type: "order", rules: ["de.gr.wortart.nomen", "de.gr.wortart.verb"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["Der", "Hund", "bellt", "im", "Garten"],
+        solution: ["Der", "Hund", "bellt", "im", "Garten"] },
+
+      { id: "de-01-27", type: "order", rules: ["de.gr.wortart.artikel", "de.gr.wortart.nomen"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["Die", "Kinder", "lesen", "ein", "Buch"],
+        solution: ["Die", "Kinder", "lesen", "ein", "Buch"] },
+
+      { id: "de-01-28", type: "order", rules: ["de.gr.wortart.verb"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["Am", "Abend", "singt", "meine", "Schwester"],
+        solution: ["Am", "Abend", "singt", "meine", "Schwester"] },
+
+      /* ---- Stufe 3: Selbst produzieren ---- */
+
+      { id: "de-01-29", type: "type", rules: ["de.gr.wortart.verb"],
+        prompt: "Wie heißt die Grundform von „wir sangen“?",
+        answer: "singen", caseSensitive: false },
+
+      { id: "de-01-30", type: "type", rules: ["de.gr.wortart.verb"],
+        prompt: "Wie heißt die Grundform von „sie hat geschrieben“?",
+        answer: "schreiben", caseSensitive: false },
+
+      { id: "de-01-31", type: "type", rules: ["de.gr.wortart.artikel"],
+        prompt: "Welcher Artikel gehört zu „Mädchen“? (nur der Artikel)",
+        answer: "das", caseSensitive: false,
+        hint: "Alle Wörter auf -chen sind sächlich." },
+
+      { id: "de-01-32", type: "type", rules: ["de.gr.wortart.nomen", "de.rs.gross-klein.nomen"],
+        prompt: "Mach aus dem Verb ein Nomen: <b>arbeiten</b> → die ____",
+        answer: "Arbeit", caseSensitive: true },
+
+      { id: "de-01-33", type: "type", rules: ["de.gr.wortart.nomen", "de.rs.gross-klein.nomen"],
+        prompt: "Mach aus dem Adjektiv ein Nomen: <b>frei</b> → die ____",
+        answer: "Freiheit", caseSensitive: true,
+        hint: "Die Endung -heit macht aus Adjektiven Nomen." },
+
+      { id: "de-01-34", type: "fehler", rules: ["de.rs.gross-klein.nomen", "de.rs.gross-klein.satzanfang"],
+        prompt: "Zwei Wörter sind falsch geschrieben. Tippe sie an.",
+        tokens: ["der", "Bruder", "spielt", "gern", "fußball"],
+        wrong: { 0: "Der", 4: "Fußball" } },
+
+      { id: "de-01-35", type: "fehler", rules: ["de.rs.gross-klein.nomen"],
+        prompt: "Zwei Wörter sind falsch geschrieben. Tippe sie an.",
+        tokens: ["Im", "sommer", "fahren", "wir", "ans", "meer"],
+        wrong: { 1: "Sommer", 5: "Meer" } },
+
+      { id: "de-01-36", type: "fehler", rules: ["de.rs.gross-klein.nomen"],
+        prompt: "Ein Wort ist falsch geschrieben. Tippe es an.",
+        tokens: ["Die", "Katze", "Schläft", "auf", "dem", "Sofa"],
+        wrong: { 2: "schläft" } }
+    ]
+  },
+
+  /* ===================== LEKTION 2 ===================== */
+  "de-l2": {
+    nr: 2, titel: "Wortarten II: Adjektive und Steigerung",
+    intro: "Adjektive sagen, WIE etwas ist — und man kann sie vergleichen.",
+    items: [
+      { id: "de-02-01", type: "mc", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Welches Wort ist ein Adjektiv?",
+        correct: "mutig",
+        opts: [{ t: "mutig" }, { t: "der Mut", miss: "nomen-als-adjektiv" },
+               { t: "sich trauen", miss: "verb-als-adjektiv" }, { t: "gestern", miss: "adverb-als-adjektiv" }] },
+
+      { id: "de-02-02", type: "type", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Steigere: schnell — ____ — am schnellsten",
+        answer: "schneller", caseSensitive: false },
+
+      { id: "de-02-03", type: "mc", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Wie lautet die Steigerung von „gut“?",
+        correct: "gut – besser – am besten",
+        opts: [{ t: "gut – besser – am besten" },
+               { t: "gut – guter – am gutesten", miss: "unregelmaessig-regelmaessig-gebildet" },
+               { t: "gut – mehr gut – am meisten gut", miss: "englische-struktur" }] },
+
+      { id: "de-02-04", type: "match", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Ordne die Steigerungsformen zu.",
+        pairs: [["viel", "mehr"], ["gern", "lieber"], ["hoch", "höher"], ["nah", "näher"]] },
+
+      { id: "de-02-05", type: "tap", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Tippe das Adjektiv an.",
+        tokens: ["Der", "alte", "Baum", "steht", "im", "Garten"],
+        correctIndex: 1 },
+
+      { id: "de-02-06", type: "type", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Steigere: teuer — teurer — ____",
+        answer: "am teuersten", alt: ["am teuersten", "teuersten"], caseSensitive: false },
+
+      { id: "de-02-07", type: "tf", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Richtig oder falsch?",
+        statement: "Man kann jedes Adjektiv steigern.",
+        answer: false,
+        erklaerung: "Nein. Wörter wie „tot“, „rund“ oder „schwanger“ kann man nicht steigern — etwas ist entweder tot oder nicht." },
+
+      { id: "de-02-08", type: "sort", rules: ["de.gr.wortart.adjektiv", "de.gr.wortart.nomen"],
+        prompt: "Adjektiv oder Nomen?",
+        buckets: ["Adjektiv", "Nomen"],
+        words: [{ w: "hell", b: "Adjektiv" }, { w: "Helligkeit", b: "Nomen" },
+                { w: "traurig", b: "Adjektiv" }, { w: "Trauer", b: "Nomen" },
+                { w: "stark", b: "Adjektiv" }, { w: "Stärke", b: "Nomen" }] },
+
+      { id: "de-02-09", type: "mc", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Welcher Satz ist richtig?",
+        correct: "Lisa ist größer als Mia.",
+        opts: [{ t: "Lisa ist größer als Mia." },
+               { t: "Lisa ist größer wie Mia.", miss: "als-wie-verwechselt" },
+               { t: "Lisa ist mehr groß als Mia.", miss: "englische-struktur" }] },
+
+      { id: "de-02-10", type: "order", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["Die", "kleine", "Katze", "schläft", "auf", "dem", "warmen", "Sofa"],
+        solution: ["Die", "kleine", "Katze", "schläft", "auf", "dem", "warmen", "Sofa"] },
+
+      /* ---- Stufe 1: Wiedererkennen ---- */
+
+      { id: "de-02-11", type: "mc", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Welches Wort ist ein Adjektiv?",
+        correct: "neugierig",
+        opts: [{ t: "neugierig" }, { t: "die Neugier", miss: "nomen-als-adjektiv" },
+               { t: "staunen", miss: "verb-als-adjektiv" }] },
+
+      { id: "de-02-12", type: "mc", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Mit welcher Frage findest du ein Adjektiv?",
+        correct: "Wie ist es?",
+        opts: [{ t: "Wie ist es?" }, { t: "Wer oder was?", miss: "frage-nach-nomen" },
+               { t: "Was tut es?", miss: "frage-nach-verb" }] },
+
+      { id: "de-02-13", type: "mc", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Wie lautet die Steigerung von „viel“?",
+        correct: "viel – mehr – am meisten",
+        opts: [{ t: "viel – mehr – am meisten" },
+               { t: "viel – vieler – am vielsten", miss: "unregelmaessig-regelmaessig-gebildet" },
+               { t: "viel – mehrer – am mehrsten", miss: "doppelte-steigerung" }] },
+
+      { id: "de-02-14", type: "mc", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Wie lautet die Steigerung von „gern“?",
+        correct: "gern – lieber – am liebsten",
+        opts: [{ t: "gern – lieber – am liebsten" },
+               { t: "gern – gerner – am gernsten", miss: "unregelmaessig-regelmaessig-gebildet" }] },
+
+      { id: "de-02-15", type: "tf", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Richtig oder falsch?",
+        statement: "„am schönsten“ ist die Höchststufe von „schön“.",
+        answer: true,
+        erklaerung: "Genau: schön – schöner – am schönsten." },
+
+      { id: "de-02-16", type: "tf", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Richtig oder falsch?",
+        statement: "Man sagt: „Das Auto ist mehr schnell als das Fahrrad.“",
+        answer: false,
+        erklaerung: "Nein — im Deutschen steigert man mit <b>-er</b>: schneller <b>als</b>. „Mehr schnell“ ist aus dem Englischen abgeschaut." },
+
+      { id: "de-02-17", type: "match", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Ordne Grundstufe und Höchststufe zu.",
+        pairs: [["gut", "am besten"], ["viel", "am meisten"],
+                ["groß", "am größten"], ["kalt", "am kältesten"]] },
+
+      { id: "de-02-18", type: "match", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Welches Adjektiv ist das Gegenteil?",
+        pairs: [["hell", "dunkel"], ["laut", "leise"], ["schwer", "leicht"], ["früh", "spät"]] },
+
+      { id: "de-02-19", type: "sort", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Regelmäßig oder unregelmäßig gesteigert?",
+        buckets: ["regelmäßig", "unregelmäßig"],
+        words: [{ w: "klein", b: "regelmäßig" }, { w: "gut", b: "unregelmäßig" },
+                { w: "schnell", b: "regelmäßig" }, { w: "gern", b: "unregelmäßig" },
+                { w: "leise", b: "regelmäßig" }, { w: "viel", b: "unregelmäßig" }] },
+
+      { id: "de-02-20", type: "sort", rules: ["de.gr.wortart.adjektiv", "de.gr.wortart.verb"],
+        prompt: "Adjektiv oder Verb?",
+        buckets: ["Adjektiv", "Verb"],
+        words: [{ w: "müde", b: "Adjektiv" }, { w: "schlafen", b: "Verb" },
+                { w: "hungrig", b: "Adjektiv" }, { w: "essen", b: "Verb" },
+                { w: "fröhlich", b: "Adjektiv" }, { w: "lachen", b: "Verb" }] },
+
+      /* ---- Stufe 2: Anwenden ---- */
+
+      { id: "de-02-21", type: "tap", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Tippe das Adjektiv an.",
+        tokens: ["Wir", "essen", "eine", "warme", "Suppe"],
+        correctIndex: 3 },
+
+      { id: "de-02-22", type: "tap", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "In diesem Satz stehen zwei Adjektive. Tippe das erste an.",
+        tokens: ["Der", "kleine", "Hund", "hat", "weiche", "Ohren"],
+        correctIndex: 1 },
+
+      { id: "de-02-23", type: "tap", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Tippe das gesteigerte Adjektiv an.",
+        tokens: ["Heute", "ist", "es", "wärmer", "als", "gestern"],
+        correctIndex: 3 },
+
+      { id: "de-02-24", type: "tap", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Ein Wort ist falsch. Tippe es an.",
+        tokens: ["Mia", "läuft", "schneller", "wie", "Lisa"],
+        correctIndex: 3 },
+
+      { id: "de-02-25", type: "order", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Bring die Steigerung in die richtige Reihenfolge.",
+        words: ["am", "kalt", "kälter", "kältesten"],
+        solution: ["kalt", "kälter", "am", "kältesten"] },
+
+      { id: "de-02-26", type: "order", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["Mein", "Bruder", "ist", "größer", "als", "ich"],
+        solution: ["Mein", "Bruder", "ist", "größer", "als", "ich"] },
+
+      { id: "de-02-27", type: "order", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["Im", "alten", "Haus", "wohnt", "eine", "freundliche", "Frau"],
+        solution: ["Im", "alten", "Haus", "wohnt", "eine", "freundliche", "Frau"] },
+
+      /* ---- Stufe 3: Selbst produzieren ---- */
+
+      { id: "de-02-28", type: "type", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Steigere: klein — ____ — am kleinsten",
+        answer: "kleiner", caseSensitive: false },
+
+      { id: "de-02-29", type: "type", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Steigere: groß — größer — ____",
+        answer: "am größten", alt: ["am größten", "größten"], caseSensitive: false },
+
+      { id: "de-02-30", type: "type", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Steigere: gut — ____ — am besten",
+        answer: "besser", caseSensitive: false,
+        hint: "Unregelmäßig — das muss man wissen." },
+
+      { id: "de-02-31", type: "type", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Steigere: hoch — ____ — am höchsten",
+        answer: "höher", caseSensitive: false },
+
+      { id: "de-02-32", type: "type", rules: ["de.gr.wortart.adjektiv"],
+        prompt: "Wie heißt das Gegenteil von „laut“?",
+        answer: "leise", caseSensitive: false },
+
+      { id: "de-02-33", type: "type", rules: ["de.gr.wortart.adjektiv", "de.gr.wortart.nomen"],
+        prompt: "Mach aus dem Nomen ein Adjektiv: <b>die Sonne</b> → ____",
+        answer: "sonnig", caseSensitive: false,
+        hint: "Die Endung -ig macht aus Nomen Adjektive." },
+
+      { id: "de-02-34", type: "type", rules: ["de.gr.wortart.adjektiv", "de.rs.gross-klein.nomen"],
+        prompt: "Mach aus dem Adjektiv ein Nomen: <b>schnell</b> → die ____",
+        answer: "Schnelligkeit", caseSensitive: true },
+
+      { id: "de-02-35", type: "fehler", rules: ["de.gr.adjektiv.steigerung"],
+        prompt: "Ein Wort ist falsch. Tippe es an.",
+        tokens: ["Der", "Turm", "ist", "hocher", "als", "das", "Haus"],
+        wrong: { 3: "höher" } },
+
+      { id: "de-02-36", type: "fehler", rules: ["de.gr.adjektiv.steigerung", "de.rs.gross-klein.nomen"],
+        prompt: "Zwei Wörter sind falsch. Tippe sie an.",
+        tokens: ["Meine", "schwester", "singt", "schöner", "wie", "ich"],
+        wrong: { 1: "Schwester", 4: "als" } }
+    ]
+  },
+
+  /* ===================== LEKTION 3 ===================== */
+  "de-l3": {
+    nr: 3, titel: "Wortarten III: Pronomen und Präpositionen",
+    intro: "Pronomen ersetzen Nomen. Präpositionen sagen, wo oder wann etwas ist.",
+    items: [
+      { id: "de-03-01", type: "mc", rules: ["de.gr.wortart.pronomen"],
+        prompt: "Welches Wort ist ein Pronomen?",
+        correct: "sie",
+        opts: [{ t: "sie" }, { t: "Schwester", miss: "nomen-als-pronomen" },
+               { t: "unter", miss: "praeposition-als-pronomen" }, { t: "lesen", miss: "verb-als-pronomen" }] },
+
+      { id: "de-03-02", type: "type", rules: ["de.gr.wortart.pronomen"],
+        prompt: "Ersetze das Nomen durch ein Pronomen: „Der Lehrer erklärt es.“ → „____ erklärt es.“",
+        answer: "Er", caseSensitive: false },
+
+      { id: "de-03-03", type: "tap", rules: ["de.gr.wortart.praeposition"],
+        prompt: "Tippe die Präposition an.",
+        tokens: ["Das", "Buch", "liegt", "unter", "dem", "Tisch"],
+        correctIndex: 3 },
+
+      { id: "de-03-04", type: "sort", rules: ["de.gr.wortart.pronomen", "de.gr.wortart.praeposition"],
+        prompt: "Pronomen oder Präposition?",
+        buckets: ["Pronomen", "Präposition"],
+        words: [{ w: "ich", b: "Pronomen" }, { w: "neben", b: "Präposition" },
+                { w: "wir", b: "Pronomen" }, { w: "hinter", b: "Präposition" },
+                { w: "ihr", b: "Pronomen" }, { w: "während", b: "Präposition" }] },
+
+      { id: "de-03-05", type: "mc", rules: ["de.gr.wortart.praeposition"],
+        prompt: "Welche Präposition passt? „Wir treffen uns ____ der Schule.“",
+        correct: "vor",
+        opts: [{ t: "vor" }, { t: "und", miss: "bindewort-als-praeposition" },
+               { t: "aber", miss: "bindewort-als-praeposition" }] },
+
+      { id: "de-03-06", type: "match", rules: ["de.gr.wortart.pronomen"],
+        prompt: "Welches Pronomen ersetzt welches Nomen?",
+        pairs: [["die Mutter", "sie"], ["der Vater", "er"], ["das Kind", "es"], ["die Eltern", "sie (Mz.)"]] },
+
+      { id: "de-03-07", type: "tf", rules: ["de.gr.wortart.pronomen"],
+        prompt: "Richtig oder falsch?",
+        statement: "„mein“ und „dein“ sind auch Pronomen.",
+        answer: true,
+        erklaerung: "Ja — das sind besitzanzeigende Pronomen. Sie zeigen, wem etwas gehört." },
+
+      { id: "de-03-08", type: "tap", rules: ["de.gr.wortart.pronomen"],
+        prompt: "Tippe das Pronomen an.",
+        tokens: ["Gestern", "hat", "sie", "einen", "Brief", "geschrieben"],
+        correctIndex: 2 },
+
+      { id: "de-03-09", type: "order", rules: ["de.gr.wortart.praeposition"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["Wir", "gehen", "nach", "der", "Schule", "ins", "Schwimmbad"],
+        solution: ["Wir", "gehen", "nach", "der", "Schule", "ins", "Schwimmbad"] },
+
+      { id: "de-03-10", type: "mc", rules: ["de.gr.wortart.pronomen"],
+        prompt: "In welchem Satz steht ein Pronomen?",
+        correct: "Kannst du mir helfen?",
+        opts: [{ t: "Kannst du mir helfen?" },
+               { t: "Die Sonne scheint hell.", miss: "kein-pronomen-erkannt" },
+               { t: "Im Garten blühen Rosen.", miss: "kein-pronomen-erkannt" }] }
+    ]
+  },
+
+  /* ===================== LEKTION 4 ===================== */
+  "de-l4": {
+    nr: 4, titel: "Die vier Fälle",
+    intro: "Wer? Wessen? Wem? Wen? — mit diesen vier Fragen bestimmst du jeden Fall.",
+    items: [
+      { id: "de-04-01", type: "mc", rules: ["de.gr.nomen.faelle"],
+        prompt: "Mit welcher Frage findest du den 3. Fall?",
+        correct: "Wem?",
+        opts: [{ t: "Wem?" }, { t: "Wen oder was?", miss: "fall3-fall4-verwechselt" },
+               { t: "Wer oder was?", miss: "fall3-fall1-verwechselt" }, { t: "Wessen?", miss: "fall3-fall2-verwechselt" }] },
+
+      { id: "de-04-02", type: "match", rules: ["de.gr.nomen.faelle"],
+        prompt: "Ordne Fall und Frage zu.",
+        pairs: [["1. Fall", "Wer oder was?"], ["2. Fall", "Wessen?"],
+                ["3. Fall", "Wem?"], ["4. Fall", "Wen oder was?"]] },
+
+      { id: "de-04-03", type: "mc", rules: ["de.gr.nomen.faelle"],
+        prompt: "In welchem Fall steht „dem Kind“ in: „Ich gebe dem Kind den Ball.“?",
+        correct: "3. Fall",
+        opts: [{ t: "3. Fall" }, { t: "4. Fall", miss: "fall3-fall4-verwechselt" },
+               { t: "1. Fall", miss: "fall-raten" }] },
+
+      { id: "de-04-04", type: "mc", rules: ["de.gr.nomen.faelle"],
+        prompt: "In welchem Fall steht „den Ball“ in: „Ich gebe dem Kind den Ball.“?",
+        correct: "4. Fall",
+        opts: [{ t: "4. Fall" }, { t: "3. Fall", miss: "fall3-fall4-verwechselt" },
+               { t: "2. Fall", miss: "fall-raten" }] },
+
+      { id: "de-04-05", type: "type", rules: ["de.gr.nomen.plural"],
+        prompt: "Wie heißt die Mehrzahl von „das Haus“?",
+        answer: "die Häuser", alt: ["Häuser", "die Häuser"], caseSensitive: false },
+
+      { id: "de-04-06", type: "type", rules: ["de.gr.nomen.plural"],
+        prompt: "Wie heißt die Mehrzahl von „der Wald“?",
+        answer: "die Wälder", alt: ["Wälder", "die Wälder"], caseSensitive: false },
+
+      { id: "de-04-07", type: "tap", rules: ["de.gr.nomen.faelle"],
+        prompt: "Tippe das Wort im 1. Fall an (Wer oder was?).",
+        tokens: ["Der", "Bruder", "schenkt", "der", "Schwester", "ein", "Buch"],
+        correctIndex: 1 },
+
+      { id: "de-04-08", type: "sort", rules: ["de.gr.nomen.faelle"],
+        prompt: "3. oder 4. Fall? Sortiere.",
+        buckets: ["3. Fall (Wem?)", "4. Fall (Wen/Was?)"],
+        words: [{ w: "dem Hund", b: "3. Fall (Wem?)" }, { w: "den Hund", b: "4. Fall (Wen/Was?)" },
+                { w: "der Freundin", b: "3. Fall (Wem?)" }, { w: "die Freundin", b: "4. Fall (Wen/Was?)" }] },
+
+      { id: "de-04-10", type: "tf", rules: ["de.gr.nomen.faelle"],
+        prompt: "Richtig oder falsch?",
+        statement: "Der 2. Fall antwortet auf die Frage „Wessen?“",
+        answer: true,
+        erklaerung: "Genau: Das Fahrrad DES MÄDCHENS — wessen Fahrrad? Des Mädchens." }
+    ]
+  },
+
+  /* ===================== LEKTION 5 ===================== */
+  "de-l5": {
+    nr: 5, titel: "Groß- und Kleinschreibung",
+    intro: "Die Artikelprobe ist dein wichtigstes Werkzeug: Passt der, die oder das davor?",
+    items: [
+      { id: "de-05-01", type: "mc", rules: ["de.rs.gross-klein.nominalisierung"],
+        prompt: "Welche Schreibweise ist richtig?",
+        correct: "Das Schwimmen macht mir Spaß.",
+        opts: [{ t: "Das Schwimmen macht mir Spaß." },
+               { t: "Das schwimmen macht mir Spaß.", miss: "nominalisierung-nicht-erkannt" },
+               { t: "das Schwimmen macht mir Spaß.", miss: "satzanfang-klein" }] },
+
+      { id: "de-05-02", type: "mc", rules: ["de.rs.gross-klein.nominalisierung"],
+        prompt: "Welche Schreibweise ist richtig?",
+        correct: "Beim Laufen höre ich Musik.",
+        opts: [{ t: "Beim Laufen höre ich Musik." },
+               { t: "Beim laufen höre ich Musik.", miss: "nominalisierung-nicht-erkannt" }] },
+
+      { id: "de-05-03", type: "sort", rules: ["de.rs.gross-klein.nomen"],
+        prompt: "Groß oder klein? Sortiere die Wörter.",
+        buckets: ["groß", "klein"],
+        words: [{ w: "Fahrrad", b: "groß" }, { w: "fahren", b: "klein" },
+                { w: "Freude", b: "groß" }, { w: "fröhlich", b: "klein" },
+                { w: "Angst", b: "groß" }, { w: "ängstlich", b: "klein" }] },
+
+      { id: "de-05-04", type: "fehler", rules: ["de.rs.gross-klein.nomen", "de.rs.gross-klein.satzanfang"],
+        prompt: "Fehlerdiktat: Tippe die falsch geschriebenen Wörter an.",
+        tokens: ["Am", "montag", "gehen", "wir", "ins", "kino", "."],
+        wrong: { 1: "Montag", 5: "Kino" } },
+
+      { id: "de-05-05", type: "mc", rules: ["de.rs.gross-klein.nominalisierung"],
+        prompt: "Welches Signalwort zeigt dir, dass danach großgeschrieben wird?",
+        correct: "beim, das, vom, zum",
+        opts: [{ t: "beim, das, vom, zum" },
+               { t: "und, oder, aber", miss: "bindewort-als-signal" },
+               { t: "sehr, ganz, viel", miss: "steigerung-als-signal" }] },
+
+      { id: "de-05-06", type: "type", rules: ["de.rs.gross-klein.nominalisierung"],
+        prompt: "Schreibe richtig: „beim (lesen) schlafe ich oft ein.“ — Wie lautet das Wort in Klammern?",
+        answer: "Lesen", caseSensitive: true,
+        hint: "Nach „beim“ wird nominalisiert." },
+
+      { id: "de-05-07", type: "tf", rules: ["de.rs.gross-klein.nomen"],
+        prompt: "Richtig oder falsch?",
+        statement: "„heute“, „morgen“ und „gestern“ schreibt man groß.",
+        answer: false,
+        erklaerung: "Nein, die schreibt man klein. Aber: „der Morgen“ als Tageszeit ist ein Nomen und wird großgeschrieben." },
+
+      { id: "de-05-08", type: "fehler", rules: ["de.rs.gross-klein.nomen", "de.zs.satzschluss"],
+        prompt: "Fehlerdiktat: Tippe die falsch geschriebenen Wörter an.",
+        tokens: ["meine", "Schwester", "spielt", "gern", "klavier"],
+        wrong: { 0: "Meine", 4: "Klavier" } },
+
+      { id: "de-05-09", type: "mc", rules: ["de.zs.satzschluss"],
+        prompt: "Welches Satzzeichen fehlt? „Wohin gehst du eigentlich___“",
+        correct: "?",
+        opts: [{ t: "?" }, { t: ".", miss: "fragesatz-nicht-erkannt" }, { t: "!", miss: "fragesatz-nicht-erkannt" }] },
+
+      { id: "de-05-10", type: "sort", rules: ["de.rs.gross-klein.nominalisierung"],
+        prompt: "Wird das Wort hier groß oder klein geschrieben?",
+        buckets: ["groß", "klein"],
+        words: [{ w: "das Singen", b: "groß" }, { w: "wir singen", b: "klein" },
+                { w: "beim Essen", b: "groß" }, { w: "wir essen", b: "klein" },
+                { w: "zum Spielen", b: "groß" }] }
+    ]
+  },
+
+  /* ===================== LEKTION 6 ===================== */
+  "de-l6": {
+    nr: 6, titel: "Rechtschreibstrategien: Verlängern und Ableiten",
+    intro: "Zwei Tricks, mit denen du fast jedes schwierige Wort selbst lösen kannst.",
+    anzahlUebungen: 10,   // deckt zusätzlich die Merkwörter mit ab
+    items: [
+      { id: "de-06-01", type: "mc", rules: ["de.rs.auslaut"],
+        prompt: "Wie schreibt man das Wort richtig?",
+        correct: "Hund",
+        opts: [{ t: "Hund" }, { t: "Hunt", miss: "de.rs.auslaut.nicht-verlaengert" },
+               { t: "Hundt", miss: "de.rs.uebergeneralisierung" }],
+        erklaerung: "Verlängern: die HUNDE — also Hund mit d." },
+
+      { id: "de-06-02", type: "mc", rules: ["de.rs.auslaut"],
+        prompt: "Wie schreibt man das Wort richtig?",
+        correct: "Berg",
+        opts: [{ t: "Berg" }, { t: "Berk", miss: "de.rs.auslaut.nicht-verlaengert" }],
+        erklaerung: "Verlängern: die BERGE — also Berg mit g." },
+
+      { id: "de-06-03", type: "type", rules: ["de.rs.auslaut"],
+        prompt: "Verlängere und schreibe richtig: „das Kin_“",
+        answer: "Kind", caseSensitive: false,
+        hint: "Mehrzahl: die Kinder." },
+
+      { id: "de-06-04", type: "mc", rules: ["de.rs.umlaut-ableitung"],
+        prompt: "Wie schreibt man das Wort richtig?",
+        correct: "Bäume",
+        opts: [{ t: "Bäume" }, { t: "Beume", miss: "de.rs.umlaut-nicht-abgeleitet" }],
+        erklaerung: "Ableiten: der BAUM — also Bäume mit äu." },
+
+      { id: "de-06-05", type: "type", rules: ["de.rs.umlaut-ableitung"],
+        prompt: "Leite ab und schreibe richtig: „die Bl_tter“",
+        answer: "Blätter", caseSensitive: false,
+        hint: "Von welchem Wort kommt es? Das Blatt." },
+
+      { id: "de-06-06", type: "sort", rules: ["de.rs.doppelkonsonant"],
+        prompt: "Einfacher oder doppelter Mitlaut?",
+        buckets: ["einfach", "doppelt"],
+        words: [{ w: "Sonne", b: "doppelt" }, { w: "Bahn", b: "einfach" },
+                { w: "Ratte", b: "doppelt" }, { w: "Rad", b: "einfach" },
+                { w: "kommen", b: "doppelt" }, { w: "Wagen", b: "einfach" }] },
+
+      { id: "de-06-07", type: "mc", rules: ["de.rs.dehnung"],
+        prompt: "Wie schreibt man das Wort richtig?",
+        correct: "Zahl",
+        opts: [{ t: "Zahl" }, { t: "Zal", miss: "de.rs.dehnungs-h-fehlt" },
+               { t: "Zaal", miss: "de.rs.doppelvokal-statt-h" }] },
+
+      { id: "de-06-08", type: "fehler", rules: ["de.rs.auslaut", "de.rs.umlaut-ableitung"],
+        prompt: "Fehlerdiktat: Tippe die falsch geschriebenen Wörter an.",
+        tokens: ["Der", "Wint", "weht", "durch", "die", "Beume", "."],
+        wrong: { 1: "Wind", 5: "Bäume" } },
+
+      { id: "de-06-09", type: "match", rules: ["de.rs.wortfamilie"],
+        prompt: "Welches verwandte Wort hilft dir beim Schreiben?",
+        pairs: [["Fahrrad", "fahren"], ["Handschuh", "die Hände"],
+                ["Waldweg", "die Wälder"], ["Diebstahl", "die Diebe"]] },
+
+      { id: "de-06-10", type: "type", rules: ["de.rs.auslaut"],
+        prompt: "Verlängere und schreibe richtig: „der Kor_“ (zum Einkaufen)",
+        answer: "Korb", caseSensitive: false,
+        hint: "Mehrzahl: die Körbe." },
+
+      { id: "de-06-11", type: "mc", rules: ["de.rs.merkwoerter"],
+        prompt: "Welche Schreibweise ist richtig?",
+        correct: "der Vogel",
+        opts: [{ t: "der Vogel" }, { t: "der Fogel", miss: "de.rs.v-f-verwechselt" }],
+        erklaerung: "Vogel, Vater, viel, vier — diese Wörter schreibt man mit v. Merkwörter." },
+
+      { id: "de-06-12", type: "sort", rules: ["de.rs.merkwoerter"],
+        prompt: "Wird das Wort mit v oder mit f geschrieben?",
+        buckets: ["mit v", "mit f"],
+        words: [{ w: "_ater", b: "mit v" }, { w: "_enster", b: "mit f" },
+                { w: "_iel", b: "mit v" }, { w: "_reund", b: "mit f" },
+                { w: "_ogel", b: "mit v" }, { w: "_arbe", b: "mit f" }] }
+    ]
+  }
+};
+
+</script>
+<script>
+/* ── data/englisch.js ── */
+/* Gymnasium Fitness — Englisch: Lektionen
+ *
+ * Schwerpunkt am Anfang: das SCHRIFTBILD. Sie kennt vieles mündlich aus
+ * der Volksschule, hat es aber nie geschrieben. Genau dort liegt der Bruch zur
+ * 1. Klasse Gymnasium, wo Englisch Pflichtgegenstand mit Schularbeiten wird.
+ *
+ * `speak` an einer Aufgabe = Text, der vorgelesen werden kann (Web Speech API).
+ */
+
+const LEKTIONEN_EN = {
+
+  /* ===================== LEKTION 1 ===================== */
+  "en-l1": {
+    nr: 1, titel: "Alphabet, Spelling & Numbers",
+    intro: "Englisch schreibt man anders, als man es spricht. Heute schaust du dir das Wortbild genau an.",
+    items: [
+      { id: "en-01-01", type: "mc", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man das Wort für „Freund“?",
+        correct: "friend",
+        opts: [{ t: "friend" }, { t: "frend", miss: "en.sp.gehoert-geschrieben" },
+               { t: "freind", miss: "en.sp.ie-ei-vertauscht" }],
+        speak: "friend" },
+
+      { id: "en-01-02", type: "mc", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man das Wort für „weil“?",
+        correct: "because",
+        opts: [{ t: "because" }, { t: "becaus", miss: "en.sp.endung-fehlt" },
+               { t: "becouse", miss: "en.sp.vokal-vertauscht" }],
+        speak: "because" },
+
+      { id: "en-01-03", type: "type", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man „Farbe“ auf Englisch? (britisch)",
+        answer: "colour", alt: ["colour", "color"], caseSensitive: false,
+        speak: "colour",
+        hint: "Britisch mit u, amerikanisch ohne." },
+
+      { id: "en-01-04", type: "type", rules: ["en.voc.zahlen"],
+        prompt: "Schreibe die Zahl als Wort: 13",
+        answer: "thirteen", caseSensitive: false, speak: "thirteen" },
+
+      { id: "en-01-05", type: "type", rules: ["en.voc.zahlen"],
+        prompt: "Schreibe die Zahl als Wort: 30",
+        answer: "thirty", caseSensitive: false, speak: "thirty",
+        hint: "Vorsicht — nicht mit thirteen verwechseln!" },
+
+      { id: "en-01-06", type: "sort", rules: ["en.voc.zahlen"],
+        prompt: "-teen oder -ty?",
+        buckets: ["-teen (13–19)", "-ty (20–90)"],
+        words: [{ w: "fifteen", b: "-teen (13–19)" }, { w: "fifty", b: "-ty (20–90)" },
+                { w: "eighteen", b: "-teen (13–19)" }, { w: "eighty", b: "-ty (20–90)" },
+                { w: "sixteen", b: "-teen (13–19)" }, { w: "sixty", b: "-ty (20–90)" }] },
+
+      { id: "en-01-07", type: "mc", rules: ["en.sp.spelling"],
+        prompt: "Welche Schreibweise ist richtig?",
+        correct: "beautiful",
+        opts: [{ t: "beautiful" }, { t: "beatiful", miss: "en.sp.buchstabe-fehlt" },
+               { t: "beautifull", miss: "en.sp.doppelter-konsonant" }],
+        speak: "beautiful" },
+
+      { id: "en-01-08", type: "match", rules: ["en.sp.spelling", "en.voc.zahlen"],
+        prompt: "Ordne Zahl und Wort zu.",
+        pairs: [["12", "twelve"], ["20", "twenty"], ["40", "forty"], ["100", "a hundred"]] },
+
+      { id: "en-01-09", type: "type", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man „Schule“ auf Englisch?",
+        answer: "school", caseSensitive: false, speak: "school" },
+
+      { id: "en-01-10", type: "mc", rules: ["en.sp.alphabet"],
+        prompt: "Wie buchstabiert man „cat“?",
+        correct: "see – ay – tee",
+        opts: [{ t: "see – ay – tee" }, { t: "tsee – ah – teh", miss: "en.sp.deutsche-buchstabennamen" }] },
+
+      /* ---- Stufe 1: Wiedererkennen ---- */
+
+      { id: "en-01-11", type: "mc", rules: ["en.sp.spelling"],
+        prompt: "Welche Schreibweise ist richtig?",
+        correct: "people",
+        opts: [{ t: "people" }, { t: "peaple", miss: "en.sp.vokal-vertauscht" },
+               { t: "pepole", miss: "en.sp.buchstabendreher" }],
+        speak: "people" },
+
+      { id: "en-01-12", type: "mc", rules: ["en.sp.spelling"],
+        prompt: "Welche Schreibweise ist richtig?",
+        correct: "favourite",
+        opts: [{ t: "favourite" }, { t: "favorit", miss: "en.sp.deutsche-endung" },
+               { t: "faverite", miss: "en.sp.vokal-vertauscht" }],
+        speak: "favourite" },
+
+      { id: "en-01-13", type: "mc", rules: ["en.sp.spelling"],
+        prompt: "Welche Schreibweise ist richtig?",
+        correct: "Wednesday",
+        opts: [{ t: "Wednesday" }, { t: "Wensday", miss: "en.sp.stummer-buchstabe" },
+               { t: "Wendsday", miss: "en.sp.buchstabendreher" }],
+        speak: "Wednesday" },
+
+      { id: "en-01-14", type: "tf", rules: ["en.voc.zahlen"],
+        prompt: "Richtig oder falsch?",
+        statement: "„fourty“ ist die richtige Schreibweise für 40.",
+        answer: false,
+        erklaerung: "Nein — 40 heißt <b>forty</b>, ohne u. Aber 4 heißt <b>four</b>, mit u. Fiese Falle." },
+
+      { id: "en-01-15", type: "tf", rules: ["en.sp.spelling"],
+        prompt: "Richtig oder falsch?",
+        statement: "Im Englischen spricht man jeden Buchstaben, den man schreibt.",
+        answer: false,
+        erklaerung: "Nein. In <b>Wednesday</b>, <b>hour</b> oder <b>knee</b> bleiben Buchstaben stumm." },
+
+      { id: "en-01-16", type: "sort", rules: ["en.sp.spelling"],
+        prompt: "Welche Schreibweise stimmt?",
+        buckets: ["richtig", "falsch"],
+        words: [{ w: "friend", b: "richtig" }, { w: "freind", b: "falsch" },
+                { w: "because", b: "richtig" }, { w: "becuase", b: "falsch" },
+                { w: "school", b: "richtig" }, { w: "shool", b: "falsch" }] },
+
+      { id: "en-01-17", type: "match", rules: ["en.voc.zahlen"],
+        prompt: "Ordne Zahl und Wort zu.",
+        pairs: [["15", "fifteen"], ["50", "fifty"], ["13", "thirteen"], ["30", "thirty"]] },
+
+      { id: "en-01-18", type: "match", rules: ["en.sp.spelling"],
+        prompt: "Ordne Englisch und Deutsch zu.",
+        pairs: [["colour", "Farbe"], ["beautiful", "schön"],
+                ["because", "weil"], ["people", "Leute"]] },
+
+      { id: "en-01-19", type: "sort", rules: ["en.voc.zahlen"],
+        prompt: "Sortiere: kleiner oder größer als 20?",
+        buckets: ["unter 20", "über 20"],
+        words: [{ w: "fourteen", b: "unter 20" }, { w: "sixty", b: "über 20" },
+                { w: "nineteen", b: "unter 20" }, { w: "ninety", b: "über 20" },
+                { w: "eleven", b: "unter 20" }, { w: "seventy", b: "über 20" }] },
+
+      /* ---- Stufe 2: Anwenden ---- */
+
+      { id: "en-01-20", type: "tap", rules: ["en.sp.spelling"],
+        prompt: "Ein Wort ist falsch geschrieben. Tippe es an.",
+        tokens: ["My", "freind", "is", "very", "nice"],
+        correctIndex: 1 },
+
+      { id: "en-01-21", type: "tap", rules: ["en.sp.spelling"],
+        prompt: "Ein Wort ist falsch geschrieben. Tippe es an.",
+        tokens: ["I", "like", "this", "colur", "very", "much"],
+        correctIndex: 3 },
+
+      { id: "en-01-22", type: "order", rules: ["en.voc.zahlen"],
+        prompt: "Bring die Zahlen in die richtige Reihenfolge — von klein nach groß.",
+        words: ["thirteen", "thirty", "forty", "fifty"],
+        solution: ["thirteen", "thirty", "forty", "fifty"] },
+
+      { id: "en-01-23", type: "order", rules: ["en.voc.zahlen"],
+        prompt: "Bring die Zahlen in die richtige Reihenfolge — von klein nach groß.",
+        words: ["twelve", "twenty", "sixty", "a hundred"],
+        solution: ["twelve", "twenty", "sixty", "a hundred"] },
+
+      { id: "en-01-24", type: "fehler", rules: ["en.sp.spelling"],
+        prompt: "Zwei Wörter sind falsch geschrieben. Tippe sie an.",
+        tokens: ["My", "favorit", "colur", "is", "green"],
+        wrong: { 1: "favourite", 2: "colour" } },
+
+      { id: "en-01-25", type: "fehler", rules: ["en.sp.spelling"],
+        prompt: "Zwei Wörter sind falsch geschrieben. Tippe sie an.",
+        tokens: ["I", "go", "to", "shool", "on", "Wensday"],
+        wrong: { 3: "school", 5: "Wednesday" } },
+
+      /* ---- Stufe 3: Selbst schreiben ---- */
+
+      { id: "en-01-26", type: "type", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man „weil“ auf Englisch?",
+        answer: "because", caseSensitive: false, speak: "because" },
+
+      { id: "en-01-27", type: "type", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man „schön“ auf Englisch?",
+        answer: "beautiful", caseSensitive: false, speak: "beautiful" },
+
+      { id: "en-01-28", type: "type", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man „Leute“ auf Englisch?",
+        answer: "people", caseSensitive: false, speak: "people" },
+
+      { id: "en-01-29", type: "type", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man „Mittwoch“ auf Englisch?",
+        answer: "Wednesday", alt: ["Wednesday", "wednesday"], caseSensitive: false,
+        speak: "Wednesday", hint: "Das d in der Mitte hört man nicht." },
+
+      { id: "en-01-30", type: "type", rules: ["en.voc.zahlen"],
+        prompt: "Schreibe die Zahl als Wort: 15",
+        answer: "fifteen", caseSensitive: false, speak: "fifteen" },
+
+      { id: "en-01-31", type: "type", rules: ["en.voc.zahlen"],
+        prompt: "Schreibe die Zahl als Wort: 40",
+        answer: "forty", caseSensitive: false, speak: "forty",
+        hint: "Achtung: four hat ein u — forty nicht." },
+
+      { id: "en-01-32", type: "type", rules: ["en.voc.zahlen"],
+        prompt: "Schreibe die Zahl als Wort: 12",
+        answer: "twelve", caseSensitive: false, speak: "twelve" },
+
+      { id: "en-01-33", type: "type", rules: ["en.voc.zahlen"],
+        prompt: "Schreibe die Zahl als Wort: 90",
+        answer: "ninety", caseSensitive: false, speak: "ninety",
+        hint: "nine verliert das e: ninety." },
+
+      { id: "en-01-34", type: "type", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man „Lieblings…“ auf Englisch? (britisch)",
+        answer: "favourite", alt: ["favourite", "favorite"], caseSensitive: false,
+        speak: "favourite" },
+
+      { id: "en-01-35", type: "type", rules: ["en.sp.spelling"],
+        prompt: "Wie schreibt man „Stunde“ auf Englisch?",
+        answer: "hour", caseSensitive: false, speak: "hour",
+        hint: "Das h am Anfang bleibt stumm." }
+    ]
+  },
+
+  /* ===================== LEKTION 2 ===================== */
+  "en-l2": {
+    nr: 2, titel: "to be — am, is, are",
+    intro: "Das wichtigste Verb im Englischen. Wenn das sitzt, sitzt sehr viel.",
+    items: [
+      { id: "en-02-01", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Ergänze: I ___ ten years old.",
+        answer: "am", caseSensitive: false },
+
+      { id: "en-02-02", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Ergänze: She ___ my best friend.",
+        answer: "is", caseSensitive: false },
+
+      { id: "en-02-03", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Ergänze: We ___ in the garden.",
+        answer: "are", caseSensitive: false },
+
+      { id: "en-02-04", type: "mc", rules: ["en.gr.to-be"],
+        prompt: "Welcher Satz ist richtig?",
+        correct: "My parents are at home.",
+        opts: [{ t: "My parents are at home." },
+               { t: "My parents is at home.", miss: "en.gr.to-be.plural-singular" },
+               { t: "My parents am at home.", miss: "en.gr.to-be.form-geraten" }] },
+
+      { id: "en-02-05", type: "match", rules: ["en.gr.to-be"],
+        prompt: "Ordne die Kurzformen zu.",
+        pairs: [["I am", "I'm"], ["she is", "she's"], ["they are", "they're"], ["it is", "it's"]] },
+
+      { id: "en-02-06", type: "type", rules: ["en.gr.to-be.negation"],
+        prompt: "Verneine: She is happy. → She ___ happy. (Kurzform)",
+        answer: "isn't", alt: ["isn't", "is not", "isnt"], caseSensitive: false },
+
+      { id: "en-02-07", type: "mc", rules: ["en.gr.to-be.negation"],
+        prompt: "Welcher Satz ist richtig?",
+        correct: "They aren't from Austria.",
+        opts: [{ t: "They aren't from Austria." },
+               { t: "They don't are from Austria.", miss: "en.gr.do-bei-to-be" },
+               { t: "They not are from Austria.", miss: "en.gr.wortstellung-deutsch" }] },
+
+      { id: "en-02-08", type: "order", rules: ["en.gr.to-be"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["is", "My", "sister", "twelve"],
+        solution: ["My", "sister", "is", "twelve"] },
+
+      { id: "en-02-09", type: "sort", rules: ["en.gr.to-be"],
+        prompt: "Welche Form von „to be“ passt?",
+        buckets: ["am", "is", "are"],
+        words: [{ w: "I", b: "am" }, { w: "he", b: "is" }, { w: "we", b: "are" },
+                { w: "it", b: "is" }, { w: "they", b: "are" }, { w: "you", b: "are" }] },
+
+      { id: "en-02-10", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Frage bilden: ___ you tired? (du bist müde?)",
+        answer: "Are", caseSensitive: false },
+
+      /* ---- Stufe 1: Wiedererkennen ---- */
+
+      { id: "en-02-11", type: "mc", rules: ["en.gr.to-be"],
+        prompt: "Welcher Satz ist richtig?",
+        correct: "The cat is hungry.",
+        opts: [{ t: "The cat is hungry." },
+               { t: "The cat are hungry.", miss: "en.gr.to-be.singular-plural" },
+               { t: "The cat am hungry.", miss: "en.gr.to-be.form-geraten" }] },
+
+      { id: "en-02-12", type: "mc", rules: ["en.gr.to-be"],
+        prompt: "Welcher Satz ist richtig?",
+        correct: "You are my best friend.",
+        opts: [{ t: "You are my best friend." },
+               { t: "You is my best friend.", miss: "en.gr.to-be.form-geraten" },
+               { t: "You am my best friend.", miss: "en.gr.to-be.form-geraten" }] },
+
+      { id: "en-02-13", type: "mc", rules: ["en.gr.to-be.negation"],
+        prompt: "Wie verneint man „I am tired.“?",
+        correct: "I'm not tired.",
+        opts: [{ t: "I'm not tired." }, { t: "I amn't tired.", miss: "en.gr.kurzform-erfunden" },
+               { t: "I don't tired.", miss: "en.gr.do-bei-to-be" }],
+        erklaerung: "Bei <b>I am</b> gibt es keine Kurzform mit not — es heißt <b>I'm not</b>." },
+
+      { id: "en-02-14", type: "tf", rules: ["en.gr.to-be"],
+        prompt: "Richtig oder falsch?",
+        statement: "Nach „he“, „she“ und „it“ steht immer „is“.",
+        answer: true,
+        erklaerung: "Ja — genau wie bei have/has: he, she, it bekommen die Sonderform." },
+
+      { id: "en-02-15", type: "tf", rules: ["en.gr.to-be"],
+        prompt: "Richtig oder falsch?",
+        statement: "„It's“ ist die Kurzform von „it is“.",
+        answer: true,
+        erklaerung: "Ja. Vorsicht: <b>its</b> ohne Apostroph heißt „sein/ihr“ und ist etwas anderes." },
+
+      { id: "en-02-16", type: "match", rules: ["en.gr.to-be.negation"],
+        prompt: "Ordne die verneinten Kurzformen zu.",
+        pairs: [["is not", "isn't"], ["are not", "aren't"],
+                ["I am not", "I'm not"], ["was not", "wasn't"]] },
+
+      { id: "en-02-17", type: "match", rules: ["en.gr.to-be"],
+        prompt: "Welcher Satzanfang passt zu welchem Ende?",
+        pairs: [["My dog", "is very old."], ["My parents", "are at work."],
+                ["I", "am in the garden."], ["You and I", "are good friends."]] },
+
+      { id: "en-02-18", type: "sort", rules: ["en.gr.to-be"],
+        prompt: "Einzahl oder Mehrzahl? Sortiere nach der passenden Form.",
+        buckets: ["is", "are"],
+        words: [{ w: "the boy", b: "is" }, { w: "the boys", b: "are" },
+                { w: "my teacher", b: "is" }, { w: "my friends", b: "are" },
+                { w: "this book", b: "is" }, { w: "these books", b: "are" }] },
+
+      { id: "en-02-19", type: "sort", rules: ["en.gr.to-be"],
+        prompt: "Aussage, Frage oder Verneinung?",
+        buckets: ["Aussage", "Frage", "Verneinung"],
+        words: [{ w: "She is nine.", b: "Aussage" }, { w: "Is she nine?", b: "Frage" },
+                { w: "She isn't nine.", b: "Verneinung" },
+                { w: "They are here.", b: "Aussage" }, { w: "Are they here?", b: "Frage" },
+                { w: "They aren't here.", b: "Verneinung" }] },
+
+      /* ---- Stufe 2: Anwenden ---- */
+
+      { id: "en-02-20", type: "tap", rules: ["en.gr.to-be"],
+        prompt: "Tippe die Form von „to be“ an.",
+        tokens: ["My", "little", "brother", "is", "six"],
+        correctIndex: 3 },
+
+      { id: "en-02-21", type: "tap", rules: ["en.gr.to-be"],
+        prompt: "Ein Wort ist falsch. Tippe es an.",
+        tokens: ["My", "parents", "is", "in", "the", "garden"],
+        correctIndex: 2 },
+
+      { id: "en-02-22", type: "tap", rules: ["en.gr.to-be.negation"],
+        prompt: "Ein Wort ist falsch. Tippe es an.",
+        tokens: ["She", "don't", "happy", "today"],
+        correctIndex: 1 },
+
+      { id: "en-02-23", type: "order", rules: ["en.gr.to-be"],
+        prompt: "Bring die Frage in die richtige Reihenfolge.",
+        words: ["your", "Is", "sister", "here"],
+        solution: ["Is", "your", "sister", "here"] },
+
+      { id: "en-02-24", type: "order", rules: ["en.gr.to-be.negation"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["not", "We", "are", "ready"],
+        solution: ["We", "are", "not", "ready"] },
+
+      { id: "en-02-25", type: "order", rules: ["en.gr.to-be"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["from", "I", "am", "Austria"],
+        solution: ["I", "am", "from", "Austria"] },
+
+      /* ---- Stufe 3: Selbst schreiben ---- */
+
+      { id: "en-02-26", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Ergänze: My name ___ Anna.",
+        answer: "is", caseSensitive: false },
+
+      { id: "en-02-27", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Ergänze: The books ___ on the table.",
+        answer: "are", caseSensitive: false },
+
+      { id: "en-02-28", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Ergänze: It ___ very cold today.",
+        answer: "is", caseSensitive: false },
+
+      { id: "en-02-29", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Schreibe die Kurzform: <b>she is</b> → ____",
+        answer: "she's", alt: ["she's", "shes"], caseSensitive: false },
+
+      { id: "en-02-30", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Schreibe die Kurzform: <b>they are</b> → ____",
+        answer: "they're", alt: ["they're", "theyre"], caseSensitive: false },
+
+      { id: "en-02-31", type: "type", rules: ["en.gr.to-be.negation"],
+        prompt: "Verneine: They are at home. → They ___ at home. (Kurzform)",
+        answer: "aren't", alt: ["aren't", "are not", "arent"], caseSensitive: false },
+
+      { id: "en-02-32", type: "type", rules: ["en.gr.to-be.negation"],
+        prompt: "Verneine: I am hungry. → I ___ hungry. (Kurzform)",
+        answer: "'m not", alt: ["'m not", "am not", "m not"], caseSensitive: false,
+        hint: "Achtung: „amn't“ gibt es nicht." },
+
+      { id: "en-02-33", type: "type", rules: ["en.gr.to-be"],
+        prompt: "Frage bilden: ___ he your brother?",
+        answer: "Is", caseSensitive: false },
+
+      { id: "en-02-34", type: "fehler", rules: ["en.gr.to-be"],
+        prompt: "Zwei Wörter sind falsch. Tippe sie an.",
+        tokens: ["My", "sister", "are", "ten", "and", "I", "is", "eleven"],
+        wrong: { 2: "is", 6: "am" } },
+
+      { id: "en-02-35", type: "fehler", rules: ["en.gr.to-be.negation"],
+        prompt: "Ein Wort ist falsch. Tippe es an.",
+        tokens: ["The", "dogs", "isn't", "in", "the", "garden"],
+        wrong: { 2: "aren't" } }
+    ]
+  },
+
+  /* ===================== LEKTION 3 ===================== */
+  "en-l3": {
+    nr: 3, titel: "Pronouns & Word Order",
+    intro: "I, you, he, she, it — und die feste englische Satzstellung.",
+    items: [
+      { id: "en-03-01", type: "type", rules: ["en.gr.pronouns"],
+        prompt: "Ersetze: Anna is my friend. → ___ is my friend.",
+        answer: "She", caseSensitive: false },
+
+      { id: "en-03-02", type: "type", rules: ["en.gr.pronouns"],
+        prompt: "Ersetze: The dog is big. → ___ is big.",
+        answer: "It", caseSensitive: false,
+        hint: "Tiere und Dinge sind im Englischen „it“." },
+
+      { id: "en-03-03", type: "mc", rules: ["en.gr.pronouns"],
+        prompt: "Welches Pronomen passt? „Tom and I are friends. ___ play football.“",
+        correct: "We",
+        opts: [{ t: "We" }, { t: "They", miss: "en.gr.pronomen-ich-vergessen" },
+               { t: "You", miss: "en.gr.pronomen-geraten" }] },
+
+      { id: "en-03-04", type: "order", rules: ["en.gr.word-order"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["football", "play", "I", "every", "day"],
+        solution: ["I", "play", "football", "every", "day"] },
+
+      { id: "en-03-05", type: "order", rules: ["en.gr.word-order"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["a", "has", "She", "cat", "small"],
+        solution: ["She", "has", "a", "small", "cat"] },
+
+      { id: "en-03-06", type: "mc", rules: ["en.gr.word-order"],
+        prompt: "Welcher Satz ist richtig?",
+        correct: "I often read books.",
+        opts: [{ t: "I often read books." },
+               { t: "I read often books.", miss: "en.gr.wortstellung-deutsch" },
+               { t: "Often I books read.", miss: "en.gr.wortstellung-deutsch" }] },
+
+      { id: "en-03-07", type: "match", rules: ["en.gr.pronouns"],
+        prompt: "Ordne zu: Pronomen und deutsche Bedeutung.",
+        pairs: [["I", "ich"], ["you", "du / ihr"], ["he", "er"], ["they", "sie (Mehrzahl)"]] },
+
+      { id: "en-03-08", type: "sort", rules: ["en.gr.pronouns"],
+        prompt: "Einzahl oder Mehrzahl?",
+        buckets: ["Einzahl", "Mehrzahl"],
+        words: [{ w: "I", b: "Einzahl" }, { w: "we", b: "Mehrzahl" },
+                { w: "she", b: "Einzahl" }, { w: "they", b: "Mehrzahl" },
+                { w: "it", b: "Einzahl" }] },
+
+      { id: "en-03-09", type: "type", rules: ["en.gr.pronouns", "en.gr.to-be"],
+        prompt: "Ergänze: My brother is nine. ___ is at school.",
+        answer: "He", caseSensitive: false },
+
+      { id: "en-03-10", type: "tf", rules: ["en.gr.word-order"],
+        prompt: "Richtig oder falsch?",
+        statement: "Im Englischen steht das Verb fast immer direkt nach dem Subjekt.",
+        answer: true,
+        erklaerung: "Genau. Deutsch kann umstellen („Morgen gehe ich“), Englisch bleibt bei Subjekt – Verb – Objekt." }
+    ]
+  },
+
+  /* ===================== LEKTION 4 ===================== */
+  "en-l4": {
+    nr: 4, titel: "have got / has got",
+    intro: "Besitz ausdrücken — und die eine Regel, die du dir merken musst.",
+    items: [
+      { id: "en-04-01", type: "type", rules: ["en.gr.have-got"],
+        prompt: "Ergänze: I ___ got a new bike.",
+        answer: "have", caseSensitive: false },
+
+      { id: "en-04-02", type: "type", rules: ["en.gr.have-got"],
+        prompt: "Ergänze: She ___ got two brothers.",
+        answer: "has", caseSensitive: false },
+
+      { id: "en-04-03", type: "mc", rules: ["en.gr.have-got"],
+        prompt: "Welcher Satz ist richtig?",
+        correct: "My dog has got long ears.",
+        opts: [{ t: "My dog has got long ears." },
+               { t: "My dog have got long ears.", miss: "en.gr.have-has-verwechselt" },
+               { t: "My dog has get long ears.", miss: "en.gr.got-form" }] },
+
+      { id: "en-04-04", type: "sort", rules: ["en.gr.have-got"],
+        prompt: "have got oder has got?",
+        buckets: ["have got", "has got"],
+        words: [{ w: "I", b: "have got" }, { w: "he", b: "has got" },
+                { w: "we", b: "have got" }, { w: "the cat", b: "has got" },
+                { w: "my friends", b: "have got" }, { w: "it", b: "has got" }] },
+
+      { id: "en-04-05", type: "type", rules: ["en.gr.have-got"],
+        prompt: "Verneine: He has got a car. → He ___ got a car. (Kurzform)",
+        answer: "hasn't", alt: ["hasn't", "has not", "hasnt"], caseSensitive: false },
+
+      { id: "en-04-06", type: "order", rules: ["en.gr.have-got", "en.gr.word-order"],
+        prompt: "Bring die Frage in die richtige Reihenfolge.",
+        words: ["got", "you", "Have", "a", "pet"],
+        solution: ["Have", "you", "got", "a", "pet"] },
+
+      { id: "en-04-07", type: "mc", rules: ["en.gr.have-got"],
+        prompt: "Wie fragst du: „Hat sie eine Schwester?“",
+        correct: "Has she got a sister?",
+        opts: [{ t: "Has she got a sister?" },
+               { t: "Have she got a sister?", miss: "en.gr.have-has-verwechselt" },
+               { t: "Does she has a sister?", miss: "en.gr.do-bei-have-got" }] },
+
+      { id: "en-04-08", type: "match", rules: ["en.gr.have-got"],
+        prompt: "Ordne die Kurzformen zu.",
+        pairs: [["I have got", "I've got"], ["she has got", "she's got"],
+                ["we have got", "we've got"], ["he has not got", "he hasn't got"]] },
+
+      { id: "en-04-09", type: "type", rules: ["en.gr.have-got"],
+        prompt: "Ergänze: My parents ___ got a big garden.",
+        answer: "have", caseSensitive: false },
+
+      { id: "en-04-10", type: "tf", rules: ["en.gr.have-got"],
+        prompt: "Richtig oder falsch?",
+        statement: "Nach „he“, „she“ und „it“ steht immer „has got“.",
+        answer: true,
+        erklaerung: "Ja — merk dir: he, she, it, das has muss mit." }
+    ]
+  },
+
+  /* ===================== LEKTION 5 ===================== */
+  "en-l5": {
+    nr: 5, titel: "Wortfeld Schule & Familie",
+    intro: "Rund 30 Wörter, die du im ersten Schuljahr täglich brauchst — diesmal schriftlich.",
+    items: [
+      { id: "en-05-01", type: "match", rules: ["en.voc.schule"],
+        prompt: "Ordne zu: Englisch – Deutsch",
+        pairs: [["timetable", "Stundenplan"], ["homework", "Hausübung"],
+                ["subject", "Unterrichtsfach"], ["break", "Pause"]] },
+
+      { id: "en-05-02", type: "type", rules: ["en.voc.schule", "en.sp.spelling"],
+        prompt: "Wie heißt „Lehrerin“ auf Englisch?",
+        answer: "teacher", caseSensitive: false, speak: "teacher" },
+
+      { id: "en-05-03", type: "type", rules: ["en.voc.schule", "en.sp.spelling"],
+        prompt: "Wie heißt „Bleistift“ auf Englisch?",
+        answer: "pencil", caseSensitive: false, speak: "pencil" },
+
+      { id: "en-05-04", type: "match", rules: ["en.voc.familie"],
+        prompt: "Ordne zu: Englisch – Deutsch",
+        pairs: [["aunt", "Tante"], ["uncle", "Onkel"],
+                ["cousin", "Cousine / Cousin"], ["grandparents", "Großeltern"]] },
+
+      { id: "en-05-05", type: "type", rules: ["en.voc.familie", "en.sp.spelling"],
+        prompt: "Wie heißt „Schwester“ auf Englisch?",
+        answer: "sister", caseSensitive: false, speak: "sister" },
+
+      { id: "en-05-06", type: "mc", rules: ["en.voc.schule", "en.sp.spelling"],
+        prompt: "Welche Schreibweise ist richtig?",
+        correct: "exercise book",
+        opts: [{ t: "exercise book" }, { t: "excercise book", miss: "en.sp.buchstabe-zuviel" },
+               { t: "exersize book", miss: "en.sp.gehoert-geschrieben" }] },
+
+      { id: "en-05-07", type: "sort", rules: ["en.voc.schule", "en.voc.familie"],
+        prompt: "Schule oder Familie?",
+        buckets: ["School", "Family"],
+        words: [{ w: "blackboard", b: "School" }, { w: "grandmother", b: "Family" },
+                { w: "rubber", b: "School" }, { w: "daughter", b: "Family" },
+                { w: "ruler", b: "School" }, { w: "parents", b: "Family" }] },
+
+      { id: "en-05-08", type: "type", rules: ["en.voc.familie", "en.sp.spelling"],
+        prompt: "Wie heißt „Bruder“ auf Englisch?",
+        answer: "brother", caseSensitive: false, speak: "brother" },
+
+      { id: "en-05-09", type: "mc", rules: ["en.voc.schule"],
+        prompt: "Was bedeutet „to be late“?",
+        correct: "zu spät kommen",
+        opts: [{ t: "zu spät kommen" }, { t: "spät aufstehen", miss: "en.voc.ungefaehr-geraten" },
+               { t: "später Nachmittag", miss: "en.voc.wortart-verwechselt" }] },
+
+      { id: "en-05-10", type: "type", rules: ["en.voc.schule", "en.sp.spelling"],
+        prompt: "Wie heißt „Freundin“ auf Englisch?",
+        answer: "friend", alt: ["friend", "girlfriend"], caseSensitive: false, speak: "friend" }
+    ]
+  },
+
+  /* ===================== LEKTION 6 ===================== */
+  "en-l6": {
+    nr: 6, titel: "Plural, a/an, this & that",
+    intro: "Kleine Wörter, große Wirkung — und drei Regeln, die immer gelten.",
+    items: [
+      { id: "en-06-01", type: "type", rules: ["en.gr.plural"],
+        prompt: "Plural bilden: one book → two ___",
+        answer: "books", caseSensitive: false },
+
+      { id: "en-06-02", type: "type", rules: ["en.gr.plural"],
+        prompt: "Plural bilden: one box → two ___",
+        answer: "boxes", caseSensitive: false,
+        hint: "Nach x, s, ch, sh kommt -es." },
+
+      { id: "en-06-03", type: "type", rules: ["en.gr.plural"],
+        prompt: "Plural bilden: one city → two ___",
+        answer: "cities", caseSensitive: false,
+        hint: "Konsonant + y → ies." },
+
+      { id: "en-06-04", type: "mc", rules: ["en.gr.plural"],
+        prompt: "Welcher Plural ist richtig?",
+        correct: "children",
+        opts: [{ t: "children" }, { t: "childs", miss: "en.gr.plural-regelmaessig-gebildet" },
+               { t: "childrens", miss: "en.gr.plural-doppelt" }] },
+
+      { id: "en-06-05", type: "sort", rules: ["en.gr.articles"],
+        prompt: "a oder an?",
+        buckets: ["a", "an"],
+        words: [{ w: "apple", b: "an" }, { w: "banana", b: "a" },
+                { w: "orange", b: "an" }, { w: "school", b: "a" },
+                { w: "egg", b: "an" }, { w: "teacher", b: "a" }] },
+
+      { id: "en-06-06", type: "mc", rules: ["en.gr.articles"],
+        prompt: "Was ist richtig: „___ hour“?",
+        correct: "an hour",
+        opts: [{ t: "an hour" }, { t: "a hour", miss: "en.gr.artikel-nach-buchstabe-statt-klang" }],
+        erklaerung: "Das h wird nicht gesprochen — es klingt wie „our“. Deshalb an." },
+
+      { id: "en-06-07", type: "sort", rules: ["en.gr.this-that"],
+        prompt: "Einzahl oder Mehrzahl?",
+        buckets: ["Einzahl", "Mehrzahl"],
+        words: [{ w: "this", b: "Einzahl" }, { w: "these", b: "Mehrzahl" },
+                { w: "that", b: "Einzahl" }, { w: "those", b: "Mehrzahl" }] },
+
+      { id: "en-06-08", type: "mc", rules: ["en.gr.this-that"],
+        prompt: "Du zeigst auf Schuhe weit weg. Was sagst du?",
+        correct: "those shoes",
+        opts: [{ t: "those shoes" }, { t: "these shoes", miss: "en.gr.nah-fern-verwechselt" },
+               { t: "that shoes", miss: "en.gr.this-that.numerus" }] },
+
+      { id: "en-06-09", type: "type", rules: ["en.gr.plural"],
+        prompt: "Plural bilden: one mouse → two ___",
+        answer: "mice", caseSensitive: false },
+
+      { id: "en-06-10", type: "order", rules: ["en.gr.this-that", "en.gr.word-order"],
+        prompt: "Bring den Satz in die richtige Reihenfolge.",
+        words: ["is", "This", "my", "bag"],
+        solution: ["This", "is", "my", "bag"] }
+    ]
+  }
+};
+
+</script>
+<script>
+/* ── data/diktate.js ── */
+/* Gymnasium Fitness — Diktat-Pool
+ *
+ * Jeden Tag ein Diktat, 3–5 Sätze, immer der ganze Satz selbst geschrieben.
+ * Kein Lückendiktat mehr — das war zu wenig.
+ *
+ * Die App wählt aus, was zum aktuellen Stoff und zu den offenen Schwächen passt,
+ * und vermeidet zuletzt verwendete Diktate.
+ *
+ *   rules     woran das Diktat vor allem arbeitet
+ *   stufe     1 = kurze, einfache Sätze · 2 = mittel · 3 = länger, mit Nebensatz
+ *   vorschau  Wörter, die vorher kurz gezeigt werden (macht aus Prüfen ein Lernen)
+ */
+
+const DIKTATE = [
+
+/* ── Stufe 1: Nomen, Satzanfang, einfache Sätze ───────────────────────── */
+
+{ id: "dik-01", stufe: 1,
+  rules: ["de.rs.gross-klein.nomen", "de.rs.gross-klein.satzanfang", "de.zs.satzschluss"],
+  vorschau: ["Ferien", "Großmutter", "Garten", "Erdbeeren", "Kuchen"],
+  sentences: [
+    { text: "In den Ferien besuchen wir die Großmutter." },
+    { text: "Im Garten pflücken wir Erdbeeren." },
+    { text: "Am Abend backt sie einen Kuchen." },
+    { text: "Wir sitzen lange auf der Terrasse." }
+  ] },
+
+{ id: "dik-02", stufe: 1,
+  rules: ["de.rs.gross-klein.nomen", "de.gr.wortart.verb"],
+  vorschau: ["Schultasche", "Federpennal", "Turnbeutel", "Pause", "Jause"],
+  sentences: [
+    { text: "Am Morgen packe ich meine Schultasche." },
+    { text: "Das Federpennal liegt schon bereit." },
+    { text: "Den Turnbeutel nehme ich am Dienstag mit." },
+    { text: "In der Pause esse ich meine Jause." }
+  ] },
+
+{ id: "dik-03", stufe: 1,
+  rules: ["de.rs.gross-klein.nomen", "de.rs.gross-klein.satzanfang"],
+  vorschau: ["Katze", "Fenster", "Sonne", "Decke", "Küche"],
+  sentences: [
+    { text: "Die Katze sitzt auf dem Fenster." },
+    { text: "Draußen scheint die Sonne." },
+    { text: "Sie schläft gern auf der weichen Decke." },
+    { text: "Danach läuft sie in die Küche." }
+  ] },
+
+/* ── Stufe 2: Verlängern, Ableiten, Umlaute ───────────────────────────── */
+
+{ id: "dik-04", stufe: 2,
+  rules: ["de.rs.auslaut", "de.rs.umlaut-ableitung", "de.rs.gross-klein.nomen"],
+  vorschau: ["Wald", "Bäume", "Hund", "Weg", "Abend"],
+  sentences: [
+    { text: "Am Nachmittag gehen wir in den Wald." },
+    { text: "Die Bäume sind schon ganz grün." },
+    { text: "Unser Hund läuft den Weg entlang." },
+    { text: "Am Abend sind wir müde und zufrieden." }
+  ] },
+
+{ id: "dik-05", stufe: 2,
+  rules: ["de.rs.auslaut", "de.rs.umlaut-ableitung"],
+  vorschau: ["Berg", "Räder", "Korb", "Hände", "kalt"],
+  sentences: [
+    { text: "Wir fahren mit den Rädern auf den Berg." },
+    { text: "Im Korb liegen Äpfel und Brot." },
+    { text: "Meine Hände werden langsam kalt." },
+    { text: "Der Wind weht uns ins Gesicht." }
+  ] },
+
+{ id: "dik-06", stufe: 2,
+  rules: ["de.rs.doppelkonsonant", "de.rs.dehnung", "de.rs.gross-klein.nomen"],
+  vorschau: ["Sonne", "Wasser", "Zahl", "Biene", "Wiese"],
+  sentences: [
+    { text: "Die Sonne wärmt das Wasser im Teich." },
+    { text: "Auf der Wiese summen viele Bienen." },
+    { text: "Ich zähle die Blumen am Rand." },
+    { text: "Bei der Zahl zwanzig höre ich auf." }
+  ] },
+
+{ id: "dik-07", stufe: 2,
+  rules: ["de.rs.merkwoerter", "de.rs.gross-klein.nomen"],
+  vorschau: ["Vater", "Vogel", "vier", "Fenster", "Frühstück"],
+  sentences: [
+    { text: "Mein Vater steht früh auf." },
+    { text: "Vor dem Fenster singt ein Vogel." },
+    { text: "Um vier Uhr ist es noch dunkel." },
+    { text: "Zum Frühstück gibt es warmen Kakao." }
+  ] },
+
+/* ── Stufe 2: Zeitformen und Satzbau ──────────────────────────────────── */
+
+{ id: "dik-08", stufe: 2,
+  rules: ["de.gr.zeit.praeteritum", "de.rs.gross-klein.nomen"],
+  vorschau: ["gestern", "Schwimmbad", "Wasser", "Rutsche", "Eis"],
+  sentences: [
+    { text: "Gestern waren wir im Schwimmbad." },
+    { text: "Das Wasser war angenehm warm." },
+    { text: "Ich rutschte dreimal die große Rutsche hinunter." },
+    { text: "Danach kauften wir uns ein Eis." }
+  ] },
+
+{ id: "dik-09", stufe: 2,
+  rules: ["de.gr.zeit.perfekt", "de.rs.auslaut"],
+  vorschau: ["Fahrrad", "Rad", "Freundin", "Hof", "Abend"],
+  sentences: [
+    { text: "Ich habe mein Fahrrad geputzt." },
+    { text: "Das Rad hat vorne einen Kratzer." },
+    { text: "Meine Freundin ist in den Hof gekommen." },
+    { text: "Wir sind bis zum Abend geblieben." }
+  ] },
+
+/* ── Stufe 3: Wörtliche Rede, Komma, längere Sätze ────────────────────── */
+
+{ id: "dik-10", stufe: 3,
+  rules: ["de.zs.woertliche-rede", "de.rs.gross-klein.nomen"],
+  vorschau: ["Mutter", "Anna", "Hausübung", "Zimmer", "gleich"],
+  sentences: [
+    { text: "Die Mutter fragt: „Hast du deine Hausübung schon gemacht?“" },
+    { text: "Anna antwortet: „Ich mache sie gleich.“" },
+    { text: "Dann geht sie in ihr Zimmer." },
+    { text: "Nach einer Stunde ruft sie: „Ich bin fertig!“" }
+  ] },
+
+{ id: "dik-11", stufe: 3,
+  rules: ["de.zs.komma-aufzaehlung", "de.zs.komma-satzverbindung"],
+  vorschau: ["Einkaufsliste", "Brot", "Butter", "Käse", "Äpfel"],
+  sentences: [
+    { text: "Auf der Einkaufsliste stehen Brot, Butter, Käse und Äpfel." },
+    { text: "Ich gehe schnell einkaufen, weil wir nichts mehr haben." },
+    { text: "Der Laden schließt bald, deshalb beeile ich mich." },
+    { text: "Zu Hause räume ich alles in den Kühlschrank." }
+  ] },
+
+{ id: "dik-12", stufe: 3,
+  rules: ["de.rs.das-dass", "de.zs.komma-satzverbindung"],
+  vorschau: ["Wetter", "morgen", "Wanderung", "Regen", "hoffentlich"],
+  sentences: [
+    { text: "Ich hoffe, dass das Wetter morgen schön wird." },
+    { text: "Das Buch, das ich gerade lese, ist spannend." },
+    { text: "Wir haben gehört, dass es Regen geben soll." },
+    { text: "Hoffentlich fällt die Wanderung nicht aus." }
+  ] },
+
+{ id: "dik-13", stufe: 3,
+  rules: ["de.gr.zeit.plusquamperfekt", "de.zs.komma-satzverbindung"],
+  vorschau: ["Konzert", "Karten", "Halle", "Reihe", "begonnen"],
+  sentences: [
+    { text: "Wir waren zu spät gekommen, weil der Bus nicht fuhr." },
+    { text: "Das Konzert hatte schon begonnen." },
+    { text: "In der letzten Reihe fanden wir noch zwei Plätze." },
+    { text: "Die Halle war bis auf den letzten Platz gefüllt." }
+  ] },
+
+{ id: "dik-14", stufe: 3,
+  rules: ["de.rs.gross-klein.nominalisierung", "de.rs.gross-klein.nomen"],
+  vorschau: ["Schwimmen", "Lesen", "Laufen", "Üben", "Warten"],
+  sentences: [
+    { text: "Das Schwimmen macht mir großen Spaß." },
+    { text: "Beim Lesen vergesse ich die Zeit." },
+    { text: "Nach dem Laufen bin ich immer hungrig." },
+    { text: "Vom vielen Üben werde ich langsam besser." }
+  ] },
+
+{ id: "dik-15", stufe: 3,
+  rules: ["de.rs.s-ss-ss", "de.rs.doppelkonsonant"],
+  vorschau: ["Straße", "Fluss", "Schloss", "draußen", "grüßen"],
+  sentences: [
+    { text: "Die Straße führt am Fluss entlang." },
+    { text: "Hinter der Brücke steht ein altes Schloss." },
+    { text: "Draußen ist es heute besonders heiß." },
+    { text: "Wir grüßen die Nachbarn im Vorbeigehen." }
+  ] }
+];
+
+</script>
+<script>
+/* ── data/badges.js ── */
+/* Gymnasium Fitness — Abzeichen
+ *
+ * `check(s)` bekommt den kompletten State und gibt true zurück, wenn das
+ * Abzeichen verdient ist. Wird nach jeder Lektion geprüft.
+ */
+
+const BADGES = [
+  { id: "erste-schritte", name: "Erste Schritte", icon: "🌱",
+    text: "Deine allererste Lektion geschafft.",
+    check: s => Object.keys(s.completed).length >= 1 },
+
+  { id: "wortartenjaegerin", name: "Wortartenjägerin", icon: "🔍",
+    text: "Alle Wortarten-Regeln sicher beherrscht.",
+    check: s => ["de.gr.wortart.nomen", "de.gr.wortart.verb", "de.gr.wortart.adjektiv",
+                 "de.gr.wortart.pronomen", "de.gr.wortart.praeposition"]
+                .every(r => (s.rules[r]?.mastery ?? 0) >= 0.85) },
+
+  { id: "rechtschreibprofi", name: "Rechtschreibprofi", icon: "✏️",
+    text: "50 Rechtschreibaufgaben richtig gelöst.",
+    check: s => s.log.filter(e => e.ok && (e.rules || []).some(r => r.startsWith("de.rs."))).length >= 50 },
+
+  { id: "diktatheldin", name: "Diktatheldin", icon: "🎧",
+    text: "Ein Diktat ganz ohne Rechtschreibfehler.",
+    check: s => (s.stats?.perfekteDiktate ?? 0) >= 1 },
+
+  { id: "word-wizard", name: "Word Wizard", icon: "🪄",
+    text: "100 englische Vokabeln gemeistert.",
+    check: s => s.log.filter(e => e.ok && (e.rules || []).some(r => r.startsWith("en.voc."))).length >= 100 },
+
+  { id: "to-be-meisterin", name: "to-be-Meisterin", icon: "⭐",
+    text: "am, is und are sitzen sicher.",
+    check: s => (s.rules["en.gr.to-be"]?.mastery ?? 0) >= 0.9 &&
+                (s.rules["en.gr.to-be"]?.seen ?? 0) >= 8 },
+
+  { id: "dranbleiberin", name: "Dranbleiberin", icon: "🔁",
+    text: "Eine Lektion viermal geübt — so entsteht Können.",
+    check: s => Object.values(s.lektionen || {}).some(p => (p.passes || 0) >= 4) },
+
+  { id: "erste-meisterschaft", name: "Erste Meisterschaft", icon: "🏆",
+    text: "Die erste Lektion vollständig gemeistert.",
+    check: s => Object.values(s.lektionen || {}).some(p => p.graduiert) },
+
+  { id: "halbzeit", name: "Halbzeit", icon: "🎖️",
+    text: "Fünf Lektionen gemeistert.",
+    check: s => Object.values(s.lektionen || {}).filter(p => p.graduiert).length >= 5 },
+
+  { id: "diktatserie", name: "Diktatserie", icon: "📜",
+    text: "Zehn Diktate geschrieben.",
+    check: s => (s.diktat?.erledigt || []).length >= 10 },
+
+  { id: "durchhalterin", name: "Durchhalterin", icon: "🔥",
+    text: "7 Tage in Folge geübt.",
+    check: s => s.streak.count >= 7 },
+
+  { id: "marathon", name: "Marathon", icon: "🏅",
+    text: "21 Tage in Folge geübt. Wahnsinn.",
+    check: s => s.streak.count >= 21 },
+
+  { id: "datenbotin", name: "Datenbotin", icon: "📮",
+    text: "Fortschritt zum ersten Mal exportiert.",
+    check: s => !!s.lastExport },
+
+  { id: "gymnasium-ready", name: "Gymnasium-Ready", icon: "🎓",
+    text: "Alle Lektionen gemeistert. Du bist bereit.",
+    check: s => {
+      const ids = Object.keys(s.lektionen || {});
+      return ids.length >= 12 && ids.every(k => s.lektionen[k].graduiert);
+    } }
+];
+
+const LEVEL_NAMEN = [
+  "Sprachforscherin", "Wortsammlerin", "Satzbauerin", "Regelkennerin",
+  "Textentdeckerin", "Sprachjongleurin", "Wortmeisterin", "Grammatikprofi",
+  "Sprachkünstlerin", "Gymnasium-Kandidatin"
+];
+
+</script>
+<script>
+"use strict";
+
+/* ══════════════════════════════════════════════════════════════════
+   1. STATE
+   ══════════════════════════════════════════════════════════════════ */
+
+const KEY = "gymfit_v2";
+const ALPHA = 0.3;          // Lerngewicht: wie stark die neueste Antwort zählt
+const DECAY = 0.02;         // Zerfall pro Tag ohne Übung
+const SCHWELLE = 0.7;       // darunter gilt eine Regel als Schwäche
+const MIN_SEEN = 4;         // erst ab so vielen Begegnungen wird gewertet
+
+/* Eine Lektion ist ein Thema, kein Tag. Sie wird so lange wiederholt,
+   bis sie sitzt — mindestens zweimal an zwei verschiedenen Tagen. */
+const MIN_DURCHGAENGE = 2;
+const MIN_TAGE        = 2;    // erzwingt Abstand: nie zwei Durchgänge am selben Tag
+const MAX_DURCHGAENGE = 5;    // Obergrenze, damit sich niemand festbeißt
+const GRAD_MASTERY    = 0.75; /* ab hier gilt eine Lektion als gemeistert.
+                                 Bewusst nicht höher: die Beherrschung pendelt sich
+                                 auf die Trefferquote ein, und 75 % richtig ist bei
+                                 neuem Stoff für ein zehnjähriges Kind gut. */
+const AUFGABEN_PRO_DURCHGANG = 10;
+
+/* Testnaht: erlaubt der Verlaufssimulation, Tage vorzuspulen.
+   Im Browser immer null — dort gilt das echte Datum. */
+let _datumHook = null;
+const heute = () => _datumHook ? _datumHook() : new Date().toISOString().slice(0, 10);
+const tageZwischen = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
+
+function leerState() {
+  return {
+    version: 1, xp: 0, level: 1,
+    streak: { count: 0, lastDay: null, jokersLeft: 1, wochenStart: heute() },
+    completed: {}, rules: {}, srs: [], log: [], badges: [],
+    /* Fortschritt je Lektion:  { passes, tage[], gesehen[] } */
+    lektionen: {},
+    /* Diktate:  { erledigt[], letzterTag } */
+    diktat: { erledigt: [], letzterTag: null },
+    stats: { perfekteDiktate: 0, sessions: 0 },
+    settings: { satzzeichenSprechen: true, tempo: 0.85, umlautLeiste: false },
+    lastExport: null, startDatum: heute()
+  };
+}
+
+let S = laden();
+
+function laden() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return leerState();
+    const leer = leerState(), gespeichert = JSON.parse(raw);
+    const s = Object.assign(leer, gespeichert);
+    // Einstellungen zusammenführen, damit neue Optionen ihren Standard behalten
+    s.settings = Object.assign(leerState().settings, gespeichert.settings || {});
+    return s;
+  } catch (e) { return leerState(); }
+}
+function sichern() {
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   2. ADAPTIVER LOOP — Mastery, Schwächen, Auswahl
+   ══════════════════════════════════════════════════════════════════ */
+
+const pad = n => String(n).padStart(2, "0");
+
+/* ---------- Lektionen ---------- */
+
+const LEK = fach => fach === "de" ? LEKTIONEN_DE : LEKTIONEN_EN;
+const lektionsIds = fach =>
+  Object.keys(LEK(fach)).sort((a, b) => (LEK(fach)[a].nr || 0) - (LEK(fach)[b].nr || 0));
+
+/** Alle Regeln, die in einer Lektion vorkommen. */
+function lektionsRegeln(lekId, fach) {
+  const lek = LEK(fach)[lekId];
+  const set = new Set();
+  (lek?.items || []).forEach(i => (i.rules || []).forEach(r => set.add(r)));
+  return [...set];
+}
+
+/**
+ * Durchschnittliche Beherrschung der Regeln einer Lektion.
+ *
+ * Gemittelt wird nur über Regeln, die tatsächlich schon drankamen. Eine noch
+ * nie geübte Regel als „null Prozent" zu zählen wäre falsch — sie zöge den
+ * Schnitt so weit herunter, dass die Lektion nie graduieren könnte.
+ */
+function lektionsMastery(lekId, fach) {
+  const geuebt = lektionsRegeln(lekId, fach).filter(r => (S.rules[r]?.seen || 0) > 0);
+  if (!geuebt.length) return 0;
+  return geuebt.reduce((a, r) => a + S.rules[r].mastery, 0) / geuebt.length;
+}
+
+/**
+ * Status einer Lektion.
+ *
+ * Gemeistert ist sie, wenn sie mindestens zweimal an zwei verschiedenen
+ * Tagen geübt wurde UND die Regeln sitzen. Wer sich festbeißt, wird nach
+ * sechs Durchgängen trotzdem weitergelassen — dann übernimmt der
+ * Schwächenpool, der die Regeln ohnehin weiter einstreut.
+ */
+function lektionsStatus(lekId, fach) {
+  const p = S.lektionen[lekId] || { passes: 0, tage: [], gesehen: [] };
+  const mastery = lektionsMastery(lekId, fach);
+  const regeln = lektionsRegeln(lekId, fach);
+
+  // Jede Regel der Lektion muss mindestens zweimal drangekommen sein …
+  const alleGeuebt = regeln.every(r => (S.rules[r]?.seen || 0) >= 2);
+  // … und höchstens eine darf noch richtig wackeln.
+  const wacklig = regeln.filter(r => (S.rules[r]?.mastery ?? 0) < 0.6).length;
+
+  const geschafft = p.passes >= MIN_DURCHGAENGE &&
+                    (p.tage || []).length >= MIN_TAGE &&
+                    mastery >= GRAD_MASTERY &&
+                    alleGeuebt && wacklig <= 1;
+  const ausgereizt = p.passes >= MAX_DURCHGAENGE;
+  return {
+    passes: p.passes, tage: p.tage || [], gesehen: p.gesehen || [],
+    mastery, fertig: geschafft || ausgereizt, ausgereizt,
+    heuteSchon: (p.tage || []).includes(heute())
+  };
+}
+
+/** Die Lektion, an der gerade gearbeitet wird — die erste unfertige. */
+function aktiveLektion(fach) {
+  for (const id of lektionsIds(fach)) {
+    if (!(LEK(fach)[id].items || []).length) continue;
+    if (!lektionsStatus(id, fach).fertig) return id;
+  }
+  return null;   // alles gemeistert
+}
+
+/** Freigeschaltet ist eine Lektion, wenn die vorige mindestens einmal lief. */
+function freigeschaltet(lekId, fach) {
+  const ids = lektionsIds(fach);
+  const i = ids.indexOf(lekId);
+  if (i <= 0) return true;
+  return (S.lektionen[ids[i - 1]]?.passes || 0) >= 1;
+}
+
+/** Was heute ansteht. */
+function tagesplan() {
+  const de = aktiveLektion("de"), en = aktiveLektion("en");
+  return {
+    de, en,
+    deOffen: de && !lektionsStatus(de, "de").heuteSchon,
+    enOffen: en && !lektionsStatus(en, "en").heuteSchon,
+    diktatOffen: S.diktat.letzterTag !== heute(),
+    fertig: (!de || lektionsStatus(de, "de").heuteSchon) &&
+            (!en || lektionsStatus(en, "en").heuteSchon) &&
+            S.diktat.letzterTag === heute()
+  };
+}
+
+/** Programmtag — nur noch für die Anzeige, nicht mehr für die Steuerung. */
+function programmTag() {
+  return S.startDatum ? tageZwischen(S.startDatum, heute()) + 1 : 1;
+}
+
+/** Zerfall anwenden: Wissen verblasst leicht, damit es wieder auftaucht. */
+function zerfallAnwenden() {
+  const h = heute();
+  for (const id in S.rules) {
+    const r = S.rules[id];
+    if (!r.lastSeen) continue;
+    const d = tageZwischen(r.lastSeen, h);
+    if (d > 0) {
+      r.mastery = Math.max(0, r.mastery - DECAY * d);
+      r.lastSeen = h;
+    }
+  }
+}
+
+/** Mastery einer Regel nach einer Antwort fortschreiben. */
+function masteryUpdate(regelId, ok) {
+  const r = S.rules[regelId] || (S.rules[regelId] = {
+    seen: 0, correct: 0, mastery: 0.5, lastSeen: null, days: 0, tage: []
+  });
+  r.seen++;
+  if (ok) r.correct++;
+  r.mastery = r.mastery + ALPHA * ((ok ? 1 : 0) - r.mastery);
+  r.mastery = Math.min(1, Math.max(0, r.mastery));
+  const h = heute();
+  if (r.lastSeen !== h) { r.tage = r.tage || []; if (!r.tage.includes(h)) r.tage.push(h); }
+  r.lastSeen = h;
+  r.days = (r.tage || []).length;
+}
+
+/**
+ * Gilt eine Regel als eingeführt?
+ *
+ * Ja, sobald sie in den Lernkarten einer Lektion erklärt wurde, die
+ * mindestens einmal gelaufen ist. Vorher ist ein Fehler kein Defizit,
+ * sondern schlicht Unkenntnis — und darf nicht als Schwäche zählen.
+ */
+function regelEingefuehrt(regelId) {
+  for (const lekId in LERNKARTEN) {
+    if (!(S.lektionen[lekId]?.passes >= 1)) continue;
+    if (LERNKARTEN[lekId].some(k => (k.rules || []).includes(regelId))) return true;
+  }
+  return false;
+}
+
+/** Regeln, die als echte Schwäche gelten — mit allen drei Bedingungen. */
+function schwaechen() {
+  return Object.entries(S.rules)
+    .filter(([id, r]) => {
+      if (!REGEL_MAP[id]) return false;
+      if (!regelEingefuehrt(id)) return false;     // noch nicht gelernt ≠ Schwäche
+      if (r.seen < MIN_SEEN) return false;         // zu wenig Daten
+      return r.mastery < SCHWELLE;
+    })
+    .sort((a, b) => a[1].mastery - b[1].mastery)
+    .map(([id, r]) => ({ id, ...r, def: REGEL_MAP[id] }));
+}
+
+/** Regeln, die als gemeistert gelten. */
+function gemeistert() {
+  return Object.entries(S.rules)
+    .filter(([id, r]) => r.mastery >= 0.9 && r.seen >= 10 && (r.days || 0) >= 3)
+    .map(([id]) => id);
+}
+
+/* --- Aufgabenpool über alle Lektionen --- */
+function alleItems(fach) {
+  const q = fach === "de" ? LEKTIONEN_DE : LEKTIONEN_EN;
+  const out = [];
+  for (const k in q) (q[k].items || []).forEach(it => out.push(it));
+  return out;
+}
+function itemById(id) {
+  return [...alleItems("de"), ...alleItems("en")].find(i => i.id === id);
+}
+
+/**
+ * Schwierigkeitsstufe einer Aufgabe — aus dem Typ abgeleitet.
+ *   1 Wiedererkennen · 2 Anwenden · 3 Selbst produzieren
+ * An einer Aufgabe mit `difficulty` überschreibbar.
+ */
+function schwierigkeit(it) {
+  if (it.difficulty) return it.difficulty;
+  return { mc: 1, tf: 1, match: 1, sort: 1,
+           tap: 2, order: 2,
+           type: 3, fehler: 3, diktat: 3 }[it.type] || 2;
+}
+
+/** Welche Stufen in welchem Durchgang drankommen. */
+function stufenFuerDurchgang(n) {
+  if (n <= 1) return [1, 2];        // erster Kontakt: erkennen und anwenden
+  if (n === 2) return [1, 2, 3];    // gemischt
+  return [2, 3];                    // ab dem dritten: selbst produzieren
+}
+
+/**
+ * Einen Durchgang zusammenstellen.
+ *
+ * Der Durchgang bestimmt die Schwierigkeit: erst Wiedererkennen, später
+ * selbst schreiben. Innerhalb der Lektion kommen Aufgaben dran, die sie noch
+ * nicht gesehen hat — deshalb braucht eine Lektion rund 35 Aufgaben. Dazu
+ * Schwächen aus früheren Lektionen und fällige Wiederholungen.
+ */
+function baueSession(lekId, fach) {
+  const lek = LEK(fach)[lekId];
+  if (!lek) return [];
+
+  const st = lektionsStatus(lekId, fach);
+  const stufen = stufenFuerDurchgang(st.passes + 1);
+  const gesehen = new Set(st.gesehen);
+  const LAENGE = lek.anzahlUebungen ?? AUFGABEN_PRO_DURCHGANG;
+
+  const gewaehlt = [];
+  const proRegel = {};
+  const nimm = (it, pflicht) => {
+    if (!it || gewaehlt.some(g => g.id === it.id)) return false;
+    const rs = it.rules || [];
+    if (!pflicht && rs.some(r => (proRegel[r] || 0) >= 3)) return false;
+    rs.forEach(r => proRegel[r] = (proRegel[r] || 0) + 1);
+    gewaehlt.push(it);
+    return true;
+  };
+
+  /* 1. Aufgaben der Lektion — passende Stufe, Ungesehenes zuerst. */
+  const eigene = [...(lek.items || [])];
+  const passend = eigene.filter(i => stufen.includes(schwierigkeit(i)));
+  const frisch  = shuffle(passend.filter(i => !gesehen.has(i.id)));
+  const bekannt = shuffle(passend.filter(i => gesehen.has(i.id)));
+  const reserve = shuffle(eigene.filter(i => !passend.includes(i)));
+  const ziel = Math.round(LAENGE * 0.75);
+  [...frisch, ...bekannt, ...reserve].forEach(it => {
+    if (gewaehlt.length < ziel) nimm(it, true);
+  });
+
+  /* 2. Schwächen aus früheren Lektionen einstreuen — gewichtet gezogen,
+        nicht stur die schlimmste Regel. */
+  const schw = schwaechen().filter(s => s.def.fach === fach);
+  const pool = alleItems(fach);
+  let versuche = 0;
+  while (gewaehlt.length < LAENGE - 2 && schw.length && versuche++ < 30) {
+    const s = schw[Math.floor(Math.pow(Math.random(), 1.6) * schw.length)];
+    const kand = pool.filter(it => (it.rules || []).includes(s.id));
+    // Dieselbe Regel, aber möglichst in einem neuen Gewand: ungesehene
+    // Aufgaben zuerst. Sonst sieht sie dieselbe Frage mehrfach.
+    const neu = kand.filter(it => !gesehen.has(it.id));
+    const quelle = neu.length ? neu : kand;
+    if (quelle.length) nimm(quelle[Math.floor(Math.random() * quelle.length)]);
+  }
+
+  /* 3. Fällige Wiederholungen. */
+  const h = heute();
+  S.srs.filter(e => e.due <= h).forEach(e => {
+    if (gewaehlt.length < LAENGE) nimm(itemById(e.item));
+  });
+
+  /* 4. Rest mit Aufgaben der Lektion auffüllen. */
+  eigene.forEach(it => { if (gewaehlt.length < LAENGE) nimm(it, true); });
+
+  /* Leitplanke: nie mit einer Schwäche-Aufgabe starten. */
+  const schwIds = new Set(schw.map(s => s.id));
+  const istSchwer = it => (it.rules || []).some(r => schwIds.has(r));
+  if (gewaehlt.length > 1 && istSchwer(gewaehlt[0])) {
+    const i = gewaehlt.findIndex(it => !istSchwer(it));
+    if (i > 0) { const t = gewaehlt[0]; gewaehlt[0] = gewaehlt[i]; gewaehlt[i] = t; }
+  }
+  return gewaehlt;
+}
+
+/* --- Spaced Repetition --- */
+const SRS_STUFEN = [1, 3, 7];
+function srsPlanen(itemId, ok) {
+  const i = S.srs.findIndex(e => e.item === itemId);
+  const h = new Date();
+  if (!ok) {
+    const e = i >= 0 ? S.srs[i] : { item: itemId, stage: 0 };
+    e.stage = 0;
+    h.setDate(h.getDate() + 1);
+    e.due = h.toISOString().slice(0, 10);
+    if (i < 0) S.srs.push(e);
+  } else if (i >= 0) {
+    const e = S.srs[i];
+    e.stage++;
+    if (e.stage >= SRS_STUFEN.length) { S.srs.splice(i, 1); return; }
+    h.setDate(h.getDate() + SRS_STUFEN[e.stage]);
+    e.due = h.toISOString().slice(0, 10);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   3. HILFSFUNKTIONEN
+   ══════════════════════════════════════════════════════════════════ */
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+const esc = s => String(s).replace(/[&<>"]/g, c =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function norm(s, cs) {
+  s = String(s).trim().replace(/\s+/g, " ").replace(/[„“”"']/g, "");
+  return cs ? s : s.toLowerCase();
+}
+
+/** Levenshtein — für die Tippfehler-Erkennung im Diktat. */
+function lev(a, b) {
+  const m = a.length, n = b.length;
+  if (!m) return n; if (!n) return m;
+  let prev = Array.from({ length: n + 1 }, (_, i) => i);
+  for (let i = 1; i <= m; i++) {
+    const cur = [i];
+    for (let j = 1; j <= n; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1,
+        prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    }
+    prev = cur;
+  }
+  return prev[n];
+}
+
+/**
+ * Tippfehler oder echter Rechtschreibfehler?
+ *
+ * Bewusst eng gefasst — nur zwei Muster gelten als Tippfehler:
+ *   1. Buchstabendreher       Hund → Hudn
+ *   2. versehentliche Dopplung Hund → Hunnd
+ *
+ * Alles andere zählt als Rechtschreibfehler. Ein fehlender oder falscher
+ * Buchstabe ist im Deutschen meistens ein echter Fehler (Stadt → Stat,
+ * Hund → Hunt), und lieber einmal zu streng als eine Schwäche übersehen.
+ * Das richtige Wort wird in der Auswertung ohnehin immer angezeigt.
+ */
+function istTippfehler(soll, ist) {
+  const a = String(soll).toLowerCase(), b = String(ist).toLowerCase();
+  if (a === b) return false;
+
+  if (a.length === b.length) {
+    const diff = [];
+    for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) diff.push(i);
+    return diff.length === 2 && diff[1] === diff[0] + 1 &&
+           a[diff[0]] === b[diff[1]] && a[diff[1]] === b[diff[0]];
+  }
+  if (b.length === a.length + 1) {
+    for (let i = 1; i < b.length; i++) {
+      if (b[i] === b[i - 1] && b.slice(0, i) + b.slice(i + 1) === a) return true;
+    }
+  }
+  return false;
+}
+
+/* --- Sprachausgabe --- */
+let STIMMEN = [];
+function stimmenLaden() {
+  STIMMEN = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+}
+if (window.speechSynthesis) {
+  stimmenLaden();
+  speechSynthesis.onvoiceschanged = stimmenLaden;
+}
+function findeStimme(lang) {
+  if (!STIMMEN.length) stimmenLaden();
+  return STIMMEN.find(v => v.lang === lang) ||
+         STIMMEN.find(v => v.lang.startsWith(lang.slice(0, 2))) || null;
+}
+const hatDeutscheStimme = () => !!findeStimme("de-AT") || !!findeStimme("de-DE");
+
+function sprich(text, lang, tempo) {
+  if (!window.speechSynthesis) return false;
+  const v = findeStimme(lang || "de-AT");
+  if (!v) return false;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.voice = v; u.lang = v.lang;
+  u.rate = tempo || S.settings.tempo;
+  speechSynthesis.speak(u);
+  return true;
+}
+
+/* --- XP, Level, Streak, Abzeichen --- */
+function xpGeben(n) {
+  S.xp += n;
+  const neu = Math.min(LEVEL_NAMEN.length, Math.floor(S.xp / 200) + 1);
+  const auf = neu > S.level;
+  S.level = neu;
+  return auf;
+}
+function streakPruefen() {
+  const h = heute(), l = S.streak.lastDay;
+  if (l === h) return;
+  if (!l) { S.streak.count = 1; }
+  else {
+    const d = tageZwischen(l, h);
+    if (d === 1) S.streak.count++;
+    else if (d === 2 && S.streak.jokersLeft > 0) { S.streak.jokersLeft--; S.streak.count++; }
+    else S.streak.count = 1;
+  }
+  S.streak.lastDay = h;
+  if (tageZwischen(S.streak.wochenStart, h) >= 7) {
+    S.streak.wochenStart = h; S.streak.jokersLeft = 1;
+  }
+}
+function badgesPruefen() {
+  const neu = [];
+  BADGES.forEach(b => {
+    if (!S.badges.includes(b.id)) {
+      let ok = false;
+      try { ok = b.check(S); } catch (e) {}
+      if (ok) { S.badges.push(b.id); neu.push(b); }
+    }
+  });
+  return neu;
+}
+
+/** Soll die Export-Erinnerung erscheinen? */
+function exportFaellig() {
+  // Meilenstein: gerade wurde eine Lektion gemeistert
+  const meilenstein = Object.keys(S.lektionen).some(id => {
+    const fach = id.startsWith("de") ? "de" : "en";
+    return S.lektionen[id].graduiert && !S.lektionen[id].gemeldet;
+  });
+  const vieleSchwaechen = schwaechen().length >= 3;
+  const langeHer = S.lastExport ? tageZwischen(S.lastExport, heute()) >= 7 : S.stats.sessions >= 3;
+  return meilenstein || vieleSchwaechen || langeHer;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   4. ANSICHTEN
+   ══════════════════════════════════════════════════════════════════ */
+
+const app = document.getElementById("app");
+let VIEW = "home";
+
+function kopf() {
+  const bis = (S.level) * 200, von = (S.level - 1) * 200;
+  const pct = Math.min(100, Math.round((S.xp - von) / (bis - von) * 100));
+  return `
+    <div class="hdr">
+      <h1>Gymnasium Fitness</h1>
+      <span class="chip fire">🔥 ${S.streak.count}</span>
+      <span class="chip">⚡ ${S.xp}</span>
+      <button class="chip" onclick="zeige('profil')">👤</button>
+    </div>
+    <div class="muted" style="margin-bottom:4px">
+      Rang ${S.level}: ${LEVEL_NAMEN[S.level - 1] || "Profi"}
+    </div>
+    <div class="bar"><i style="width:${pct}%"></i></div>`;
+}
+
+/* ---------- Startseite: Tagesplan + Lernpfad ---------- */
+
+function viewHome() {
+  const p = tagesplan();
+  let h = kopf();
+
+  /* Was heute ansteht — genau drei Punkte, mehr nicht. Das ist der einzige
+     Teil der Startseite, der ein Tagespensum beschreibt. */
+  const offen = (p.deOffen ? 1 : 0) + (p.enOffen ? 1 : 0) + (p.diktatOffen ? 1 : 0);
+  h += `<div class="card" style="border-color:var(--de)">
+    <h2>Dein Plan für heute</h2>
+    <p class="sub" style="margin-bottom:11px">${p.fertig
+      ? "Fertig für heute."
+      : `Drei Aufgaben, zusammen etwa 25 Minuten. Mehr ist heute nicht vorgesehen.`}</p>`;
+  if (p.fertig) {
+    h += `<p class="sub">🎉 Alles erledigt. Wenn du magst, übe freiwillig weiter —
+      für den Fortschritt zählt der nächste Durchgang aber erst morgen.</p>`;
+  } else {
+    const zeile = (istOffen, text, cb, farbe) => `
+      <div class="wk"><b style="${istOffen ? "" : "opacity:.45"}">${istOffen ? "○" : "✓"} ${text}</b>
+      ${istOffen ? `<button class="chip" style="${farbe}" onclick="${cb}">Start</button>`
+                 : `<span class="muted">erledigt</span>`}</div>`;
+    if (p.de) h += zeile(p.deOffen, "Deutsch: " + esc(LEKTIONEN_DE[p.de].titel),
+                         `starte('de','${p.de}')`, "background:var(--de);color:#0a1024");
+    if (p.en) h += zeile(p.enOffen, "Englisch: " + esc(LEKTIONEN_EN[p.en].titel),
+                         `starte('en','${p.en}')`, "background:var(--en);color:#0a1024");
+    h += zeile(p.diktatOffen, "Diktat des Tages", "diktatStarten()",
+               "background:var(--ok);color:#06301b");
+    h += `<p class="sub" style="margin-top:11px">Noch ${offen} von 3 offen.</p>`;
+  }
+  h += `</div>`;
+
+  if (exportFaellig()) {
+    h += `<div class="banner">
+      <b>📮 Zeit für neue Aufgaben!</b>
+      <p class="sub" style="margin:5px 0 11px">
+        Schick deinen Fortschritt — dann bekommst du ein Übungspaket, das genau zu dir passt.</p>
+      <button class="btn sm" onclick="zeige('export')">Fortschritt senden</button>
+    </div>`;
+  }
+
+  const schw = schwaechen();
+  if (schw.length) {
+    h += `<div class="card"><h2>Woran wir gerade arbeiten</h2>` +
+      schw.slice(0, 3).map(s => `
+        <div class="wk"><b>${esc(s.def.name)}</b>
+          <div class="mini"><i style="width:${Math.round(s.mastery * 100)}%;
+            background:${s.mastery < .5 ? "var(--no)" : "var(--gold)"}"></i></div>
+        </div>`).join("") + `</div>`;
+  }
+
+  if (!p.de && !p.en) {
+    h += `<div class="card"><h2>🎓 Alles gemeistert</h2>
+      <p class="sub">Alle Lektionen sitzen. Ab jetzt kommen die Aufgaben fast nur noch
+      aus deinem eigenen Profil — kurz, aber genau passend.</p>
+      <div style="height:11px"></div>
+      <button class="btn" onclick="starte('de','dauer',true)">Deutsch üben</button>
+      <div style="height:9px"></div>
+      <button class="btn" style="background:var(--en)"
+        onclick="starte('en','dauer',true)">Englisch üben</button></div>`;
+  }
+
+  h += pfad("de", "🇩🇪 Deutsch") + pfad("en", "🇬🇧 Englisch");
+  return h;
+}
+
+/** Der Lernpfad eines Fachs: alle Lektionen mit ihrem Durchgangsstand. */
+function pfad(fach, titel) {
+  const aktiv = aktiveLektion(fach);
+  const ids = lektionsIds(fach).filter(id => (LEK(fach)[id].items || []).length);
+  const fertig = ids.filter(id => lektionsStatus(id, fach).fertig).length;
+
+  let h = `<div class="card" style="padding-bottom:6px">
+    <h2>${titel} — dein Lernweg</h2>
+    <p class="sub">${ids.length} Lektionen · jede dauert 2 bis 5 Tage.
+    ${fertig ? `${fertig} davon schon gemeistert.` :
+      "Das ist der Weg bis zum Schulstart, nicht das Tagespensum."}</p>
+    <div class="bar" style="margin:10px 0 2px"><i
+      style="width:${Math.round(fertig / ids.length * 100)}%"></i></div>
+  </div>`;
+
+  lektionsIds(fach).forEach(id => {
+    const lek = LEK(fach)[id];
+    const hatInhalt = (lek.items || []).length > 0;
+    const st = lektionsStatus(id, fach);
+    const frei = hatInhalt && freigeschaltet(id, fach);
+    const cls = st.fertig ? "done" : (id === aktiv ? "today" : (frei ? "" : "locked"));
+    const ziel = Math.max(MIN_DURCHGAENGE, Math.min(MAX_DURCHGAENGE,
+                  st.passes + (st.fertig ? 0 : 1)));
+
+    h += `<div class="day ${cls}" ${frei ? `onclick="zeige('lektion','${id}')"` : ""}>
+      <div class="dnum">${st.fertig ? "✓" : (lek.nr || "?")}</div>
+      <div class="dinfo">
+        <b>${esc(lek.titel)}</b>
+        <span>${hatInhalt
+          ? (st.fertig ? "✓ gemeistert" :
+             st.passes ? `${st.passes} von etwa ${ziel} Übungstagen` :
+             (frei ? "noch nicht begonnen" : "wird später freigeschaltet"))
+          : "in Vorbereitung"}</span>
+        ${hatInhalt ? `<div class="mini" style="width:100%;margin-top:6px"><i
+          style="width:${Math.round(st.mastery * 100)}%;background:${
+            st.mastery >= GRAD_MASTERY ? "var(--ok)" :
+            st.mastery >= 0.5 ? "var(--gold)" : "var(--de)"}"></i></div>` : ""}
+      </div>
+    </div>`;
+  });
+  return h;
+}
+
+/* ---------- Eine Lektion ---------- */
+
+function viewLektion(id) {
+  const fach = id.startsWith("de") ? "de" : "en";
+  const lek = LEK(fach)[id];
+  if (!lek) return viewHome();
+  const st = lektionsStatus(id, fach);
+  const karten = (LERNKARTEN[id] || []).length;
+  const farbe = fach === "de" ? "" : "background:var(--en)";
+
+  let h = `<div class="hdr"><button class="chip" onclick="zeige('home')">‹ Zurück</button>
+    <h1 style="text-align:right;font-size:16px">Lektion ${lek.nr}</h1></div>
+    <div class="card">
+      <h2>${fach === "de" ? "🇩🇪" : "🇬🇧"} ${esc(lek.titel)}</h2>
+      <p class="sub">${esc(lek.intro || "")}</p>
+      <div style="height:12px"></div>
+      <div class="wk"><b>Durchgänge</b><span class="muted">${st.passes}
+        ${st.fertig ? "· gemeistert 🎉" : `· mindestens ${MIN_DURCHGAENGE} nötig`}</span></div>
+      <div class="wk"><b>Wie gut sitzt es?</b>
+        <div class="mini"><i style="width:${Math.round(st.mastery * 100)}%;background:${
+          st.mastery >= GRAD_MASTERY ? "var(--ok)" : "var(--gold)"}"></i></div></div>
+      <div class="wk"><b>Geübt an</b><span class="muted">${st.tage.length} Tag${
+        st.tage.length === 1 ? "" : "en"}</span></div>
+    </div>`;
+
+  if (st.heuteSchon) {
+    h += `<div class="card"><p class="sub">Diese Lektion hast du heute schon geübt.
+      <b>Wiederholung wirkt am besten mit einem Tag Abstand</b> — deshalb zählt der
+      nächste Durchgang erst morgen. Freiwillig üben kannst du trotzdem.</p></div>
+      <button class="btn ghost" onclick="starte('${fach}','${id}',true,true)">
+        Trotzdem üben (zählt nicht)</button>`;
+  } else if (st.passes === 0 && karten) {
+    h += `<button class="btn" style="${farbe}" onclick="starte('${fach}','${id}')">
+        Lernen &amp; üben · ${karten} Karten</button>
+      <div style="height:9px"></div>
+      <button class="btn ghost sm" onclick="starte('${fach}','${id}',true)">
+        Direkt zu den Übungen</button>`;
+  } else {
+    h += `<button class="btn" style="${farbe}" onclick="starte('${fach}','${id}',true)">
+        Durchgang ${st.passes + 1} starten</button>`;
+    if (karten) h += `<div style="height:9px"></div>
+      <button class="btn ghost sm" onclick="starte('${fach}','${id}')">
+        📖 Lernkarten ansehen</button>`;
+  }
+
+  if (st.ausgereizt && !st.fertig) {
+    h += `<div class="card" style="margin-top:12px"><p class="sub">Diese Lektion war
+      besonders zäh. Sie gilt jetzt als abgeschlossen — die offenen Regeln kommen
+      aber weiter als Wiederholung in anderen Lektionen vor.</p></div>`;
+  }
+  return h;
+}
+
+
+/* ---------- Profil, Abzeichen, Export ---------- */
+function viewProfil() {
+  let h = `<div class="hdr"><button class="chip" onclick="zeige('home')">‹ Zurück</button>
+    <h1 style="text-align:right">Dein Profil</h1></div>`;
+
+  h += `<div class="card center">
+    <div class="big">⚡ ${S.xp}</div>
+    <div><b>Rang ${S.level}</b> · ${LEVEL_NAMEN[S.level - 1] || "Profi"}</div>
+    <div class="muted">🔥 ${S.streak.count} Tage in Folge · ${S.streak.jokersLeft} Joker übrig</div>
+  </div>`;
+
+  const g = gemeistert();
+  h += `<div class="card"><h2>Deine Regeln</h2>
+    <p class="sub">${g.length} gemeistert · ${schwaechen().length} in Arbeit ·
+    ${Object.keys(S.rules).length} insgesamt geübt</p></div>`;
+
+  h += `<div class="card"><h2>Abzeichen</h2>` + BADGES.map(b => {
+    const hat = S.badges.includes(b.id);
+    return `<div class="badge ${hat ? "" : "off"}"><i>${b.icon}</i>
+      <div><b>${esc(b.name)}</b><span>${esc(b.text)}</span></div></div>`;
+  }).join("") + `</div>`;
+
+  /* Einstellungen — vor allem der Tontest, damit vor dem ersten Diktat
+     klar ist, ob auf diesem Gerät eine deutsche Stimme vorhanden ist. */
+  const stimme = findeStimme("de-AT") || findeStimme("de-DE");
+  h += `<div class="card"><h2>Einstellungen</h2>
+    <div class="wk"><b>Sprachausgabe</b>
+      <span class="muted">${stimme ? esc(stimme.name) : "keine deutsche Stimme"}</span></div>
+    <div style="height:10px"></div>
+    <button class="btn ghost sm" onclick="tonTest()">🔊 Sprachausgabe testen</button>
+    <div style="height:9px"></div>
+    <button class="btn ghost sm" onclick="einstellung('satzzeichenSprechen')">
+      Satzzeichen mitsprechen: <b>${S.settings.satzzeichenSprechen ? "an" : "aus"}</b></button>
+    <div style="height:9px"></div>
+    <button class="btn ghost sm" onclick="einstellung('umlautLeiste')">
+      Umlaut-Leiste anzeigen: <b>${S.settings.umlautLeiste ? "an" : "aus"}</b></button>
+    <p class="sub" style="margin-top:9px">Die Umlaut-Leiste braucht man nur bei einer
+    fremden Tastatur — deutsche Tastaturen können ä ö ü ß ohnehin.</p>
+  </div>`;
+
+  h += `<button class="btn" onclick="zeige('export')">📮 Fortschritt senden</button>
+    <div style="height:9px"></div>
+    <button class="btn ghost" onclick="importDialog()">📥 Neues Paket laden</button>
+    <div style="height:9px"></div>
+    <button class="btn ghost" onclick="if(confirm('Wirklich alles zurücksetzen?')){localStorage.removeItem(KEY);location.reload()}">
+      Alles zurücksetzen</button>`;
+  return h;
+}
+
+function einstellung(k) {
+  S.settings[k] = !S.settings[k];
+  sichern();
+  render();
+}
+function tonTest() {
+  const ok = sprich("Am Nachmittag gehen wir in den Wald.", "de-AT", 0.85);
+  if (!ok) alert("Auf diesem Gerät ist keine deutsche Sprachausgabe installiert.\n\n" +
+    "Die Diktate laufen dann automatisch als Schleichdiktat: Der Satz wird kurz " +
+    "eingeblendet, statt vorgelesen zu werden.");
+}
+
+function viewExport() {
+  const paket = exportPaket();
+  const json = JSON.stringify(paket);
+  return `<div class="hdr"><button class="chip" onclick="zeige('home')">‹ Zurück</button>
+      <h1 style="text-align:right">Fortschritt senden</h1></div>
+    <div class="card">
+      <h2>📮 So funktioniert's</h2>
+      <p class="sub">Schick diese Datei an deine Eltern. Daraus entsteht ein Übungspaket,
+      das genau auf deine Fehler zugeschnitten ist.</p>
+    </div>
+    <button class="btn" onclick='exportTeilen()'>Teilen (AirDrop, WhatsApp, Mail)</button>
+    <div style="height:9px"></div>
+    <button class="btn ghost" onclick='exportDatei()'>Als Datei speichern</button>
+    <div style="height:9px"></div>
+    <button class="btn ghost" onclick='exportKopieren()'>Als Text kopieren</button>
+    <div class="card" style="margin-top:14px">
+      <p class="sub">Enthalten sind nur Lernstatistiken — kein Name, keine
+      persönlichen Daten. Größe: ${(json.length / 1024).toFixed(1)} KB</p>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   5. LEKTIONS-ENGINE
+   ══════════════════════════════════════════════════════════════════ */
+
+let L = null;   // laufende Lektion
+let K = null;   // laufende Lernphase
+
+/**
+ * Eine Lektion beginnt mit der Lernphase — beim ersten Mal verpflichtend,
+ * danach optional. Erst erklären, dann abprüfen.
+ */
+function starte(fach, lekId, ohneLernphase, zaehltNicht) {
+  let items;
+  if (lekId === "dauer") {
+    items = baueDauerSession(fach);
+    if (!items.length) { alert("Noch keine Aufgaben verfügbar. Übe erst ein paar Lektionen."); return; }
+  } else {
+    items = baueSession(lekId, fach);
+    if (!items.length) { alert("Diese Lektion hat noch keine Aufgaben."); return; }
+  }
+  L = { fach, lekId, items, i: 0, richtig: 0, falsch: 0, antworten: [], zaehltNicht,
+        start: Date.now(), itemStart: Date.now(), regelFehler: {} };
+
+  const karten = LERNKARTEN[lekId];
+  if (karten && karten.length && !ohneLernphase) {
+    K = { lekId, karten, i: 0, aufgedeckt: false };
+    VIEW = "lernen";
+  } else {
+    VIEW = "uebung";
+  }
+  render();
+}
+
+/* ---------- Lernphase ---------- */
+
+function viewLernen() {
+  const k = K.karten[K.i];
+  const letzte = K.i === K.karten.length - 1;
+  const erstmals = !S.completed[K.lekId];
+
+  let h = `<div class="hdr">
+      <button class="chip" onclick="zeige('home')">✕</button>
+      <h1 style="text-align:right;font-size:15px">Lernen · ${K.i + 1}/${K.karten.length}</h1>
+    </div>
+    ${karteHtml(k, K.aufgedeckt)}
+    <div class="dots">${K.karten.map((_, i) =>
+      `<i class="${i === K.i ? "on" : ""}"></i>`).join("")}</div>`;
+
+  if (k.typ === "probe" && !K.aufgedeckt) {
+    h += `<button class="btn" onclick="probeAufdecken()">Antwort zeigen</button>`;
+  } else {
+    h += `<div class="row">
+        ${K.i > 0 ? `<button class="btn ghost" onclick="karteZurueck()">Zurück</button>` : ""}
+        <button class="btn ${letzte ? "ok" : ""}" onclick="karteWeiter()">
+          ${letzte ? "Jetzt üben →" : "Weiter"}</button>
+      </div>`;
+  }
+  if (!letzte && !erstmals) {
+    h += `<div style="height:9px"></div>
+      <button class="btn ghost sm" onclick="lernphaseFertig(true)">Überspringen</button>`;
+  }
+  return h;
+}
+
+function karteHtml(k, aufgedeckt) {
+  const kicker = { regel: "Regel", beispiele: "Beispiele",
+                   woerter: "Wörter", probe: "Probier's aus" }[k.typ] || "";
+  let inner = `<div class="kicker">${kicker}</div>`;
+
+  if (k.typ === "probe") {
+    inner += `<h2>${k.frage}</h2>`;
+    if (aufgedeckt) {
+      inner += `<div class="probe-a"><b>${esc(k.antwort)}</b>
+        ${k.erklaerung ? `<div style="margin-top:6px;font-size:15px">${k.erklaerung}</div>` : ""}</div>
+        <p class="muted" style="margin:11px 0 0">Diese Frage zählt nicht — sie ist nur zum Ausprobieren.</p>`;
+    } else {
+      inner += `<p class="muted">Überleg kurz, dann deck die Antwort auf.</p>`;
+    }
+  } else {
+    inner += `<h2>${esc(k.titel)}</h2>`;
+    if (k.text) inner += `<p>${k.text}</p>`;
+    if (k.hinweis) inner += `<p class="muted">${k.hinweis}</p>`;
+
+    if (k.typ === "beispiele") {
+      inner += k.zeilen.map(z =>
+        `<div class="bsp"><div class="l">${z[0]}</div><div class="r">${z[1]}</div></div>`).join("");
+    }
+    if (k.typ === "woerter") {
+      inner += k.woerter.map((w, i) =>
+        `<button class="wrd" onclick="wortHoeren(${i})">
+           <b>${esc(w.en)}</b><span>${esc(w.de)}</span><i>🔊</i></button>`).join("");
+    }
+    if (k.merke) inner += `<div class="merke" style="margin-top:12px">💡 ${k.merke}</div>`;
+  }
+  return `<div class="lk">${inner}</div>`;
+}
+
+function wortHoeren(i) {
+  const k = K ? K.karten[K.i] : null;
+  const w = k?.woerter?.[i];
+  if (w) sprich(w.en, "en-GB", 0.9);
+}
+function probeAufdecken() { K.aufgedeckt = true; render(); }
+function karteZurueck() { K.i--; K.aufgedeckt = false; render(); }
+function karteWeiter() {
+  if (K.i < K.karten.length - 1) { K.i++; K.aufgedeckt = false; render(); }
+  else lernphaseFertig(false);
+}
+function lernphaseFertig(uebersprungen) {
+  if (!uebersprungen && !S.completed[K.lekId]) { xpGeben(5); sichern(); }
+  K = null;
+  VIEW = "uebung";
+  render();
+}
+
+/** Findet die Lernkarte, die eine bestimmte Regel erklärt. */
+function karteFuerRegel(regelId) {
+  for (const lek in LERNKARTEN) {
+    const t = LERNKARTEN[lek].find(k =>
+      (k.rules || []).includes(regelId) && k.typ !== "probe");
+    if (t) return t;
+  }
+  return null;
+}
+function erklaerungZeigen(regelId) {
+  const k = karteFuerRegel(regelId);
+  if (!k) return;
+  const d = document.createElement("div");
+  d.className = "ovl";
+  d.onclick = e => { if (e.target === d) d.remove(); };
+  d.innerHTML = `<div>${karteHtml(k, true)}
+    <button class="btn ghost" onclick="this.closest('.ovl').remove()">Schließen</button></div>`;
+  document.body.appendChild(d);
+}
+
+function baueDauerSession(fach) {
+  const pool = alleItems(fach);
+  const schw = schwaechen().filter(s => s.def.fach === fach);
+  const out = [];
+  const nimm = it => { if (it && !out.some(o => o.id === it.id)) out.push(it); };
+
+  schw.slice(0, 8).forEach(s => {
+    const k = pool.filter(it => (it.rules || []).includes(s.id));
+    if (k.length) nimm(k[Math.floor(Math.random() * k.length)]);
+  });
+  const h = heute();
+  S.srs.filter(e => e.due <= h).slice(0, 6).forEach(e => nimm(itemById(e.item)));
+  const gem = new Set(gemeistert());
+  const frisch = pool.filter(it => (it.rules || []).some(r => gem.has(r)));
+  shuffle(frisch); frisch.slice(0, 3).forEach(nimm);
+  if (out.length < 6) { shuffle(pool); pool.slice(0, 8).forEach(nimm); }
+  return out.slice(0, 14);
+}
+
+function render() {
+  if (VIEW === "home") app.innerHTML = viewHome();
+  else if (VIEW === "profil") app.innerHTML = viewProfil();
+  else if (VIEW === "export") app.innerHTML = viewExport();
+  else if (VIEW === "lektion") app.innerHTML = viewLektion(window._arg);
+  else if (VIEW === "lernen") app.innerHTML = viewLernen();
+  else if (VIEW === "uebung") renderItem();
+  else if (VIEW === "ergebnis") renderErgebnis();
+  window.scrollTo(0, 0);
+}
+function zeige(v, arg) { VIEW = v; window._arg = arg; render(); }
+
+/* ---------- Eine Aufgabe darstellen ---------- */
+function renderItem() {
+  const it = L.items[L.i];
+  if (!it) { beenden(); return; }
+  const pct = Math.round(L.i / L.items.length * 100);
+
+  let h = `<div class="hdr">
+      <button class="chip" onclick="if(confirm('Lektion abbrechen?'))zeige('home')">✕</button>
+      <h1 style="text-align:right;font-size:15px">${L.i + 1} / ${L.items.length}</h1>
+    </div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="card"><p class="q">${esc(it.prompt)}</p>`;
+
+  h += ({
+    mc: rMC, type: rType, tf: rTF, sort: rSort, tap: rTap,
+    order: rOrder, match: rMatch, diktat: rDiktat, fehler: rFehler
+  }[it.type] || (() => `<p class="muted">Unbekannter Aufgabentyp.</p>`))(it);
+
+  h += `</div><div id="fb"></div>
+    <button class="btn" id="pruefen" onclick="pruefen()" disabled>Prüfen</button>`;
+  app.innerHTML = h;
+  if (it.type === "type") {
+    const inp = document.getElementById("eingabe");
+    if (inp) { inp.oninput = () => btnAn(inp.value.trim().length > 0); }
+  }
+  if (it.type === "diktat") diktatInit(it);
+}
+
+const btnAn = an => { const b = document.getElementById("pruefen"); if (b) b.disabled = !an; };
+
+/* --- Renderer je Aufgabentyp --- */
+let A = {};   // Antwortzustand der laufenden Aufgabe
+
+function rMC(it) {
+  A = { wahl: null };
+  const o = shuffle([...it.opts]);
+  A.opts = o;
+  return o.map((x, i) =>
+    `<button class="opt" id="o${i}" onclick="mcWahl(${i})">${esc(x.t)}</button>`).join("");
+}
+function mcWahl(i) {
+  A.wahl = i;
+  A.opts.forEach((_, j) => document.getElementById("o" + j).classList.toggle("sel", i === j));
+  btnAn(true);
+}
+
+function rType(it) {
+  A = {};
+  /* Die Umlaut-Leiste ist standardmäßig aus: Jede deutsche Tastatur kann
+     ä ö ü ß ohnehin. Nur für fremde Tastaturlayouts zuschaltbar. */
+  const uml = (L.fach === "de" && S.settings.umlautLeiste)
+    ? `<div class="uml">${["ä", "ö", "ü", "ß", "Ä", "Ö", "Ü"]
+        .map(c => `<button onclick="einfuegen('${c}')">${c}</button>`).join("")}</div>` : "";
+  return `<input type="text" id="eingabe" autocomplete="off" autocorrect="off"
+    autocapitalize="off" spellcheck="false" placeholder="Deine Antwort">${uml}
+    ${it.hint ? `<p class="muted" style="margin-top:9px">💡 ${esc(it.hint)}</p>` : ""}`;
+}
+function einfuegen(c) {
+  const i = document.getElementById("eingabe");
+  const s = i.selectionStart ?? i.value.length;
+  i.value = i.value.slice(0, s) + c + i.value.slice(i.selectionEnd ?? s);
+  i.focus(); i.selectionStart = i.selectionEnd = s + 1;
+  btnAn(i.value.trim().length > 0);
+}
+
+function rTF(it) {
+  A = { wahl: null };
+  return `<p style="font-size:17px;margin:12px 0">${esc(it.statement)}</p>
+    <div class="row">
+      <button class="opt center" id="o0" onclick="tfWahl(true)">✓ Richtig</button>
+      <button class="opt center" id="o1" onclick="tfWahl(false)">✕ Falsch</button>
+    </div>`;
+}
+function tfWahl(v) {
+  A.wahl = v;
+  document.getElementById("o0").classList.toggle("sel", v);
+  document.getElementById("o1").classList.toggle("sel", !v);
+  btnAn(true);
+}
+
+function rSort(it) {
+  A = { zuord: {}, aktiv: null };
+  A.words = shuffle([...it.words]);
+  return `<div class="chips" id="wpool">${A.words.map((w, i) =>
+      `<button class="chip2" id="w${i}" onclick="sortWahl(${i})">${esc(w.w)}</button>`).join("")}</div>
+    <div class="buckets">${it.buckets.map((b, i) =>
+      `<div class="bucket" id="b${i}" onclick="sortLegen(${i})">
+        <b>${esc(b)}</b><div id="bc${i}"></div></div>`).join("")}</div>`;
+}
+function sortWahl(i) {
+  A.aktiv = i;
+  A.words.forEach((_, j) => {
+    const e = document.getElementById("w" + j);
+    if (e) e.classList.toggle("sel", i === j);
+  });
+}
+function sortLegen(bi) {
+  if (A.aktiv === null) return;
+  const it = L.items[L.i];
+  A.zuord[A.aktiv] = bi;
+  const w = A.words[A.aktiv];
+  document.getElementById("w" + A.aktiv).classList.add("used");
+  document.getElementById("bc" + bi).insertAdjacentHTML("beforeend",
+    `<div class="chip2">${esc(w.w)}</div>`);
+  A.aktiv = null;
+  A.words.forEach((_, j) => document.getElementById("w" + j)?.classList.remove("sel"));
+  btnAn(Object.keys(A.zuord).length === A.words.length);
+}
+
+function rTap(it) {
+  A = { wahl: null };
+  return `<div class="chips">${it.tokens.map((t, i) =>
+    `<button class="chip2" id="t${i}" onclick="tapWahl(${i})">${esc(t)}</button>`).join("")}</div>`;
+}
+function tapWahl(i) {
+  A.wahl = i;
+  L.items[L.i].tokens.forEach((_, j) =>
+    document.getElementById("t" + j).classList.toggle("sel", i === j));
+  btnAn(true);
+}
+
+function rOrder(it) {
+  A = { gelegt: [] };
+  A.pool = shuffle([...it.words]);
+  return `<div class="slot" id="slot"></div>
+    <div class="chips" id="pool">${A.pool.map((w, i) =>
+      `<button class="chip2" id="p${i}" onclick="ordNimm(${i})">${esc(w)}</button>`).join("")}</div>`;
+}
+function ordNimm(i) {
+  const b = document.getElementById("p" + i);
+  if (b.classList.contains("used")) return;
+  b.classList.add("used");
+  A.gelegt.push({ w: A.pool[i], i });
+  ordZeichnen();
+}
+function ordZurueck(k) {
+  const e = A.gelegt.splice(k, 1)[0];
+  document.getElementById("p" + e.i).classList.remove("used");
+  ordZeichnen();
+}
+function ordZeichnen() {
+  document.getElementById("slot").innerHTML = A.gelegt.map((e, k) =>
+    `<button class="chip2" onclick="ordZurueck(${k})">${esc(e.w)}</button>`).join("");
+  btnAn(A.gelegt.length === A.pool.length);
+}
+
+function rMatch(it) {
+  A = { zuord: {}, aktiv: null };
+  A.links = it.pairs.map(p => p[0]);
+  A.rechts = shuffle(it.pairs.map(p => p[1]));
+  return `<div class="pairs">
+    <div>${A.links.map((x, i) =>
+      `<button class="chip2" style="width:100%;margin-bottom:7px" id="l${i}"
+        onclick="matchL(${i})">${esc(x)}</button>`).join("")}</div>
+    <div>${A.rechts.map((x, i) =>
+      `<button class="chip2" style="width:100%;margin-bottom:7px" id="r${i}"
+        onclick="matchR(${i})">${esc(x)}</button>`).join("")}</div></div>`;
+}
+function matchL(i) {
+  A.aktiv = i;
+  A.links.forEach((_, j) => document.getElementById("l" + j).classList.toggle("sel", i === j));
+}
+function matchR(i) {
+  if (A.aktiv === null) return;
+  A.zuord[A.aktiv] = i;
+  document.getElementById("l" + A.aktiv).classList.add("used");
+  document.getElementById("r" + i).classList.add("used");
+  document.getElementById("l" + A.aktiv).classList.remove("sel");
+  A.aktiv = null;
+  btnAn(Object.keys(A.zuord).length === A.links.length);
+}
+
+function rFehler(it) {
+  A = { markiert: new Set() };
+  return `<p class="muted" style="margin:0 0 10px">
+      ${Object.keys(it.wrong).length} Wörter sind falsch geschrieben.</p>
+    <div class="chips">${it.tokens.map((t, i) =>
+      `<button class="chip2" id="f${i}" onclick="fehlerTipp(${i})">${esc(t)}</button>`).join("")}</div>`;
+}
+function fehlerTipp(i) {
+  A.markiert.has(i) ? A.markiert.delete(i) : A.markiert.add(i);
+  document.getElementById("f" + i).classList.toggle("sel", A.markiert.has(i));
+  btnAn(A.markiert.size > 0);
+}
+
+/* --- Diktat ---
+ * Jeder Modus wird vorgelesen. Ein Diktat ohne Ansage wäre Raterei.
+ * Ist keine deutsche Stimme da, blendet die App den Satz stattdessen
+ * kurz ein (Schleichdiktat) — das funktioniert auf jedem Gerät.
+ */
+function rDiktat(it) {
+  A = { satz: 0, eingaben: [], modus: it.mode || "hoeren", tonDefekt: false };
+  const hinweis = {
+    hoeren: "Du hörst jeden Satz einzeln und tippst ihn. So oft wiederholen, wie du willst.",
+    luecke: "Du hörst den ganzen Satz — tippen musst du nur die fehlenden Wörter.",
+    schleich: "Der Satz erscheint kurz. Merk ihn dir und tippe ihn dann."
+  }[A.modus];
+  return `<div id="dbox">
+    <p class="muted">${esc(hinweis)}</p>
+    ${it.vorschau ? `<div class="card" style="background:var(--card2);margin:12px 0">
+      <b style="font-size:14px">Diese Wörter kommen vor:</b>
+      <div class="chips" style="margin:8px 0 0">${it.vorschau.map(w =>
+        `<span class="chip2">${esc(w)}</span>`).join("")}</div></div>` : ""}
+    <button class="btn ok" onclick="diktatLos()">Los geht's</button>
+  </div>`;
+}
+function diktatInit() {
+  btnAn(false);
+  const b = document.getElementById("pruefen");
+  if (b) b.style.display = "none";        // das Diktat hat eigene Knöpfe
+}
+
+function diktatLos() { diktatSatz(); }
+
+function diktatSatz() {
+  const it = L.items[L.i];
+  const s = it.sentences[A.satz];
+  if (!s) return;
+  const letzter = A.satz + 1 >= it.sentences.length;
+
+  /* Abspielknöpfe gibt es in JEDEM Modus. */
+  let steuer = `<div class="dict-sent">
+      <button onclick="diktatHoeren()">🔊 Anhören</button>
+      <button onclick="diktatHoeren(0.55)">🐢 Langsam</button>
+      ${A.modus !== "luecke" ? `<button onclick="diktatBlitz()">👁 Kurz zeigen</button>` : ""}
+    </div>
+    <div id="blitz" class="muted" style="min-height:26px"></div>`;
+
+  let feld;
+  if (A.modus === "luecke") {
+    feld = `<div class="lsatz">${lueckeHtml(s)}</div>`;
+  } else {
+    feld = `<input type="text" id="eingabe" autocomplete="off" autocorrect="off"
+      autocapitalize="sentences" spellcheck="false" placeholder="Satz hier tippen">`;
+  }
+
+  document.getElementById("dbox").innerHTML = `
+    <p class="muted">Satz ${A.satz + 1} von ${it.sentences.length}</p>
+    ${A.tonDefekt ? `<div class="tonhinweis">🔇 Auf diesem Gerät ist keine deutsche
+      Sprachausgabe installiert. Nutze stattdessen <b>👁 Kurz zeigen</b>.</div>` : ""}
+    ${steuer}${feld}
+    ${S.settings.umlautLeiste ? `<div class="uml">${["ä", "ö", "ü", "ß", "Ä", "Ö", "Ü"]
+      .map(c => `<button onclick="einfuegen('${c}')">${c}</button>`).join("")}</div>` : ""}
+    <div style="height:12px"></div>
+    <button class="btn ok" onclick="diktatWeiter()">
+      ${letzter ? "Diktat abgeben" : "Nächster Satz"}</button>`;
+
+  setTimeout(() => diktatHoeren(), 400);
+}
+
+/** Satz mit Eingabefeldern an den Lückenstellen. */
+function lueckeHtml(s) {
+  let rest = s.text, out = "", gi = 0;
+  (s.luecken || []).forEach(w => {
+    const i = rest.indexOf(w);
+    if (i < 0) return;
+    out += esc(rest.slice(0, i)) +
+      `<input type="text" class="gap" id="g${gi}" autocomplete="off" autocorrect="off"
+        spellcheck="false" style="width:${Math.max(6, w.length + 2)}ch">`;
+    rest = rest.slice(i + w.length);
+    gi++;
+  });
+  return out + esc(rest);
+}
+
+/** @returns {boolean} ob tatsächlich etwas abgespielt wurde */
+function diktatHoeren(tempo) {
+  const it = L.items[L.i];
+  let t = it.sentences[A.satz].text;
+  if (S.settings.satzzeichenSprechen) {
+    t = t.replace(/,/g, " Komma").replace(/\.$/, " Punkt")
+         .replace(/\?$/, " Fragezeichen").replace(/!$/, " Rufzeichen");
+  }
+  const ok = sprich(t, "de-AT", tempo || S.settings.tempo);
+  if (!ok && !A.tonDefekt) {
+    A.tonDefekt = true;
+    // Ohne Stimme darf das Diktat nicht zur Raterei werden: Satz einblenden.
+    if (A.modus === "hoeren") A.modus = "schleich";
+    diktatSatz();
+    setTimeout(diktatBlitz, 300);
+  }
+  return ok;
+}
+
+function diktatBlitz() {
+  const it = L.items[L.i];
+  const el = document.getElementById("blitz");
+  if (!el) return;
+  el.textContent = it.sentences[A.satz].text;
+  el.style.color = "var(--txt)";
+  setTimeout(() => {
+    el.textContent = "…jetzt tippen";
+    el.style.color = "var(--dim)";
+  }, 5000);
+}
+
+function diktatWeiter() {
+  const it = L.items[L.i];
+  if (A.modus === "luecke") {
+    const s = it.sentences[A.satz];
+    A.eingaben[A.satz] = (s.luecken || []).map((_, i) =>
+      (document.getElementById("g" + i)?.value || "").trim());
+  } else {
+    A.eingaben[A.satz] = document.getElementById("eingabe").value;
+  }
+  A.satz++;
+  if (A.satz < it.sentences.length) diktatSatz();
+  else {
+    if (window.speechSynthesis) speechSynthesis.cancel();
+    const b = document.getElementById("pruefen");
+    if (b) b.style.display = "";
+    btnAn(true);
+    pruefen();
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   6. AUSWERTUNG
+   ══════════════════════════════════════════════════════════════════ */
+
+function pruefen() {
+  const it = L.items[L.i];
+  let ok = false, miss = null, loesung = "", extra = "";
+
+  switch (it.type) {
+    case "mc": {
+      const w = A.opts[A.wahl];
+      ok = w.t === it.correct; miss = ok ? null : w.miss;
+      loesung = it.correct;
+      A.opts.forEach((x, i) => {
+        const e = document.getElementById("o" + i);
+        if (x.t === it.correct) e.classList.add("good");
+        else if (i === A.wahl) e.classList.add("bad");
+      });
+      break;
+    }
+    case "type": {
+      const v = document.getElementById("eingabe").value;
+      const cs = it.caseSensitive !== false;
+      const kand = [it.answer, ...(it.alt || [])];
+      ok = kand.some(k => norm(k, cs) === norm(v, cs));
+      loesung = it.answer;
+      break;
+    }
+    case "tf":
+      ok = A.wahl === it.answer;
+      loesung = it.answer ? "Richtig" : "Falsch";
+      extra = it.erklaerung || "";
+      break;
+    case "sort": {
+      ok = true;
+      A.words.forEach((w, i) => {
+        const soll = it.buckets.indexOf(w.b);
+        if (A.zuord[i] !== soll) ok = false;
+      });
+      loesung = A.words.map(w => `${w.w} → ${w.b}`).join(" · ");
+      break;
+    }
+    case "tap":
+      ok = A.wahl === it.correctIndex;
+      loesung = it.tokens[it.correctIndex];
+      it.tokens.forEach((_, i) => {
+        const e = document.getElementById("t" + i);
+        if (i === it.correctIndex) e.classList.add("good");
+        else if (i === A.wahl) e.classList.add("bad");
+      });
+      break;
+    case "order":
+      ok = A.gelegt.map(e => e.w).join(" ") === it.solution.join(" ");
+      loesung = it.solution.join(" ");
+      break;
+    case "match": {
+      ok = true;
+      A.links.forEach((l, i) => {
+        const soll = it.pairs.find(p => p[0] === l)[1];
+        if (A.rechts[A.zuord[i]] !== soll) ok = false;
+      });
+      loesung = it.pairs.map(p => `${p[0]} → ${p[1]}`).join(" · ");
+      break;
+    }
+    case "fehler": {
+      const sollIdx = new Set(Object.keys(it.wrong).map(Number));
+      ok = sollIdx.size === A.markiert.size &&
+           [...sollIdx].every(i => A.markiert.has(i));
+      it.tokens.forEach((_, i) => {
+        const e = document.getElementById("f" + i);
+        if (sollIdx.has(i)) e.classList.add("good");
+        else if (A.markiert.has(i)) e.classList.add("bad");
+      });
+      loesung = Object.entries(it.wrong).map(([i, w]) => `${it.tokens[i]} → ${w}`).join(" · ");
+      break;
+    }
+    case "diktat": {
+      const res = diktatAuswerten(it);
+      ok = res.fehler === 0;
+      extra = res.html;
+      if (ok) S.stats.perfekteDiktate = (S.stats.perfekteDiktate || 0) + 1;
+      break;
+    }
+  }
+
+  /* --- Mastery und Protokoll fortschreiben --- */
+  (it.rules || []).forEach(r => masteryUpdate(r, ok));
+  srsPlanen(it.id, ok);
+  S.log.push({ item: it.id, ok, rules: it.rules || [], miss: miss || null,
+               ms: Date.now() - (L.itemStart || L.start), tag: programmTag(),
+               lektion: L.lekId });
+  if (S.log.length > 300) S.log = S.log.slice(-300);
+
+  if (ok) { L.richtig++; xpGeben(10); }
+  else {
+    L.falsch++;
+    (it.rules || []).forEach(r => L.regelFehler[r] = (L.regelFehler[r] || 0) + 1);
+  }
+
+  /* --- Notbremse: dreimal dieselbe Regel falsch ---
+     Weiterbohren bringt nichts. Die Regel fliegt für heute raus und die
+     Erklärkarte kommt stattdessen von selbst. */
+  const gesperrt = Object.entries(L.regelFehler).filter(([, n]) => n >= 3).map(([r]) => r);
+  if (gesperrt.length) {
+    L.items = L.items.filter((x, idx) =>
+      idx <= L.i || !(x.rules || []).some(r => gesperrt.includes(r)));
+    const neuGesperrt = gesperrt.find(r => !(L.gezeigt || []).includes(r));
+    if (neuGesperrt && karteFuerRegel(neuGesperrt)) {
+      L.gezeigt = [...(L.gezeigt || []), neuGesperrt];
+      setTimeout(() => erklaerungZeigen(neuGesperrt), 600);
+    }
+  }
+
+  /* --- Rückmeldung --- */
+  const strat = (it.rules || []).map(r => REGEL_MAP[r]?.strategie).filter(Boolean)[0];
+  const erklRegel = ok ? null : (it.rules || []).find(r => karteFuerRegel(r));
+  document.getElementById("fb").innerHTML = `
+    <div class="fb ${ok ? "good" : "bad"}">
+      <b>${ok ? "✓ Richtig!" : "✕ Noch nicht"}</b>
+      ${!ok && loesung ? `Richtig wäre: <b style="display:inline">${esc(loesung)}</b>` : ""}
+      ${extra ? `<div style="margin-top:7px">${extra}</div>` : ""}
+      ${!ok && strat ? `<div class="strat">💡 ${esc(strat)}</div>` : ""}
+      ${erklRegel ? `<button class="btn ghost sm" style="margin-top:10px"
+          onclick="erklaerungZeigen('${erklRegel}')">📖 Nochmal erklären</button>` : ""}
+    </div>`;
+
+  const b = document.getElementById("pruefen");
+  b.textContent = L.i + 1 < L.items.length ? "Weiter" : "Fertig";
+  b.className = "btn ok";
+  b.onclick = weiter;
+  b.disabled = false;
+  sichern();
+}
+
+function diktatAuswerten(it) {
+  let fehler = 0, tippfehler = 0;
+  const clean = x => String(x).replace(/[.,!?„“”"]/g, "");
+
+  /** Ein Wort vergleichen und als farbiges Stück zurückgeben. */
+  const wort = (soll, ist) => {
+    if (clean(ist) === clean(soll)) return `<span class="w-ok">${esc(soll)}</span>`;
+    if (ist && istTippfehler(clean(soll), clean(ist))) {
+      tippfehler++;
+      return `<span class="w-typo">${esc(ist)}</span>`;
+    }
+    fehler++;
+    return `<span class="w-bad">${esc(ist || "—")} <small>(${esc(soll)})</small></span>`;
+  };
+
+  const zeilen = it.sentences.map((s, si) => {
+    /* Lückendiktat: nur die Lücken werden bewertet, der Rest steht ja da. */
+    if (A.modus === "luecke" && Array.isArray(A.eingaben[si])) {
+      const gaps = s.luecken || [];
+      let rest = s.text, out = "";
+      gaps.forEach((w, gi) => {
+        const i = rest.indexOf(w);
+        if (i < 0) return;
+        out += esc(rest.slice(0, i)) + wort(w, A.eingaben[si][gi] || "");
+        rest = rest.slice(i + w.length);
+      });
+      return out + esc(rest);
+    }
+    /* Hör- und Schleichdiktat: der ganze Satz zählt. */
+    const soll = s.text.split(/\s+/);
+    const ist = String(A.eingaben[si] || "").trim().split(/\s+/).filter(Boolean);
+    return soll.map((w, wi) => wort(w, ist[wi] || "")).join(" ");
+  });
+
+  return {
+    fehler,
+    html: `<div class="diff">${zeilen.join("<br>")}</div>
+      <div class="muted" style="margin-top:8px">
+        ${fehler} Rechtschreibfehler${tippfehler ? ` · ${tippfehler} Tippfehler (zählen nicht)` : ""}</div>`
+  };
+}
+
+function weiter() {
+  L.i++;
+  L.itemStart = Date.now();
+  if (L.i >= L.items.length) beenden(); else render();
+}
+
+function beenden() {
+  const score = L.items.length ? L.richtig / L.items.length : 0;
+  streakPruefen();
+  S.stats.sessions = (S.stats.sessions || 0) + 1;
+  S.completed[L.lekId] = { score, date: heute() };
+
+  /* Durchgang verbuchen — aber höchstens einer pro Tag und Lektion.
+     Der erzwungene Abstand ist der eigentliche Wirkstoff. */
+  if (L.lekId === "diktat") {
+    S.diktat.letzterTag = heute();
+    if (!S.diktat.erledigt.includes(L.diktatId)) S.diktat.erledigt.push(L.diktatId);
+  }
+
+  if (L.lekId !== "dauer" && L.lekId !== "diktat" && !L.zaehltNicht) {
+    const p = S.lektionen[L.lekId] || (S.lektionen[L.lekId] = { passes: 0, tage: [], gesehen: [] });
+    const h = heute();
+    if (!p.tage.includes(h)) {
+      p.passes++;
+      p.tage.push(h);
+    }
+    // gesehene Aufgaben merken, damit der nächste Durchgang Neues bringt
+    L.items.forEach(it => { if (!p.gesehen.includes(it.id)) p.gesehen.push(it.id); });
+
+    const st = lektionsStatus(L.lekId, L.fach);
+    if (st.fertig && !p.graduiert) {
+      p.graduiert = true;
+      L.graduiert = true;
+      xpGeben(60);
+    }
+    L.status = st;
+  }
+
+  if (score >= 0.8) xpGeben(25);
+  L.neueBadges = badgesPruefen();
+  sichern();
+  VIEW = "ergebnis";
+  render();
+}
+
+/* ---------- Diktat des Tages ---------- */
+
+/** Wählt ein Diktat, das zum aktuellen Stoff und zu den Schwächen passt. */
+function waehleDiktat() {
+  const erledigt = new Set(S.diktat.erledigt || []);
+  const offen = DIKTATE.filter(d => !erledigt.has(d.id));
+  const pool = offen.length ? offen : DIKTATE;          // notfalls von vorn
+
+  const schwIds = new Set(schwaechen().map(s => s.id));
+  const aktivDe = aktiveLektion("de");
+  const aktuelleRegeln = new Set(aktivDe ? lektionsRegeln(aktivDe, "de") : []);
+
+  const punkte = d => {
+    let p = 0;
+    d.rules.forEach(r => {
+      if (schwIds.has(r)) p += 3;              // gezielt an Schwächen arbeiten
+      if (aktuelleRegeln.has(r)) p += 2;       // zum laufenden Thema passen
+      if (regelEingefuehrt(r)) p += 1;         // nichts abfragen, was noch fehlt
+    });
+    return p - Math.abs(d.stufe - diktatStufe()) * 2;
+  };
+  return [...pool].sort((a, b) => punkte(b) - punkte(a))[0];
+}
+
+/** Mit wachsender Erfahrung dürfen die Diktate länger werden. */
+function diktatStufe() {
+  const n = (S.diktat.erledigt || []).length;
+  return n < 4 ? 1 : n < 10 ? 2 : 3;
+}
+
+function diktatStarten() {
+  const d = waehleDiktat();
+  if (!d) { alert("Keine Diktate verfügbar."); return; }
+  const item = {
+    id: "diktat-" + d.id, type: "diktat", mode: "hoeren",
+    rules: ["de.txt.diktat", ...d.rules],
+    prompt: "Diktat des Tages",
+    vorschau: d.vorschau, sentences: d.sentences
+  };
+  L = { fach: "de", lekId: "diktat", diktatId: d.id, items: [item], i: 0,
+        richtig: 0, falsch: 0, start: Date.now(), itemStart: Date.now(), regelFehler: {} };
+  VIEW = "uebung";
+  render();
+}
+
+function renderErgebnis() {
+  const score = L.items.length ? L.richtig / L.items.length : 0;
+  const pct = Math.round(score * 100);
+  const wort = pct >= 90 ? "Fantastisch!" : pct >= 70 ? "Gut gemacht!" :
+               pct >= 50 ? "Solide Runde." : "Das üben wir nochmal.";
+
+  let h = `<div class="card center">
+    <div class="big">${pct >= 90 ? "🎉" : pct >= 70 ? "👏" : "💪"}</div>
+    <h2>${wort}</h2>
+    <p class="sub">${L.richtig} von ${L.items.length} richtig · ${pct} %</p>
+  </div>`;
+
+  /* Lektion gemeistert? Das ist der eigentliche Meilenstein — nicht ein Tag. */
+  if (L.graduiert) {
+    h += `<div class="card center" style="border-color:var(--ok)">
+      <div class="big">🏆</div>
+      <h2>Lektion gemeistert!</h2>
+      <p class="sub">„${esc(LEK(L.fach)[L.lekId].titel)}" sitzt.
+      Die nächste Lektion ist freigeschaltet.</p></div>`;
+  } else if (L.status) {
+    const fehlt = [];
+    if (L.status.passes < MIN_DURCHGAENGE)
+      fehlt.push(`noch ${MIN_DURCHGAENGE - L.status.passes} Durchgang`);
+    if (L.status.mastery < GRAD_MASTERY)
+      fehlt.push(`Sicherheit bei ${Math.round(L.status.mastery * 100)} von 85 %`);
+    h += `<div class="card"><h2>Diese Lektion</h2>
+      <div class="wk"><b>Durchgang ${L.status.passes} geschafft</b>
+        <div class="mini"><i style="width:${Math.round(L.status.mastery * 100)}%;
+          background:${L.status.mastery >= 0.7 ? "var(--ok)" : "var(--gold)"}"></i></div></div>
+      <p class="sub" style="margin-top:9px">${fehlt.length
+        ? "Bis zum Meistern: " + fehlt.join(" · ") + ". Der nächste Durchgang zählt ab morgen."
+        : "Fast geschafft — der nächste Durchgang zählt ab morgen."}</p></div>`;
+  }
+
+  const schwach = Object.entries(L.regelFehler).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  if (schwach.length) {
+    h += `<div class="card"><h2>Das üben wir nochmal</h2>` +
+      schwach.map(([r, n]) => {
+        const d = REGEL_MAP[r];
+        return `<div class="wk"><b>${esc(d?.name || r)}</b>
+          <span class="muted">${n}×</span></div>`;
+      }).join("") +
+      `<p class="sub" style="margin-top:9px">Diese Aufgaben kommen in den nächsten
+      Tagen automatisch wieder.</p></div>`;
+  }
+
+  if (L.neueBadges?.length) {
+    h += `<div class="card"><h2>🎁 Neue Abzeichen!</h2>` + L.neueBadges.map(b =>
+      `<div class="badge"><i>${b.icon}</i><div><b>${esc(b.name)}</b>
+        <span>${esc(b.text)}</span></div></div>`).join("") + `</div>`;
+  }
+
+  if (exportFaellig()) {
+    h += `<div class="banner"><b>📮 Zeit für neue Aufgaben!</b>
+      <p class="sub" style="margin:5px 0 11px">Schick deinen Fortschritt und hol dir
+      Übungen, die genau zu deinen Fehlern passen.</p>
+      <button class="btn sm" onclick="zeige('export')">Fortschritt senden</button></div>`;
+  }
+
+  h += `<button class="btn" onclick="zeige('home')">Weiter zur Übersicht</button>`;
+  app.innerHTML = h;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   7. EXPORT / IMPORT
+   ══════════════════════════════════════════════════════════════════ */
+
+function exportPaket() {
+  zerfallAnwenden();
+  return {
+    app: "gymnasium-fitness", version: 1, erstellt: new Date().toISOString(),
+    tag: programmTag(),
+    xp: S.xp, level: S.level, streak: S.streak.count,
+    sessions: S.stats.sessions,
+    completed: S.completed,
+    lektionen: S.lektionen,
+    diktate: (S.diktat.erledigt || []).length,
+    rules: S.rules,
+    schwaechen: schwaechen().map(s => ({ id: s.id, name: s.def.name,
+      mastery: +s.mastery.toFixed(2), seen: s.seen, correct: s.correct })),
+    gemeistert: gemeistert(),
+    log: S.log.slice(-300),
+    badges: S.badges
+  };
+}
+
+function exportName() {
+  return `gymfit-fortschritt-${heute()}.json`;
+}
+
+function exportDatei() {
+  const b = new Blob([JSON.stringify(exportPaket(), null, 1)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(b);
+  a.download = exportName();
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  exportNotieren();
+}
+
+async function exportTeilen() {
+  const json = JSON.stringify(exportPaket());
+  const datei = new File([json], exportName(), { type: "application/json" });
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [datei] })) {
+      await navigator.share({ files: [datei], title: "Gymnasium Fitness — Fortschritt" });
+      exportNotieren(); return;
+    }
+    if (navigator.share) {
+      await navigator.share({ title: "Gymnasium Fitness", text: json });
+      exportNotieren(); return;
+    }
+  } catch (e) { if (e.name === "AbortError") return; }
+  exportDatei();
+}
+
+async function exportKopieren() {
+  const json = JSON.stringify(exportPaket());
+  try {
+    await navigator.clipboard.writeText(json);
+    alert("Fortschritt kopiert! Jetzt einfach in eine Nachricht einfügen.");
+    exportNotieren();
+  } catch (e) {
+    const t = document.createElement("textarea");
+    t.value = json; document.body.appendChild(t); t.select();
+    document.execCommand("copy"); t.remove();
+    alert("Fortschritt kopiert!");
+    exportNotieren();
+  }
+}
+
+function exportNotieren() {
+  S.lastExport = heute();
+  Object.values(S.lektionen).forEach(p => { if (p.graduiert) p.gemeldet = true; });
+  const neu = badgesPruefen();
+  sichern();
+  if (neu.length) alert("🎁 Neues Abzeichen: " + neu.map(b => b.name).join(", "));
+}
+
+/** Neues Übungspaket einlesen (aus der Wochenanalyse). */
+function importDialog() {
+  const inp = document.createElement("input");
+  inp.type = "file"; inp.accept = ".js,.json,application/json,text/javascript";
+  inp.onchange = () => {
+    const f = inp.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const txt = String(r.result);
+        // Fortschrittsdatei zurückspielen (Gerätewechsel)
+        if (f.name.includes("fortschritt")) {
+          const p = JSON.parse(txt);
+          if (p.app !== "gymnasium-fitness") throw new Error("falsches Format");
+          S.xp = p.xp ?? S.xp; S.level = p.level ?? S.level;
+          S.completed = p.completed || S.completed;
+          S.lektionen = p.lektionen || S.lektionen;
+          S.rules = p.rules || S.rules;
+          S.badges = p.badges || S.badges;
+          sichern();
+          alert("Fortschritt geladen!");
+          zeige("home"); return;
+        }
+        // Neues Aufgabenpaket
+        const sc = document.createElement("script");
+        sc.textContent = txt;
+        document.body.appendChild(sc);
+        const n = zaehleItems();
+        alert(`🎁 Neues Paket geladen — ${n} Aufgaben verfügbar!`);
+        zeige("home");
+      } catch (e) {
+        alert("Datei konnte nicht gelesen werden: " + e.message);
+      }
+    };
+    r.readAsText(f);
+  };
+  inp.click();
+}
+const zaehleItems = () => alleItems("de").length + alleItems("en").length;
+
+/* ══════════════════════════════════════════════════════════════════
+   8. START
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Die Inhalte liegen in data/*.js daneben. Wird index.html ohne diesen
+   Ordner geöffnet — etwa in einer Dateivorschau —, fehlen sie. Statt eines
+   schwarzen Bildschirms gibt es dann eine Erklärung. */
+const FEHLEND = [
+  ["data/regeln.js", typeof REGELN], ["data/lernkarten.js", typeof LERNKARTEN],
+  ["data/deutsch.js", typeof LEKTIONEN_DE], ["data/englisch.js", typeof LEKTIONEN_EN],
+  ["data/diktate.js", typeof DIKTATE], ["data/badges.js", typeof BADGES]
+].filter(([, t]) => t === "undefined").map(([f]) => f);
+
+if (FEHLEND.length) {
+  app.innerHTML = `
+    <div class="hdr"><h1>Gymnasium Fitness</h1></div>
+    <div class="card">
+      <h2>⚠️ Die Inhalte fehlen</h2>
+      <p class="sub">Diese Datei braucht den Ordner <b>data/</b> daneben.
+      Nicht gefunden wurden:</p>
+      <div class="chips" style="margin:10px 0">${FEHLEND.map(f =>
+        `<span class="chip2">${f}</span>`).join("")}</div>
+      <p class="sub"><b>So geht es:</b> index.html im Finder doppelklicken
+      (nicht in einer Vorschau öffnen) — oder die eigenständige Fassung
+      <b>gymnasium-fitness.html</b> verwenden, in der alles enthalten ist.</p>
+    </div>`;
+} else {
+  zerfallAnwenden();
+  sichern();
+  render();
+}
+</script>
+</body>
+</html>
