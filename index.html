@@ -2513,19 +2513,92 @@ function leerState() {
   };
 }
 
+/* Alle Speicherschlüssel, die es je gab — neueste zuerst. Wird die App
+   aktualisiert und ändert sich die Struktur, findet sie so den letzten Stand
+   trotzdem und rechnet ihn um, statt bei null anzufangen.
+
+   Muss VOR dem ersten laden() stehen — sonst greift die Umwandlung ins Leere. */
+const ALTE_KEYS = ["gymfit_v1"];
+const BACKUP_KEY = KEY + "_backup";
+
 let S = laden();
 
 function laden() {
   try {
-    const raw = localStorage.getItem(KEY);
+    let raw = localStorage.getItem(KEY), herkunft = KEY;
+
+    // Nichts unter dem aktuellen Schlüssel? Dann in älteren nachsehen.
+    if (!raw) {
+      for (const alt of ALTE_KEYS) {
+        const a = localStorage.getItem(alt);
+        if (a) { raw = a; herkunft = alt; break; }
+      }
+    }
     if (!raw) return leerState();
-    const leer = leerState(), gespeichert = JSON.parse(raw);
-    const s = Object.assign(leer, gespeichert);
+
+    const gespeichert = JSON.parse(raw);
+
+    /* Vor jeder Umwandlung eine Sicherung anlegen. Geht beim Umrechnen etwas
+       schief, sind Wochen an Übung nicht verloren — sie lassen sich im Profil
+       wiederherstellen. */
+    if (herkunft !== KEY) {
+      try {
+        localStorage.setItem(BACKUP_KEY, JSON.stringify({
+          gesichertAm: new Date().toISOString(), ausSchluessel: herkunft, daten: gespeichert
+        }));
+      } catch (e) {}
+    }
+
+    const s = Object.assign(leerState(), gespeichert);
     // Einstellungen zusammenführen, damit neue Optionen ihren Standard behalten
     s.settings = Object.assign(leerState().settings, gespeichert.settings || {});
-    return s;
-  } catch (e) { return leerState(); }
+    return umwandeln(s, gespeichert);
+  } catch (e) {
+    return leerState();
+  }
 }
+
+/**
+ * Alte Stände auf die aktuelle Struktur bringen.
+ *
+ * Hier kommt bei künftigen Umbauten die Umrechnung hinein — statt den
+ * Speicherschlüssel zu wechseln und damit den Fortschritt wegzuwerfen.
+ */
+function umwandeln(s, roh) {
+  // v1 kannte nur Tages-Lektionen ("de-01") und keine Durchgänge.
+  if (roh.completed && !roh.lektionen) {
+    s.lektionen = {};
+    for (const alt in roh.completed) {
+      const m = alt.match(/^(de|en)-0?(\d+)$/);
+      if (!m) continue;
+      const neu = `${m[1]}-l${m[2]}`;
+      s.lektionen[neu] = {
+        passes: 1, tage: [roh.completed[alt].date || heute()], gesehen: []
+      };
+    }
+  }
+  if (!s.diktat) s.diktat = { erledigt: [], letzterTag: null };
+  if (!s.lektionen) s.lektionen = {};
+  return s;
+}
+
+/** Gibt es eine Sicherung aus einer Umwandlung? */
+function backupInfo() {
+  try {
+    const b = localStorage.getItem(BACKUP_KEY);
+    return b ? JSON.parse(b) : null;
+  } catch (e) { return null; }
+}
+
+function backupWiederherstellen() {
+  const b = backupInfo();
+  if (!b) return;
+  if (!confirm("Den gesicherten Stand von " + b.gesichertAm.slice(0, 10) +
+               " wiederherstellen? Der aktuelle Fortschritt wird ersetzt.")) return;
+  localStorage.setItem(KEY, JSON.stringify(b.daten));
+  location.reload();
+}
+
 function sichern() {
   try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
 }
@@ -3184,10 +3257,24 @@ function viewProfil() {
 
   h += `<button class="btn" onclick="zeige('export')">📮 Fortschritt senden</button>
     <div style="height:9px"></div>
-    <button class="btn ghost" onclick="importDialog()">📥 Neues Paket laden</button>
-    <div style="height:9px"></div>
-    <button class="btn ghost" onclick="if(confirm('Wirklich alles zurücksetzen?')){localStorage.removeItem(KEY);location.reload()}">
-      Alles zurücksetzen</button>`;
+    <button class="btn ghost" onclick="importDialog()">📥 Fortschritt oder Paket laden</button>`;
+
+  /* Sicherung aus einer Umwandlung — nur anzeigen, wenn es wirklich eine gibt. */
+  const b = backupInfo();
+  if (b) {
+    h += `<div class="card" style="margin-top:12px">
+      <h2>🛟 Sicherung vorhanden</h2>
+      <p class="sub">Beim letzten Update wurde dein Stand vom
+      ${esc(b.gesichertAm.slice(0, 10))} automatisch gesichert, bevor er
+      umgerechnet wurde. Falls etwas fehlt, kannst du ihn zurückholen.</p>
+      <div style="height:10px"></div>
+      <button class="btn ghost sm" onclick="backupWiederherstellen()">
+        Gesicherten Stand wiederherstellen</button>
+    </div>`;
+  }
+
+  h += `<div style="height:9px"></div>
+    <button class="btn ghost" onclick="zuruecksetzen()">Alles zurücksetzen</button>`;
   return h;
 }
 
@@ -3195,6 +3282,18 @@ function einstellung(k) {
   S.settings[k] = !S.settings[k];
   sichern();
   render();
+}
+
+/** Zurücksetzen — aber vorher sichern, damit es umkehrbar bleibt. */
+function zuruecksetzen() {
+  if (!confirm("Wirklich alles zurücksetzen? Der bisherige Fortschritt geht verloren.")) return;
+  try {
+    localStorage.setItem(BACKUP_KEY, JSON.stringify({
+      gesichertAm: new Date().toISOString(), ausSchluessel: "zuruecksetzen", daten: S
+    }));
+  } catch (e) {}
+  localStorage.removeItem(KEY);
+  location.reload();
 }
 function tonTest() {
   const ok = sprich("Am Nachmittag gehen wir in den Wald.", "de-AT", 0.85);
