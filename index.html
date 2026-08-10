@@ -2703,6 +2703,22 @@ function freigeschaltet(lekId, fach) {
   return (S.lektionen[ids[i - 1]]?.passes || 0) >= 1;
 }
 
+/**
+ * Die nächste Lektion, die heute noch keinen Durchgang hatte.
+ *
+ * Für freiwilliges Weiterarbeiten: Neues Material ist anderes Material —
+ * dagegen spricht didaktisch nichts. Den Abstand erzwingt die Graduierung
+ * ohnehin weiter, weil sie zwei verschiedene Übungstage verlangt.
+ */
+function naechsteOffene(fach) {
+  for (const id of lektionsIds(fach)) {
+    if (!(LEK(fach)[id].items || []).length) continue;
+    const st = lektionsStatus(id, fach);
+    if (!st.fertig && !st.heuteSchon && freigeschaltet(id, fach)) return id;
+  }
+  return null;
+}
+
 /** Was heute ansteht. */
 function tagesplan() {
   const de = aktiveLektion("de"), en = aktiveLektion("en");
@@ -3087,8 +3103,7 @@ function viewHome() {
       ? "Fertig für heute."
       : `Drei Aufgaben, zusammen etwa 25 Minuten. Mehr ist heute nicht vorgesehen.`}</p>`;
   if (p.fertig) {
-    h += `<p class="sub">🎉 Alles erledigt. Wenn du magst, übe freiwillig weiter —
-      für den Fortschritt zählt der nächste Durchgang aber erst morgen.</p>`;
+    h += `<p class="sub">🎉 Alles erledigt.</p>`;
   } else {
     const zeile = (istOffen, text, cb, farbe) => `
       <div class="wk"><b style="${istOffen ? "" : "opacity:.45"}">${istOffen ? "○" : "✓"} ${text}</b>
@@ -3103,6 +3118,37 @@ function viewHome() {
     h += `<p class="sub" style="margin-top:11px">Noch ${offen} von 3 offen.</p>`;
   }
   h += `</div>`;
+
+  /* Wer weitermachen will, soll das auch dürfen — die Abstandsregel gilt für
+     dasselbe Material, nicht für den ganzen Tag. Alle vier Wege wirken auf die
+     Beherrschung; nur ein zweiter Durchgang derselben Lektion zählt erst morgen. */
+  if (p.fertig) {
+    const naechsteDe = naechsteOffene("de"), naechsteEn = naechsteOffene("en");
+    const wege = [];
+    if (Object.keys(S.rules).length)
+      wege.push(`<button class="btn ghost sm" onclick="uebungsrundeStarten('de')">
+        🔁 Übungsrunde Deutsch — deine Schwachstellen</button>`);
+    if (Object.keys(S.rules).some(r => r.startsWith("en.")))
+      wege.push(`<button class="btn ghost sm" onclick="uebungsrundeStarten('en')">
+        🔁 Übungsrunde Englisch</button>`);
+    if (naechsteDe) wege.push(`<button class="btn ghost sm"
+      onclick="starte('de','${naechsteDe}')">▶︎ Nächste Deutsch-Lektion beginnen</button>`);
+    if (naechsteEn) wege.push(`<button class="btn ghost sm"
+      onclick="starte('en','${naechsteEn}')">▶︎ Nächste Englisch-Lektion beginnen</button>`);
+    if ((S.diktat.erledigt || []).length < DIKTATE.length)
+      wege.push(`<button class="btn ghost sm" onclick="diktatStarten()">
+        🎧 Noch ein Diktat</button>`);
+
+    if (wege.length) {
+      h += `<div class="card">
+        <h2>Lust auf mehr?</h2>
+        <p class="sub">Alles davon zählt — jede Antwort verbessert, wie sicher du
+        die Regeln beherrschst.</p>
+        <div style="height:11px"></div>
+        ${wege.join(`<div style="height:8px"></div>`)}
+      </div>`;
+    }
+  }
 
   if (exportFaellig()) {
     h += `<div class="banner">
@@ -3138,11 +3184,23 @@ function viewHome() {
   return h;
 }
 
-/** Der Lernpfad eines Fachs: alle Lektionen mit ihrem Durchgangsstand. */
+/**
+ * Der Lernpfad eines Fachs.
+ *
+ * Standardmäßig eingeklappt: Nur die aktive und die nächste Lektion sind zu
+ * sehen. Sonst verschwindet der zweite Lernweg unter sechs Karten des ersten —
+ * auf dem Handy sieht man Englisch dann gar nicht mehr.
+ */
 function pfad(fach, titel) {
   const aktiv = aktiveLektion(fach);
-  const ids = lektionsIds(fach).filter(id => (LEK(fach)[id].items || []).length);
+  const alleIds = lektionsIds(fach);
+  const ids = alleIds.filter(id => (LEK(fach)[id].items || []).length);
   const fertig = ids.filter(id => lektionsStatus(id, fach).fertig).length;
+  const offen = !!S.settings["pfadOffen_" + fach];
+
+  /* Eingeklappt: aktive Lektion und die eine danach. */
+  const i = aktiv ? alleIds.indexOf(aktiv) : 0;
+  const sichtbar = offen ? alleIds : alleIds.slice(Math.max(0, i), i + 2);
 
   let h = `<div class="card" style="padding-bottom:6px">
     <h2>${titel} — dein Lernweg</h2>
@@ -3153,7 +3211,7 @@ function pfad(fach, titel) {
       style="width:${Math.round(fertig / ids.length * 100)}%"></i></div>
   </div>`;
 
-  lektionsIds(fach).forEach(id => {
+  sichtbar.forEach(id => {
     const lek = LEK(fach)[id];
     const hatInhalt = (lek.items || []).length > 0;
     const st = lektionsStatus(id, fach);
@@ -3181,7 +3239,20 @@ function pfad(fach, titel) {
       </div>
     </div>`;
   });
+
+  if (alleIds.length > sichtbar.length || offen) {
+    h += `<button class="btn ghost sm" onclick="pfadUmschalten('${fach}')">
+      ${offen ? "Weniger anzeigen"
+              : `Alle ${alleIds.length} Lektionen zeigen`}</button>
+      <div style="height:14px"></div>`;
+  }
   return h;
+}
+
+function pfadUmschalten(fach) {
+  S.settings["pfadOffen_" + fach] = !S.settings["pfadOffen_" + fach];
+  sichern();
+  render();
 }
 
 /* ---------- Eine Lektion ---------- */
@@ -3214,9 +3285,12 @@ function viewLektion(id) {
   if (st.heuteSchon) {
     h += `<div class="card"><p class="sub">Diese Lektion hast du heute schon geübt.
       <b>Wiederholung wirkt am besten mit einem Tag Abstand</b> — deshalb zählt der
-      nächste Durchgang erst morgen. Freiwillig üben kannst du trotzdem.</p></div>
+      nächste <i>Durchgang</i> erst morgen.<br><br>
+      Weiterüben lohnt sich trotzdem: Jede Antwort verbessert, wie sicher du die
+      Regeln beherrschst — und genau das entscheidet am Ende, ob die Lektion
+      sitzt.</p></div>
       <button class="btn ghost" onclick="starte('${fach}','${id}',true,true)">
-        Trotzdem üben (zählt nicht)</button>`;
+        Nochmal üben</button>`;
   } else if (st.passes === 0 && karten) {
     h += `<button class="btn" style="${farbe}" onclick="starte('${fach}','${id}')">
         Lernen &amp; üben · ${karten} Karten</button>
@@ -3481,6 +3555,54 @@ function erklaerungZeigen(regelId) {
   d.innerHTML = `<div>${karteHtml(k, true)}
     <button class="btn ghost" onclick="this.closest('.ovl').remove()">Schließen</button></div>`;
   document.body.appendChild(d);
+}
+
+/**
+ * Nachbesser-Runde: gezielt das, was in der letzten Runde falsch war.
+ *
+ * Nimmt die verpatzten Aufgaben selbst plus weitere zur gleichen Regel, damit
+ * es nicht beim Auswendiglernen einer Antwort bleibt. Verbessert die
+ * Beherrschung — verbucht aber keinen Durchgang und überschreibt kein Ergebnis.
+ * Das ist der Unterschied zwischen „nochmal für eine bessere Zahl" und
+ * „das schaue ich mir nochmal an".
+ */
+function baueNachbesserung(fehlerIds, fach) {
+  const pool = alleItems(fach);
+  const out = [];
+  const nimm = it => { if (it && !out.some(o => o.id === it.id)) out.push(it); };
+
+  const falsche = fehlerIds.map(id => pool.find(i => i.id === id)).filter(Boolean);
+  falsche.forEach(nimm);
+
+  // Zu jeder betroffenen Regel eine weitere Aufgabe, möglichst eine andere
+  const regeln = [...new Set(falsche.flatMap(i => i.rules || []))];
+  regeln.forEach(r => {
+    const kand = shuffle(pool.filter(i =>
+      (i.rules || []).includes(r) && !fehlerIds.includes(i.id)));
+    if (kand.length) nimm(kand[0]);
+  });
+
+  return shuffle(out).slice(0, 12);
+}
+
+/** Nachbessern starten — aus dem Ergebnis oder von der Lektionsseite. */
+function nachbessernStarten(fach, fehlerIds) {
+  const items = baueNachbesserung(fehlerIds, fach);
+  if (!items.length) { alert("Nichts zum Nachbessern — es war alles richtig!"); return; }
+  L = { fach, lekId: "nachbessern", items, i: 0, richtig: 0, falsch: 0,
+        zaehltNicht: true, start: Date.now(), itemStart: Date.now(), regelFehler: {} };
+  VIEW = "uebung";
+  render();
+}
+
+/** Freiwillige Übungsrunde aus Schwächen und fälligen Wiederholungen. */
+function uebungsrundeStarten(fach) {
+  const items = baueDauerSession(fach);
+  if (!items.length) { alert("Übe erst ein paar Lektionen, dann gibt es hier Wiederholungen."); return; }
+  L = { fach, lekId: "uebungsrunde", items, i: 0, richtig: 0, falsch: 0,
+        zaehltNicht: true, start: Date.now(), itemStart: Date.now(), regelFehler: {} };
+  VIEW = "uebung";
+  render();
 }
 
 function baueDauerSession(fach) {
@@ -4001,6 +4123,7 @@ function pruefen() {
   if (ok) { L.richtig++; xpGeben(10); }
   else {
     L.falsch++;
+    (L.fehlerIds = L.fehlerIds || []).push(it.id);
     (it.rules || []).forEach(r => L.regelFehler[r] = (L.regelFehler[r] || 0) + 1);
   }
 
@@ -4100,7 +4223,8 @@ function beenden() {
     if (!S.diktat.erledigt.includes(L.diktatId)) S.diktat.erledigt.push(L.diktatId);
   }
 
-  if (L.lekId !== "dauer" && L.lekId !== "diktat" && !L.zaehltNicht) {
+  const SONDER = ["dauer", "diktat", "nachbessern", "uebungsrunde"];
+  if (!SONDER.includes(L.lekId) && !L.zaehltNicht) {
     const p = S.lektionen[L.lekId] || (S.lektionen[L.lekId] = { passes: 0, tage: [], gesehen: [] });
     const h = heute();
     if (!p.tage.includes(h)) {
@@ -4177,11 +4301,29 @@ function renderErgebnis() {
   const wort = pct >= 90 ? "Fantastisch!" : pct >= 70 ? "Gut gemacht!" :
                pct >= 50 ? "Solide Runde." : "Das üben wir nochmal.";
 
+  /* Bewusst ohne Prozentzahl: Die Zahl allein lädt zum Punktejagen ein.
+     „8 von 10 richtig" sagt dasselbe, ohne nach Note zu klingen. */
   let h = `<div class="card center">
     <div class="big">${pct >= 90 ? "🎉" : pct >= 70 ? "👏" : "💪"}</div>
     <h2>${wort}</h2>
-    <p class="sub">${L.richtig} von ${L.items.length} richtig · ${pct} %</p>
+    <p class="sub">${L.richtig} von ${L.items.length} richtig</p>
   </div>`;
+
+  /* Nachbessern anbieten, solange die Fehler frisch sind. Rückmeldung wirkt
+     am stärksten, wenn gleich danach die Gelegenheit kommt, sie anzuwenden. */
+  if ((L.fehlerIds || []).length && L.lekId !== "nachbessern") {
+    const ids = JSON.stringify(L.fehlerIds).replace(/"/g, "&quot;");
+    h += `<div class="card">
+      <h2>Nochmal anschauen?</h2>
+      <p class="sub">${L.fehlerIds.length} Aufgabe${L.fehlerIds.length === 1 ? "" : "n"}
+      ${L.fehlerIds.length === 1 ? "hat" : "haben"} noch nicht geklappt. Du kannst sie
+      dir gleich nochmal vornehmen — das verbessert deine Regeln. Dein Ergebnis von
+      eben bleibt, wie es ist.</p>
+      <div style="height:11px"></div>
+      <button class="btn ok" onclick='nachbessernStarten("${L.fach}", ${ids})'>
+        Das üben wir nochmal</button>
+    </div>`;
+  }
 
   /* Lektion gemeistert? Das ist der eigentliche Meilenstein — nicht ein Tag. */
   if (L.graduiert) {
