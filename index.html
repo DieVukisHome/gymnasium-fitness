@@ -13,193 +13,297 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Gym Fitness">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0f1424">
+<meta name="theme-color" content="#160b33">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="manifest" href="manifest.json">
 <style>
+/* ══════════════════════════════════════════════════════════════════
+   Gymnasium Fitness — Erscheinungsbild
+   Ziel: fühlt sich an wie ein Spiel, nicht wie ein Schulbuch.
+   Für eine Zehnjährige: kräftig und griffig, aber nicht kindisch.
+   ══════════════════════════════════════════════════════════════════ */
 :root{
-  --bg:#0f1424; --card:#1a2138; --card2:#232c48; --line:#2f3a5c;
-  --txt:#eef1f8; --dim:#94a0c0;
-  --de:#7aa2f7; --en:#f7a072; --ok:#4ade80; --no:#f87171;
-  --gold:#fbbf24; --r:16px;
+  /* Kosmisches Violett: Sternenhimmel, Kristalle, Polarlicht. */
+  --bg:#160b33; --bg2:#221049;
+  --card:#2d1560; --card2:#3d1f7d; --line:#5c2fb0;
+  --txt:#f8f2ff; --dim:#c0a8ee;
+  --de:#a855f7; --de-d:#7c2fc9;        /* Deutsch: Violett   */
+  --en:#f472b6; --en-d:#c2478b;        /* Englisch: Pink     */
+  --ok:#4ade80; --ok-d:#26a55c;        /* Richtig: Mint      */
+  --no:#fb7185; --no-d:#d24457;
+  --gold:#fbbf24; --gold-d:#d19405;
+  --lila:#c084fc; --lila-d:#9333ea;
+  --tuerkis:#38bdf8;
+  --r:22px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);
-  font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  overscroll-behavior-y:contain}
+html,body{margin:0;padding:0;color:var(--txt);
+  background:var(--bg);
+  background-image:
+    /* Sterne */
+    radial-gradient(1.6px 1.6px at 12% 8%, #ffffffcc, transparent),
+    radial-gradient(1.4px 1.4px at 28% 22%, #e9d5ffaa, transparent),
+    radial-gradient(1.8px 1.8px at 47% 6%, #ffffffbb, transparent),
+    radial-gradient(1.3px 1.3px at 63% 17%, #c4b5fd99, transparent),
+    radial-gradient(1.7px 1.7px at 81% 4%, #ffffffcc, transparent),
+    radial-gradient(1.4px 1.4px at 92% 26%, #f0abfc99, transparent),
+    radial-gradient(1.5px 1.5px at 8% 41%, #ffffffaa, transparent),
+    radial-gradient(1.3px 1.3px at 35% 52%, #ddd6fe88, transparent),
+    radial-gradient(1.6px 1.6px at 71% 44%, #ffffff99, transparent),
+    radial-gradient(1.4px 1.4px at 96% 58%, #e9d5ff88, transparent),
+    radial-gradient(1.5px 1.5px at 19% 71%, #ffffff88, transparent),
+    radial-gradient(1.3px 1.3px at 55% 83%, #c4b5fd77, transparent),
+    radial-gradient(1.6px 1.6px at 87% 76%, #ffffff88, transparent),
+    /* Polarlicht */
+    radial-gradient(1200px 620px at 12% -10%, #7c3aed4d, transparent 62%),
+    radial-gradient(1000px 560px at 96% 6%, #db277744, transparent 64%),
+    radial-gradient(900px 700px at 50% 105%, #38bdf833, transparent 62%);
+  background-attachment:fixed;
+  font:16px/1.5 ui-rounded,"SF Pro Rounded",-apple-system,"Segoe UI Variable",
+    "Segoe UI",Roboto,system-ui,sans-serif;
+  overscroll-behavior-y:contain;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
-/* Sichere Bereiche: Auf dem iPhone liegt der Inhalt sonst unter der
-   Statusleiste und unter dem Home-Indikator. Betrifft vor allem die
-   Fassung, die vom Home-Bildschirm gestartet wird. */
 #app{max-width:640px;margin:0 auto;min-height:100vh;
   padding:calc(14px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right))
           calc(40px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left))}
 
 /* ---------- Kopfzeile ---------- */
-.hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.hdr h1{font-size:19px;margin:0;flex:1;letter-spacing:-.3px}
-.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;
-  padding:5px 11px;font-size:13px;font-weight:600;white-space:nowrap}
-.chip.fire{color:var(--gold)}
-.bar{height:8px;background:var(--card);border-radius:99px;overflow:hidden;margin:6px 0 18px}
-.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--de),var(--ok));
-  border-radius:99px;transition:width .5s}
+.hdr{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap}
+.hdr h1{font-size:21px;margin:0;flex:1;letter-spacing:-.4px;font-weight:800}
+.chip{background:var(--card);border:2px solid var(--line);border-radius:999px;
+  padding:7px 13px;font-size:15px;font-weight:800;white-space:nowrap;
+  box-shadow:0 3px 0 #0003}
+.chip.fire{color:var(--gold);border-color:#ffc53155}
+.chip.fire.aktiv{animation:puls 2.4s ease-in-out infinite}
+@keyframes puls{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.bar{height:14px;background:#0003;border-radius:99px;overflow:hidden;margin:6px 0 18px;
+  border:2px solid var(--line)}
+.bar>i{display:block;height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--lila),var(--en),var(--tuerkis));
+  transition:width .8s cubic-bezier(.2,.9,.3,1);
+  box-shadow:0 0 14px #c084fc77}
 
 /* ---------- Karten ---------- */
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  padding:16px;margin-bottom:12px}
-.card h2{margin:0 0 4px;font-size:17px}
-.card p.sub{margin:0;color:var(--dim);font-size:14px}
+.card{background:linear-gradient(180deg,var(--card),var(--bg2));
+  border:2px solid var(--line);border-radius:var(--r);
+  padding:18px;margin-bottom:14px;box-shadow:0 6px 0 #0002,0 12px 26px #0004;
+  animation:rein .35s cubic-bezier(.2,.9,.3,1) both}
+@keyframes rein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card h2{margin:0 0 6px;font-size:20px;font-weight:800;letter-spacing:-.3px}
+.card p.sub{margin:0;color:var(--dim);font-size:15px}
 
-/* ---------- Wegkarte ---------- */
-.day{display:flex;align-items:center;gap:12px;background:var(--card);
-  border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:9px;
-  transition:transform .12s}
-.day:active{transform:scale(.985)}
-.day.locked{opacity:.42}
-.day.done{border-color:#2c5c46}
-.dnum{width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;
-  font-weight:700;background:var(--card2);font-size:15px}
-.day.done .dnum{background:var(--ok);color:#06301b}
-.day.today .dnum{background:var(--de);color:#0a1024;box-shadow:0 0 0 4px rgba(122,162,247,.2)}
-.dinfo{flex:1;min-width:0}
-.dinfo b{display:block;font-size:15px}
-.dinfo span{color:var(--dim);font-size:13px;display:block;overflow:hidden;
-  text-overflow:ellipsis;white-space:nowrap}
-.tags{display:flex;gap:5px;margin-top:4px}
-.tag{font-size:11px;padding:2px 7px;border-radius:99px;font-weight:600}
-.tag.de{background:rgba(122,162,247,.18);color:var(--de)}
-.tag.en{background:rgba(247,160,114,.18);color:var(--en)}
-
-/* ---------- Buttons ---------- */
-.btn{display:block;width:100%;padding:15px;border-radius:14px;font-weight:700;
-  background:var(--de);color:#0a1024;text-align:center;font-size:16px}
-.btn:disabled{opacity:.35;cursor:default}
-.btn.ghost{background:var(--card2);color:var(--txt);border:1px solid var(--line)}
-.btn.ok{background:var(--ok);color:#06301b}
-.btn.sm{padding:10px;font-size:14px}
-.row{display:flex;gap:9px}
+/* ---------- Knöpfe: dick, mit Druckpunkt ---------- */
+.btn{display:block;width:100%;padding:16px;border-radius:18px;font-weight:800;
+  background:var(--de);color:#0b1030;text-align:center;font-size:17px;
+  box-shadow:0 5px 0 var(--de-d);transition:transform .06s,box-shadow .06s;
+  letter-spacing:-.2px}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--de-d)}
+.btn:disabled{opacity:.4;box-shadow:0 5px 0 #0003;cursor:default}
+.btn:disabled:active{transform:none}
+.btn.ghost{background:var(--card2);color:var(--txt);box-shadow:0 5px 0 #1b1550}
+.btn.ghost:active{box-shadow:0 1px 0 #1b1550}
+.btn.ok{background:var(--ok);color:#052c18;box-shadow:0 5px 0 var(--ok-d)}
+.btn.ok:active{box-shadow:0 1px 0 var(--ok-d)}
+.btn.sm{padding:12px;font-size:15px}
+.row{display:flex;gap:10px}
 .row>*{flex:1}
 
+/* ---------- Lernpfad als Spielkarte ---------- */
+.day{display:flex;align-items:center;gap:14px;
+  background:linear-gradient(180deg,var(--card),var(--bg2));
+  border:2px solid var(--line);border-radius:20px;padding:14px;margin-bottom:12px;
+  box-shadow:0 5px 0 #0002;transition:transform .08s,box-shadow .08s;position:relative}
+.day:active{transform:translateY(3px);box-shadow:0 2px 0 #0002}
+.day.locked{opacity:.4;filter:saturate(.4)}
+.day.done{border-color:#3ddc8455;background:linear-gradient(180deg,#1e4d3a,#17323a)}
+.day.today{border-color:var(--gold);box-shadow:0 5px 0 #0002,0 0 0 4px #ffc53125}
+/* Lektionsnummer als geschliffener Kristall statt schlichtem Kreis */
+.dnum{width:58px;height:58px;flex:none;display:grid;place-items:center;
+  font-weight:900;font-size:21px;background:var(--card2);
+  clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  position:relative;text-shadow:0 2px 4px #0006}
+.dnum::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(145deg,#ffffff33,transparent 45%);
+  clip-path:inherit;pointer-events:none}
+.day.done .dnum{background:linear-gradient(160deg,#86efac,var(--ok));color:#04301a}
+.day.today .dnum{background:linear-gradient(160deg,#fcd34d,var(--gold));color:#3d2800;
+  animation:funkeln 2.8s ease-in-out infinite}
+@keyframes funkeln{0%,100%{transform:scale(1);filter:brightness(1)}
+  50%{transform:scale(1.06);filter:brightness(1.25) drop-shadow(0 0 10px #fbbf2488)}}
+.dinfo{flex:1;min-width:0}
+.dinfo b{display:block;font-size:16px;font-weight:800}
+.dinfo span{color:var(--dim);font-size:14px;display:block}
+.tags{display:flex;gap:6px;margin-top:5px}
+.tag{font-size:11px;padding:3px 9px;border-radius:99px;font-weight:800}
+.tag.de{background:#5b8cff33;color:#9fbcff}
+.tag.en{background:#ff914233;color:#ffbf91}
+
 /* ---------- Übungen ---------- */
-.q{font-size:18px;font-weight:600;margin:0 0 4px;line-height:1.4}
+.q{font-size:21px;font-weight:800;margin:0 0 10px;line-height:1.35;letter-spacing:-.3px}
 .opt{display:block;width:100%;text-align:left;background:var(--card2);
-  border:2px solid var(--line);border-radius:13px;padding:14px;margin-bottom:9px;
-  transition:.12s;font-size:16px}
-.opt:active{transform:scale(.99)}
-.opt.sel{border-color:var(--de)}
-.opt.good{border-color:var(--ok);background:rgba(74,222,128,.13)}
-.opt.bad{border-color:var(--no);background:rgba(248,113,113,.13)}
-input[type=text],textarea{width:100%;background:var(--card2);border:2px solid var(--line);
-  border-radius:13px;padding:14px;color:var(--txt);font:inherit;outline:none}
-input[type=text]:focus,textarea:focus{border-color:var(--de)}
-textarea{resize:vertical;min-height:66px}
-.uml{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.uml button{background:var(--card2);border:1px solid var(--line);border-radius:9px;
-  padding:8px 13px;font-size:17px;min-width:44px}
+  border:3px solid var(--line);border-radius:18px;padding:16px;margin-bottom:11px;
+  font-size:17px;font-weight:600;box-shadow:0 4px 0 #1b1550;
+  transition:transform .07s,box-shadow .07s,border-color .12s}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 #1b1550}
+.opt.sel{border-color:var(--de);background:#5b8cff22}
+.opt.good{border-color:var(--ok);background:#3ddc8422;box-shadow:0 4px 0 var(--ok-d)}
+.opt.bad{border-color:var(--no);background:#ff5c7222;box-shadow:0 4px 0 var(--no-d)}
+input[type=text],textarea{width:100%;background:#0f0b2b;border:3px solid var(--line);
+  border-radius:18px;padding:16px;color:var(--txt);font:inherit;font-size:18px;
+  font-weight:600;outline:none}
+input[type=text]:focus,textarea:focus{border-color:var(--de);
+  box-shadow:0 0 0 4px #5b8cff2a}
+textarea{resize:vertical;min-height:70px}
+.uml{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.uml button{background:var(--card2);border:2px solid var(--line);border-radius:12px;
+  padding:9px 14px;font-size:18px;min-width:46px;font-weight:700;
+  box-shadow:0 3px 0 #1b1550}
+.uml button:active{transform:translateY(2px);box-shadow:0 1px 0 #1b1550}
 
-/* Wort-Chips: Ordnen, Antippen, Fehlersuche */
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.chip2{background:var(--card2);border:2px solid var(--line);border-radius:11px;
-  padding:10px 13px;font-size:16px}
-.chip2.sel{border-color:var(--de);background:rgba(122,162,247,.15)}
-.chip2.good{border-color:var(--ok);background:rgba(74,222,128,.15)}
-.chip2.bad{border-color:var(--no);background:rgba(248,113,113,.15)}
-.chip2.used{opacity:.25}
-.slot{min-height:54px;background:var(--card2);border:2px dashed var(--line);
-  border-radius:13px;padding:9px;display:flex;flex-wrap:wrap;gap:7px;align-items:flex-start}
+/* Wort-Chips */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.chip2{background:var(--card2);border:3px solid var(--line);border-radius:15px;
+  padding:11px 15px;font-size:17px;font-weight:700;box-shadow:0 4px 0 #1b1550;
+  transition:transform .07s,box-shadow .07s}
+.chip2:active{transform:translateY(3px);box-shadow:0 1px 0 #1b1550}
+.chip2.sel{border-color:var(--de);background:#5b8cff2e;transform:scale(1.04)}
+.chip2.good{border-color:var(--ok);background:#3ddc8426;box-shadow:0 4px 0 var(--ok-d)}
+.chip2.bad{border-color:var(--no);background:#ff5c7226;box-shadow:0 4px 0 var(--no-d)}
+.chip2.used{opacity:.22}
+.slot{min-height:62px;background:#0f0b2b;border:3px dashed var(--line);
+  border-radius:18px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
 
-/* Körbe (Sortieren) */
-.buckets{display:flex;gap:8px;margin-top:12px}
-.bucket{flex:1;background:var(--card2);border:2px dashed var(--line);border-radius:13px;
-  padding:9px;min-height:96px}
-.bucket.act{border-color:var(--de)}
-.bucket b{display:block;font-size:12px;color:var(--dim);margin-bottom:7px;text-align:center}
-.bucket .chip2{width:100%;text-align:center;padding:7px;font-size:14px;margin-bottom:6px}
-
-/* Paare */
-.pairs{display:flex;gap:9px}
+/* Körbe */
+.buckets{display:flex;gap:10px;margin-top:14px}
+.bucket{flex:1;background:#0f0b2b;border:3px dashed var(--line);border-radius:18px;
+  padding:11px;min-height:110px;transition:border-color .15s,background .15s}
+.bucket.act{border-color:var(--de);background:#5b8cff14}
+.bucket b{display:block;font-size:13px;color:var(--dim);margin-bottom:9px;
+  text-align:center;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.bucket .chip2{width:100%;text-align:center;padding:9px;font-size:15px;margin-bottom:7px}
+.pairs{display:flex;gap:10px}
 .pairs>div{flex:1}
 
-/* Rückmeldung */
-.fb{border-radius:13px;padding:13px;margin-top:12px;font-size:15px}
-.fb.good{background:rgba(74,222,128,.12);border:1px solid var(--ok)}
-.fb.bad{background:rgba(248,113,113,.12);border:1px solid var(--no)}
-.fb b{display:block;margin-bottom:3px}
-.strat{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.12);
-  font-size:14px;color:var(--dim)}
+/* ---------- Rückmeldung: kräftig, von unten ---------- */
+.fb{border-radius:20px;padding:16px;margin-top:14px;font-size:16px;font-weight:600;
+  animation:hoch .3s cubic-bezier(.2,.9,.3,1) both}
+@keyframes hoch{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.fb.good{background:#3ddc841f;border:3px solid var(--ok)}
+.fb.bad{background:#ff5c721f;border:3px solid var(--no)}
+.fb b{display:block;margin-bottom:5px;font-size:20px;font-weight:900}
+.fb.good b{color:#7bf0ad}
+.fb.bad b{color:#ff9aa8}
+.strat{margin-top:10px;padding-top:10px;border-top:2px solid #ffffff1a;
+  font-size:15px;color:var(--dim)}
 
-/* Diktat — die Knöpfe müssen umbrechen, sonst laufen sie auf dem Handy
-   rechts aus dem Bild. */
-.dict-sent{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center}
-.dict-sent button{background:var(--card2);border:1px solid var(--line);border-radius:11px;
-  padding:11px 14px;font-size:15px;white-space:nowrap;flex:1 1 auto;min-width:0}
-.diff{background:var(--card2);border-radius:11px;padding:12px;margin-top:9px;
-  line-height:2.1;font-size:16px}
-.lsatz{font-size:18px;line-height:2.4;margin:12px 0}
-input.gap{display:inline-block;width:auto;min-width:90px;padding:5px 9px;
-  border-radius:8px;border:2px solid var(--de);background:var(--card2);
-  font:inherit;font-size:17px;color:var(--txt);text-align:center}
-.tonhinweis{background:rgba(251,191,36,.12);border:1px solid var(--gold);
-  border-radius:11px;padding:11px;margin-bottom:10px;font-size:15px}
-.w-ok{color:var(--ok)}
+/* ---------- Diktat ---------- */
+.dict-sent{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:12px;align-items:center}
+.dict-sent button{background:var(--card2);border:2px solid var(--line);border-radius:15px;
+  padding:12px 15px;font-size:16px;font-weight:700;white-space:nowrap;flex:1 1 auto;
+  min-width:0;box-shadow:0 4px 0 #1b1550}
+.dict-sent button:active{transform:translateY(3px);box-shadow:0 1px 0 #1b1550}
+.diff{background:#0f0b2b;border-radius:16px;padding:14px;margin-top:11px;
+  line-height:2.2;font-size:17px;border:2px solid var(--line)}
+.w-ok{color:#7bf0ad}
 .w-typo{color:var(--gold);text-decoration:underline wavy}
-.w-bad{color:var(--no);font-weight:700}
-.w-bad small{color:var(--ok);font-weight:400}
+.w-bad{color:#ff9aa8;font-weight:800}
+.w-bad small{color:#7bf0ad;font-weight:600}
+.lsatz{font-size:19px;line-height:2.5;margin:14px 0;font-weight:600}
+input.gap{display:inline-block;width:auto;min-width:96px;padding:6px 11px;
+  border-radius:12px;border:3px solid var(--de);background:#0f0b2b;
+  font:inherit;font-size:18px;font-weight:700;color:var(--txt);text-align:center}
+.tonhinweis{background:#ffc5311a;border:2px solid var(--gold);border-radius:16px;
+  padding:12px;margin-bottom:11px;font-size:15px}
 
-/* Sonstiges */
-.badge{display:flex;gap:11px;align-items:center;background:var(--card2);
-  border-radius:13px;padding:11px;margin-bottom:8px}
-.badge.off{opacity:.3}
-.badge i{font-size:26px;font-style:normal}
-.badge b{display:block;font-size:15px}
-.badge span{color:var(--dim);font-size:13px}
-.banner{background:linear-gradient(135deg,#3b2f6b,#2a3a6b);border:1px solid #5b4fa8;
-  border-radius:var(--r);padding:15px;margin-bottom:12px}
-.wk{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;
-  border-bottom:1px solid var(--line)}
+/* ---------- Abzeichen, Banner, Zeilen ---------- */
+.badge{display:flex;gap:13px;align-items:center;background:var(--card2);
+  border-radius:16px;padding:13px;margin-bottom:9px;border:2px solid var(--line)}
+.badge.off{opacity:.28;filter:grayscale(1)}
+.badge i{font-size:30px;font-style:normal}
+.badge b{display:block;font-size:16px;font-weight:800}
+.badge span{color:var(--dim);font-size:14px}
+.banner{background:linear-gradient(135deg,var(--lila),#5b3ad4);
+  border:3px solid #c690ff;border-radius:var(--r);padding:17px;margin-bottom:14px;
+  box-shadow:0 6px 0 #0002,0 0 30px #b06bff33}
+.wk{display:flex;justify-content:space-between;align-items:center;font-size:15px;
+  padding:10px 0;border-bottom:2px solid #ffffff12;gap:10px}
 .wk:last-child{border:none}
-.wk b{font-weight:600}
-.mini{height:6px;width:70px;background:var(--card2);border-radius:99px;overflow:hidden;
-  align-self:center}
-.mini>i{display:block;height:100%;border-radius:99px}
+.wk b{font-weight:700}
+.mini{height:12px;width:88px;background:#0004;border-radius:99px;overflow:hidden;
+  flex:none;border:2px solid var(--line)}
+.mini>i{display:block;height:100%;border-radius:99px;
+  transition:width .8s cubic-bezier(.2,.9,.3,1)}
 .center{text-align:center}
-.big{font-size:46px;margin:6px 0}
-.muted{color:var(--dim);font-size:14px}
+.big{font-size:64px;margin:8px 0;line-height:1;
+  animation:pop .5s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.muted{color:var(--dim);font-size:15px}
 .hidden{display:none}
 
 /* ---------- Lernkarten ---------- */
-.lk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  padding:20px 17px;margin-bottom:12px;min-height:210px}
-.lk .kicker{color:var(--de);font-size:12px;font-weight:700;letter-spacing:.9px;
-  text-transform:uppercase;margin-bottom:7px}
-.lk h2{margin:0 0 11px;font-size:21px;line-height:1.3;letter-spacing:-.3px}
-.lk p{margin:0 0 12px;font-size:16px;line-height:1.6}
-.merke{background:rgba(122,162,247,.13);border-left:3px solid var(--de);
-  border-radius:9px;padding:11px 13px;font-size:16px}
-.merke b{color:var(--de)}
-.bsp{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);
-  font-size:15px;align-items:baseline}
+.lk{background:linear-gradient(180deg,var(--card),var(--bg2));
+  border:3px solid var(--line);border-radius:var(--r);padding:22px 18px;
+  margin-bottom:14px;min-height:220px;box-shadow:0 6px 0 #0002,0 12px 26px #0004;
+  animation:rein .35s cubic-bezier(.2,.9,.3,1) both}
+.lk .kicker{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:1.2px;
+  text-transform:uppercase;margin-bottom:9px}
+.lk h2{margin:0 0 13px;font-size:23px;line-height:1.3;font-weight:800;letter-spacing:-.4px}
+.lk p{margin:0 0 13px;font-size:17px;line-height:1.6}
+.merke{background:#5b8cff1f;border-left:5px solid var(--de);border-radius:14px;
+  padding:13px 15px;font-size:17px;font-weight:600}
+.merke b{color:#9fbcff}
+.bsp{display:flex;gap:12px;padding:11px 0;border-bottom:2px solid #ffffff12;
+  font-size:16px;align-items:baseline}
 .bsp:last-child{border:none}
 .bsp .l{flex:0 0 42%;color:var(--dim)}
-.bsp .r{flex:1}
-.wrd{display:flex;align-items:center;gap:11px;background:var(--card2);
-  border-radius:11px;padding:11px 13px;margin-bottom:7px;width:100%;text-align:left}
-.wrd b{font-size:17px;flex:0 0 42%}
-.wrd span{color:var(--dim);font-size:14px;flex:1}
-.wrd i{font-style:normal;opacity:.55}
-.probe-a{background:rgba(74,222,128,.12);border:1px solid var(--ok);
-  border-radius:11px;padding:13px;margin-top:11px}
-.dots{display:flex;gap:6px;justify-content:center;margin:14px 0 4px}
-.dots i{width:7px;height:7px;border-radius:50%;background:var(--line);display:block}
-.dots i.on{background:var(--de);width:20px;border-radius:99px}
+.bsp .r{flex:1;font-weight:600}
+.wrd{display:flex;align-items:center;gap:12px;background:var(--card2);
+  border:2px solid var(--line);border-radius:15px;padding:13px;margin-bottom:8px;
+  width:100%;text-align:left;box-shadow:0 3px 0 #1b1550}
+.wrd:active{transform:translateY(2px);box-shadow:0 1px 0 #1b1550}
+.wrd b{font-size:18px;flex:0 0 42%;font-weight:800}
+.wrd span{color:var(--dim);font-size:15px;flex:1}
+.wrd i{font-style:normal;opacity:.6;font-size:19px}
+.probe-a{background:#3ddc841f;border:3px solid var(--ok);border-radius:16px;
+  padding:15px;margin-top:13px;animation:hoch .3s both}
+.dots{display:flex;gap:7px;justify-content:center;margin:16px 0 6px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block;
+  transition:width .25s,background .25s}
+.dots i.on{background:var(--gold);width:26px;border-radius:99px}
 
-/* ---------- Overlay „Nochmal erklären" ---------- */
-.ovl{position:fixed;inset:0;background:rgba(8,11,20,.82);z-index:50;
-  display:flex;align-items:flex-end;justify-content:center;padding:14px}
-.ovl>div{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);
-  padding:16px;max-width:620px;width:100%;max-height:86vh;overflow:auto}
+/* ---------- Overlay ---------- */
+.ovl{position:fixed;inset:0;background:#0a0722d9;z-index:50;
+  display:flex;align-items:flex-end;justify-content:center;padding:14px;
+  backdrop-filter:blur(3px);animation:rein .2s both}
+.ovl>div{background:var(--bg2);border:3px solid var(--line);border-radius:var(--r);
+  padding:18px;max-width:620px;width:100%;max-height:86vh;overflow:auto}
+
+/* ---------- Kristall ---------- */
+.kristall{display:block;margin:0 auto;
+  filter:drop-shadow(0 8px 22px #7c3aed66);
+  animation:schweben 4.5s ease-in-out infinite}
+@keyframes schweben{0%,100%{transform:translateY(0) rotate(-1.5deg)}
+  50%{transform:translateY(-9px) rotate(1.5deg)}}
+.kristall .k-funken{animation:blinken 3.2s ease-in-out infinite}
+@keyframes blinken{0%,100%{opacity:.25}50%{opacity:1}}
+.jubel .kristall{animation:jubeln .8s cubic-bezier(.2,1.6,.4,1),
+  schweben 4.5s ease-in-out .8s infinite}
+@keyframes jubeln{0%{transform:scale(.4) rotate(-18deg);opacity:0}
+  60%{transform:scale(1.15) rotate(6deg)}100%{transform:scale(1) rotate(0)}}
+.kmini{width:34px;height:44px;flex:none}
+.kmini .kristall{animation:none;filter:drop-shadow(0 3px 8px #7c3aed88);margin:0}
+
+/* ---------- Konfetti ---------- */
+#konfetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+.kf{position:absolute;width:11px;height:16px;border-radius:3px;
+  animation:fall linear forwards}
+@keyframes fall{
+  from{transform:translateY(-20px) rotate(0)}
+  to{transform:translateY(105vh) rotate(720deg);opacity:.7}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}}
 </style>
 </head>
 <body>
@@ -2514,7 +2618,7 @@ function leerState() {
     /* Diktate:  { erledigt[], letzterTag } */
     diktat: { erledigt: [], letzterTag: null },
     stats: { perfekteDiktate: 0, sessions: 0 },
-    settings: { satzzeichenSprechen: true, tempo: 0.85, umlautLeiste: false },
+    settings: { satzzeichenSprechen: true, tempo: 0.85, umlautLeiste: false, klang: true },
     lastExport: null, startDatum: heute()
   };
 }
@@ -3018,6 +3122,95 @@ function sprich(text, lang, tempo) {
   return true;
 }
 
+/**
+ * Kurze Töne über die Web Audio API — keine Dateien, offline, abschaltbar.
+ * Belohnung, die man hört, wirkt bei Kindern stärker als eine Zahl.
+ */
+let _audio = null;
+function ton(art) {
+  if (!S.settings.klang) return;
+  try {
+    _audio = _audio || new (window.AudioContext || window.webkitAudioContext)();
+    if (_audio.state === "suspended") _audio.resume();
+    const folge = {
+      richtig: [[660, 0], [880, .09]],
+      falsch:  [[300, 0], [220, .12]],
+      fertig:  [[523, 0], [659, .11], [784, .22], [1047, .33]],
+      stufe:   [[784, 0], [988, .1], [1319, .2]]
+    }[art] || [];
+    folge.forEach(([hz, t]) => {
+      const o = _audio.createOscillator(), g = _audio.createGain();
+      o.type = art === "falsch" ? "sawtooth" : "triangle";
+      o.frequency.value = hz;
+      const start = _audio.currentTime + t;
+      g.gain.setValueAtTime(0.0001, start);
+      g.gain.exponentialRampToValueAtTime(art === "falsch" ? .12 : .18, start + .015);
+      g.gain.exponentialRampToValueAtTime(0.0001, start + .22);
+      o.connect(g); g.connect(_audio.destination);
+      o.start(start); o.stop(start + .25);
+    });
+  } catch (e) {}
+}
+
+/**
+ * Der Kristall — die Figur der App.
+ *
+ * Ein geschliffener Edelstein statt eines Maskottchens: wirkt „cool" statt
+ * niedlich und altert nicht mit. Farbe und Glanz erzählen den Zustand.
+ */
+function kristall(zustand = "normal", groesse = 92) {
+  const paletten = {
+    normal: ["#c084fc", "#7c3aed", "#e9d5ff"],
+    super:  ["#fcd34d", "#f59e0b", "#fef3c7"],
+    gut:    ["#86efac", "#22c55e", "#dcfce7"],
+    uebung: ["#f9a8d4", "#db2777", "#fce7f3"],
+    schlaf: ["#a5b4fc", "#4f46e5", "#e0e7ff"]
+  };
+  const [hell, dunkel, glanz] = paletten[zustand] || paletten.normal;
+  const id = "k" + Math.random().toString(36).slice(2, 8);
+  return `<svg class="kristall" viewBox="0 0 100 128" width="${groesse}"
+      height="${Math.round(groesse * 1.28)}" aria-hidden="true">
+    <defs>
+      <linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="${hell}"/><stop offset="1" stop-color="${dunkel}"/>
+      </linearGradient>
+      <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${glanz}" stop-opacity=".95"/>
+        <stop offset="1" stop-color="${hell}" stop-opacity=".3"/>
+      </linearGradient>
+    </defs>
+    <path d="M50 3 L92 39 L72 123 L28 123 L8 39 Z" fill="url(#${id}a)"/>
+    <path d="M50 3 L92 39 L50 53 Z" fill="url(#${id}b)"/>
+    <path d="M50 3 L8 39 L50 53 Z" fill="${glanz}" opacity=".6"/>
+    <path d="M8 39 L50 53 L28 123 Z" fill="#ffffff" opacity=".14"/>
+    <path d="M92 39 L50 53 L72 123 Z" fill="#000000" opacity=".18"/>
+    <path d="M50 53 L28 123 L72 123 Z" fill="#ffffff" opacity=".07"/>
+    <g class="k-funken" fill="${glanz}">
+      <path d="M85 15 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4 Z"/>
+      <path d="M15 95 l1.7 4 4 1.7 -4 1.7 -1.7 4 -1.7 -4 -4 -1.7 4 -1.7 Z"/>
+    </g>
+  </svg>`;
+}
+
+/** Konfetti — reines CSS, räumt sich selbst auf. */
+function konfetti(anzahl = 60) {
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = document.createElement("div");
+  box.id = "konfetti";
+  document.body.appendChild(box);
+  const farben = ["#c084fc", "#f472b6", "#38bdf8", "#fbbf24", "#4ade80", "#e9d5ff"];
+  for (let i = 0; i < anzahl; i++) {
+    const k = document.createElement("i");
+    k.className = "kf";
+    k.style.left = Math.random() * 100 + "%";
+    k.style.background = farben[Math.floor(Math.random() * farben.length)];
+    k.style.animationDuration = (1.6 + Math.random() * 1.4) + "s";
+    k.style.animationDelay = (Math.random() * .5) + "s";
+    box.appendChild(k);
+  }
+  setTimeout(() => box.remove(), 4000);
+}
+
 /* --- XP, Level, Streak, Abzeichen --- */
 function xpGeben(n) {
   S.xp += n;
@@ -3078,7 +3271,7 @@ function kopf() {
   return `
     <div class="hdr">
       <h1>Gymnasium Fitness</h1>
-      <span class="chip fire">🔥 ${S.streak.count}</span>
+      <span class="chip fire${S.streak.count > 0 ? " aktiv" : ""}">🔥 ${S.streak.count}</span>
       <span class="chip">⚡ ${S.xp}</span>
       <button class="chip" onclick="zeige('profil')">👤</button>
     </div>
@@ -3103,7 +3296,8 @@ function viewHome() {
       ? "Fertig für heute."
       : `Drei Aufgaben, zusammen etwa 25 Minuten. Mehr ist heute nicht vorgesehen.`}</p>`;
   if (p.fertig) {
-    h += `<p class="sub">🎉 Alles erledigt.</p>`;
+    h += `<div style="margin:6px 0 2px">${kristall("gut", 70)}</div>
+      <p class="sub center">Alles erledigt für heute.</p>`;
   } else {
     const zeile = (istOffen, text, cb, farbe) => `
       <div class="wk"><b style="${istOffen ? "" : "opacity:.45"}">${istOffen ? "○" : "✓"} ${text}</b>
@@ -3319,8 +3513,11 @@ function viewProfil() {
   let h = `<div class="hdr"><button class="chip" onclick="zeige('home')">‹ Zurück</button>
     <h1 style="text-align:right">Dein Profil</h1></div>`;
 
+  const profilZustand = S.streak.count >= 3 ? "super"
+    : S.streak.count >= 1 ? "normal" : "schlaf";
   h += `<div class="card center">
-    <div class="big">⚡ ${S.xp}</div>
+    ${kristall(profilZustand, 96)}
+    <div class="big" style="font-size:38px;margin:12px 0 4px">⚡ ${S.xp}</div>
     <div><b>Rang ${S.level}</b> · ${LEVEL_NAMEN[S.level - 1] || "Profi"}</div>
     <div class="muted">🔥 ${S.streak.count} Tage in Folge · ${S.streak.jokersLeft} Joker übrig</div>
   </div>`;
@@ -3350,6 +3547,9 @@ function viewProfil() {
     <div style="height:9px"></div>
     <button class="btn ghost sm" onclick="einstellung('umlautLeiste')">
       Umlaut-Leiste anzeigen: <b>${S.settings.umlautLeiste ? "an" : "aus"}</b></button>
+    <div style="height:9px"></div>
+    <button class="btn ghost sm" onclick="einstellung('klang');ton('richtig')">
+      Töne: <b>${S.settings.klang ? "an" : "aus"}</b></button>
     <p class="sub" style="margin-top:9px">Die Umlaut-Leiste braucht man nur bei einer
     fremden Tastatur — deutsche Tastaturen können ä ö ü ß ohnehin.</p>
   </div>`;
@@ -4141,6 +4341,8 @@ function pruefen() {
     }
   }
 
+  ton(ok ? "richtig" : "falsch");
+
   /* --- Rückmeldung --- */
   const strat = (it.rules || []).map(r => REGEL_MAP[r]?.strategie).filter(Boolean)[0];
   const erklRegel = ok ? null : (it.rules || []).find(r => karteFuerRegel(r));
@@ -4245,6 +4447,8 @@ function beenden() {
 
   if (score >= 0.8) xpGeben(25);
   L.neueBadges = badgesPruefen();
+  ton(L.graduiert ? "stufe" : "fertig");
+  if (L.graduiert || score >= 0.9) setTimeout(() => konfetti(L.graduiert ? 90 : 50), 250);
   sichern();
   VIEW = "ergebnis";
   render();
@@ -4303,9 +4507,10 @@ function renderErgebnis() {
 
   /* Bewusst ohne Prozentzahl: Die Zahl allein lädt zum Punktejagen ein.
      „8 von 10 richtig" sagt dasselbe, ohne nach Note zu klingen. */
+  const zustand = pct >= 90 ? "super" : pct >= 70 ? "gut" : "uebung";
   let h = `<div class="card center">
-    <div class="big">${pct >= 90 ? "🎉" : pct >= 70 ? "👏" : "💪"}</div>
-    <h2>${wort}</h2>
+    <div class="jubel">${kristall(zustand, 86)}</div>
+    <h2 style="margin-top:10px">${wort}</h2>
     <p class="sub">${L.richtig} von ${L.items.length} richtig</p>
   </div>`;
 
@@ -4327,9 +4532,9 @@ function renderErgebnis() {
 
   /* Lektion gemeistert? Das ist der eigentliche Meilenstein — nicht ein Tag. */
   if (L.graduiert) {
-    h += `<div class="card center" style="border-color:var(--ok)">
-      <div class="big">🏆</div>
-      <h2>Lektion gemeistert!</h2>
+    h += `<div class="card center" style="border-color:var(--gold)">
+      <div class="jubel">${kristall("super", 100)}</div>
+      <h2 style="margin-top:10px">Lektion gemeistert!</h2>
       <p class="sub">„${esc(LEK(L.fach)[L.lekId].titel)}" sitzt.
       Die nächste Lektion ist freigeschaltet.</p></div>`;
   } else if (L.status) {
