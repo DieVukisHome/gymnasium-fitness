@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gymnasium Fitness</title>
-<!-- Erzeugt von tools/bauen.js am 2026-08-09. Nicht direkt bearbeiten —
+<!-- Erzeugt von tools/bauen.js am 2026-08-10. Nicht direkt bearbeiten —
      Änderungen gehören in index.html und data/*.js. -->
 
 <!-- Als App auf den Home-Bildschirm: iPad und iPhone starten dann ohne
@@ -29,7 +29,12 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);
   font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   overscroll-behavior-y:contain}
 button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
-#app{max-width:640px;margin:0 auto;padding:14px 14px 40px;min-height:100vh}
+/* Sichere Bereiche: Auf dem iPhone liegt der Inhalt sonst unter der
+   Statusleiste und unter dem Home-Indikator. Betrifft vor allem die
+   Fassung, die vom Home-Bildschirm gestartet wird. */
+#app{max-width:640px;margin:0 auto;min-height:100vh;
+  padding:calc(14px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right))
+          calc(40px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left))}
 
 /* ---------- Kopfzeile ---------- */
 .hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
@@ -125,10 +130,11 @@ textarea{resize:vertical;min-height:66px}
 .strat{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.12);
   font-size:14px;color:var(--dim)}
 
-/* Diktat */
-.dict-sent{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+/* Diktat — die Knöpfe müssen umbrechen, sonst laufen sie auf dem Handy
+   rechts aus dem Bild. */
+.dict-sent{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center}
 .dict-sent button{background:var(--card2);border:1px solid var(--line);border-radius:11px;
-  padding:11px 15px;font-size:15px;white-space:nowrap}
+  padding:11px 14px;font-size:15px;white-space:nowrap;flex:1 1 auto;min-width:0}
 .diff{background:var(--card2);border-radius:11px;padding:12px;margin-top:9px;
   line-height:2.1;font-size:16px}
 .lsatz{font-size:18px;line-height:2.4;margin:12px 0}
@@ -2666,6 +2672,20 @@ function lektionsStatus(lekId, fach) {
   };
 }
 
+/**
+ * Fortschrittsbalken einer Lektion — nur fürs Anzeigen.
+ *
+ * Bewusst nicht dasselbe wie `lektionsMastery`: Lektionen teilen sich Regeln
+ * (Lektion 2 übt nebenbei Nomen aus Lektion 1). Der Durchschnitt über die
+ * bereits geübten Regeln würde deshalb Fortschritt in einer Lektion anzeigen,
+ * die noch nie gelaufen ist. Vor dem ersten Durchgang bleibt der Balken leer.
+ */
+function anzeigeFortschritt(lekId, fach) {
+  const p = S.lektionen[lekId];
+  if (!p || !p.passes) return 0;
+  return lektionsMastery(lekId, fach);
+}
+
 /** Die Lektion, an der gerade gearbeitet wird — die erste unfertige. */
 function aktiveLektion(fach) {
   for (const id of lektionsIds(fach)) {
@@ -3151,10 +3171,13 @@ function pfad(fach, titel) {
              st.passes ? `${st.passes} von etwa ${ziel} Übungstagen` :
              (frei ? "noch nicht begonnen" : "wird später freigeschaltet"))
           : "in Vorbereitung"}</span>
-        ${hatInhalt ? `<div class="mini" style="width:100%;margin-top:6px"><i
-          style="width:${Math.round(st.mastery * 100)}%;background:${
-            st.mastery >= GRAD_MASTERY ? "var(--ok)" :
-            st.mastery >= 0.5 ? "var(--gold)" : "var(--de)"}"></i></div>` : ""}
+        ${hatInhalt ? (() => {
+          const w = Math.round(anzeigeFortschritt(id, fach) * 100);
+          return `<div class="mini" style="width:100%;margin-top:6px"><i
+            style="width:${w}%;background:${
+              w >= GRAD_MASTERY * 100 ? "var(--ok)" :
+              w >= 50 ? "var(--gold)" : "var(--de)"}"></i></div>`;
+        })() : ""}
       </div>
     </div>`;
   });
@@ -3180,8 +3203,10 @@ function viewLektion(id) {
       <div class="wk"><b>Durchgänge</b><span class="muted">${st.passes}
         ${st.fertig ? "· gemeistert 🎉" : `· mindestens ${MIN_DURCHGAENGE} nötig`}</span></div>
       <div class="wk"><b>Wie gut sitzt es?</b>
-        <div class="mini"><i style="width:${Math.round(st.mastery * 100)}%;background:${
-          st.mastery >= GRAD_MASTERY ? "var(--ok)" : "var(--gold)"}"></i></div></div>
+        ${st.passes
+          ? `<div class="mini"><i style="width:${Math.round(anzeigeFortschritt(id, fach) * 100)}%;
+              background:${st.mastery >= GRAD_MASTERY ? "var(--ok)" : "var(--gold)"}"></i></div>`
+          : `<span class="muted">noch nicht geübt</span>`}</div>
       <div class="wk"><b>Geübt an</b><span class="muted">${st.tage.length} Tag${
         st.tage.length === 1 ? "" : "en"}</span></div>
     </div>`;
@@ -3569,33 +3594,62 @@ function tfWahl(v) {
   btnAn(true);
 }
 
+/**
+ * Sortieren in Körbe.
+ *
+ * Alles bleibt bis zum Prüfen änderbar: Ein Wort im Korb lässt sich antippen
+ * und wandert zurück in den Vorrat. Ohne das wäre ein Fehlgriff nicht mehr zu
+ * korrigieren — und das ist bei einem Kind der sichere Weg zum Frust.
+ */
 function rSort(it) {
   A = { zuord: {}, aktiv: null };
   A.words = shuffle([...it.words]);
-  return `<div class="chips" id="wpool">${A.words.map((w, i) =>
-      `<button class="chip2" id="w${i}" onclick="sortWahl(${i})">${esc(w.w)}</button>`).join("")}</div>
-    <div class="buckets">${it.buckets.map((b, i) =>
-      `<div class="bucket" id="b${i}" onclick="sortLegen(${i})">
-        <b>${esc(b)}</b><div id="bc${i}"></div></div>`).join("")}</div>`;
+  return `<div id="sortbox">${sortHtml(it)}</div>
+    <p class="muted" id="sorthinweis" style="margin-top:10px">Tippe ein Wort an,
+    dann den Korb. Ein Wort im Korb kannst du wieder herausnehmen.</p>`;
 }
+
+function sortHtml(it) {
+  const offen = A.words.map((w, i) => ({ w, i })).filter(x => A.zuord[x.i] === undefined);
+  return `
+    <div class="chips" id="wpool">${offen.length
+      ? offen.map(x => `<button class="chip2 ${A.aktiv === x.i ? "sel" : ""}"
+          onclick="sortWahl(${x.i})">${esc(x.w.w)}</button>`).join("")
+      : (A.geprueft ? "" : `<span class="muted">Alle Wörter zugeordnet.</span>`)}</div>
+    <div class="buckets">${it.buckets.map((b, bi) => `
+      <div class="bucket ${A.aktiv !== null && !A.geprueft ? "act" : ""}"
+        ${A.geprueft ? "" : `onclick="sortLegen(${bi})"`}>
+        <b>${esc(b)}</b>
+        ${A.words.map((w, i) => {
+          if (A.zuord[i] !== bi) return "";
+          const richtig = it.buckets.indexOf(w.b) === bi;
+          const farbe = A.geprueft ? (richtig ? " good" : " bad") : "";
+          return `<button class="chip2${farbe}" ${A.geprueft ? "" :
+            `onclick="event.stopPropagation();sortRaus(${i})"`}>${esc(w.w)}${
+            A.geprueft && !richtig ? ` <small>(${esc(w.b)})</small>` : ""}</button>`;
+        }).join("")}
+      </div>`).join("")}</div>`;
+}
+
+function sortZeichnen() {
+  document.getElementById("sortbox").innerHTML = sortHtml(L.items[L.i]);
+  btnAn(Object.keys(A.zuord).length === A.words.length);
+}
+
 function sortWahl(i) {
-  A.aktiv = i;
-  A.words.forEach((_, j) => {
-    const e = document.getElementById("w" + j);
-    if (e) e.classList.toggle("sel", i === j);
-  });
+  A.aktiv = A.aktiv === i ? null : i;   // nochmal antippen hebt die Auswahl auf
+  sortZeichnen();
 }
 function sortLegen(bi) {
   if (A.aktiv === null) return;
-  const it = L.items[L.i];
   A.zuord[A.aktiv] = bi;
-  const w = A.words[A.aktiv];
-  document.getElementById("w" + A.aktiv).classList.add("used");
-  document.getElementById("bc" + bi).insertAdjacentHTML("beforeend",
-    `<div class="chip2">${esc(w.w)}</div>`);
   A.aktiv = null;
-  A.words.forEach((_, j) => document.getElementById("w" + j)?.classList.remove("sel"));
-  btnAn(Object.keys(A.zuord).length === A.words.length);
+  sortZeichnen();
+}
+function sortRaus(i) {
+  delete A.zuord[i];
+  A.aktiv = null;
+  sortZeichnen();
 }
 
 function rTap(it) {
@@ -3635,30 +3689,68 @@ function ordZeichnen() {
   btnAn(A.gelegt.length === A.pool.length);
 }
 
+/**
+ * Paare zuordnen.
+ *
+ * Verbundene Paare bekommen dieselbe Nummer, damit sichtbar ist, was
+ * zusammengehört. Antippen löst die Verbindung wieder — bis zum Prüfen
+ * bleibt alles änderbar.
+ */
 function rMatch(it) {
   A = { zuord: {}, aktiv: null };
   A.links = it.pairs.map(p => p[0]);
   A.rechts = shuffle(it.pairs.map(p => p[1]));
+  return `<div id="matchbox">${matchHtml(it)}</div>
+    <p class="muted" id="matchhinweis" style="margin-top:10px">Tippe links ein Wort an,
+    dann rechts das passende. Zum Lösen nochmal antippen.</p>`;
+}
+
+function matchHtml(it) {
+  /* Nummer eines Paares — für die sichtbare Verbindung. */
+  const nrLinks = i => A.zuord[i] === undefined ? null
+    : Object.keys(A.zuord).sort((a, b) => a - b).indexOf(String(i)) + 1;
+  const nrRechts = ri => {
+    const l = Object.keys(A.zuord).find(k => A.zuord[k] === ri);
+    return l === undefined ? null : nrLinks(+l);
+  };
+  const richtigL = i => A.rechts[A.zuord[i]] === it.pairs.find(p => p[0] === A.links[i])[1];
+
+  const knopf = (text, nr, sel, klick, zustand) => `
+    <button class="chip2${zustand}${sel ? " sel" : ""}"
+      style="width:100%;margin-bottom:7px;text-align:left"
+      ${klick ? `onclick="${klick}"` : ""}>
+      ${nr ? `<b style="opacity:.6">${nr}</b> ` : ""}${esc(text)}</button>`;
+
   return `<div class="pairs">
-    <div>${A.links.map((x, i) =>
-      `<button class="chip2" style="width:100%;margin-bottom:7px" id="l${i}"
-        onclick="matchL(${i})">${esc(x)}</button>`).join("")}</div>
-    <div>${A.rechts.map((x, i) =>
-      `<button class="chip2" style="width:100%;margin-bottom:7px" id="r${i}"
-        onclick="matchR(${i})">${esc(x)}</button>`).join("")}</div></div>`;
+    <div>${A.links.map((x, i) => {
+      const nr = nrLinks(i);
+      const zustand = A.geprueft && nr ? (richtigL(i) ? " good" : " bad") : "";
+      return knopf(x, nr, A.aktiv === i, A.geprueft ? "" : `matchL(${i})`, zustand);
+    }).join("")}</div>
+    <div>${A.rechts.map((x, i) => {
+      const nr = nrRechts(i);
+      return knopf(x, nr, false, A.geprueft ? "" : `matchR(${i})`, "");
+    }).join("")}</div></div>`;
 }
-function matchL(i) {
-  A.aktiv = i;
-  A.links.forEach((_, j) => document.getElementById("l" + j).classList.toggle("sel", i === j));
-}
-function matchR(i) {
-  if (A.aktiv === null) return;
-  A.zuord[A.aktiv] = i;
-  document.getElementById("l" + A.aktiv).classList.add("used");
-  document.getElementById("r" + i).classList.add("used");
-  document.getElementById("l" + A.aktiv).classList.remove("sel");
-  A.aktiv = null;
+
+function matchZeichnen() {
+  document.getElementById("matchbox").innerHTML = matchHtml(L.items[L.i]);
   btnAn(Object.keys(A.zuord).length === A.links.length);
+}
+
+function matchL(i) {
+  // Schon verbunden? Dann Verbindung lösen statt neu auswählen.
+  if (A.zuord[i] !== undefined) { delete A.zuord[i]; A.aktiv = null; }
+  else A.aktiv = A.aktiv === i ? null : i;
+  matchZeichnen();
+}
+function matchR(ri) {
+  const belegt = Object.keys(A.zuord).find(k => A.zuord[k] === ri);
+  if (belegt !== undefined) { delete A.zuord[belegt]; A.aktiv = null; matchZeichnen(); return; }
+  if (A.aktiv === null) return;
+  A.zuord[A.aktiv] = ri;
+  A.aktiv = null;
+  matchZeichnen();
 }
 
 function rFehler(it) {
@@ -3844,7 +3936,11 @@ function pruefen() {
         const soll = it.buckets.indexOf(w.b);
         if (A.zuord[i] !== soll) ok = false;
       });
-      loesung = A.words.map(w => `${w.w} → ${w.b}`).join(" · ");
+      A.geprueft = true;
+      sortZeichnen();
+      const hinweis = document.getElementById("sorthinweis");
+      if (hinweis) hinweis.style.display = "none";
+      loesung = "";   // die richtige Zuordnung steht schon farbig in den Körben
       break;
     }
     case "tap":
@@ -3866,7 +3962,11 @@ function pruefen() {
         const soll = it.pairs.find(p => p[0] === l)[1];
         if (A.rechts[A.zuord[i]] !== soll) ok = false;
       });
-      loesung = it.pairs.map(p => `${p[0]} → ${p[1]}`).join(" · ");
+      A.geprueft = true;
+      matchZeichnen();
+      const mh = document.getElementById("matchhinweis");
+      if (mh) mh.style.display = "none";
+      loesung = ok ? "" : it.pairs.map(p => `${p[0]} → ${p[1]}`).join(" · ");
       break;
     }
     case "fehler": {
