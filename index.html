@@ -154,7 +154,8 @@ input[type=text],textarea{width:100%;background:#0f0b2b;border:3px solid var(--l
   font-weight:600;outline:none}
 input[type=text]:focus,textarea:focus{border-color:var(--de);
   box-shadow:0 0 0 4px #5b8cff2a}
-textarea{resize:vertical;min-height:70px}
+textarea{resize:none;min-height:76px;line-height:1.6;overflow:hidden}
+#eingabe{font-size:19px}
 .uml{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
 .uml button{background:var(--card2);border:2px solid var(--line);border-radius:12px;
   padding:9px 14px;font-size:18px;min-width:46px;font-weight:700;
@@ -3766,28 +3767,42 @@ function erklaerungZeigen(regelId) {
  * Das ist der Unterschied zwischen „nochmal für eine bessere Zahl" und
  * „das schaue ich mir nochmal an".
  */
-function baueNachbesserung(fehlerIds, fach) {
+function baueNachbesserung(fehler, fach) {
   const pool = alleItems(fach);
   const out = [];
   const nimm = it => { if (it && !out.some(o => o.id === it.id)) out.push(it); };
 
-  const falsche = fehlerIds.map(id => pool.find(i => i.id === id)).filter(Boolean);
-  falsche.forEach(nimm);
+  /* Zwei Aufrufformen: mit Regeln (aus einer Runde) oder nur mit IDs.
+     Fehlen die Regeln, werden sie aus der Aufgabe im Pool geholt — sonst
+     gäbe es keine Zusatzübungen und es bliebe beim Auswendiglernen. */
+  const liste = (fehler || []).map(f => {
+    const roh = typeof f === "string" ? { id: f, rules: [] } : { ...f };
+    if (!roh.rules || !roh.rules.length) {
+      const imPool = pool.find(i => i.id === roh.id);
+      roh.rules = imPool ? (imPool.rules || []) : [];
+    }
+    return roh;
+  });
+  const ids = liste.map(f => f.id);
 
-  // Zu jeder betroffenen Regel eine weitere Aufgabe, möglichst eine andere
-  const regeln = [...new Set(falsche.flatMap(i => i.rules || []))];
+  // Die verpatzten Aufgaben selbst, sofern sie im Pool stehen
+  ids.map(id => pool.find(i => i.id === id)).filter(Boolean).forEach(nimm);
+
+  /* Dann über die Regeln — das ist der Weg, der auch für das Diktat
+     funktioniert: Es steht in keinem Pool, trägt aber Regeln wie
+     „Nomen großschreiben", zu denen es sehr wohl Übungen gibt. */
+  const regeln = [...new Set(liste.flatMap(f => f.rules))];
   regeln.forEach(r => {
-    const kand = shuffle(pool.filter(i =>
-      (i.rules || []).includes(r) && !fehlerIds.includes(i.id)));
-    if (kand.length) nimm(kand[0]);
+    const kand = shuffle(pool.filter(i => (i.rules || []).includes(r) && !ids.includes(i.id)));
+    kand.slice(0, 2).forEach(nimm);
   });
 
   return shuffle(out).slice(0, 12);
 }
 
 /** Nachbessern starten — aus dem Ergebnis oder von der Lektionsseite. */
-function nachbessernStarten(fach, fehlerIds) {
-  const items = baueNachbesserung(fehlerIds, fach);
+function nachbessernStarten(fach, fehler) {
+  const items = baueNachbesserung(fehler, fach);
   if (!items.length) { alert("Nichts zum Nachbessern — es war alles richtig!"); return; }
   L = { fach, lekId: "nachbessern", items, i: 0, richtig: 0, falsch: 0,
         zaehltNicht: true, start: Date.now(), itemStart: Date.now(), regelFehler: {} };
@@ -4135,8 +4150,13 @@ function diktatSatz() {
   if (A.modus === "luecke") {
     feld = `<div class="lsatz">${lueckeHtml(s)}</div>`;
   } else {
-    feld = `<input type="text" id="eingabe" autocomplete="off" autocorrect="off"
-      autocapitalize="sentences" spellcheck="false" placeholder="Satz hier tippen">`;
+    /* Mehrzeilig und mitwachsend: Ein einzeiliges Feld schiebt den Satzanfang
+       aus dem Bild, sobald er länger wird — dann kann sie vor dem Abschicken
+       nicht mehr nachlesen, was sie geschrieben hat. */
+    feld = `<textarea id="eingabe" rows="2" autocomplete="off" autocorrect="off"
+      autocapitalize="sentences" spellcheck="false"
+      placeholder="Satz hier tippen"
+      oninput="mitwachsen(this)"></textarea>`;
   }
 
   document.getElementById("dbox").innerHTML = `
@@ -4150,7 +4170,15 @@ function diktatSatz() {
     <button class="btn ok" onclick="diktatWeiter()">
       ${letzter ? "Diktat abgeben" : "Nächster Satz"}</button>`;
 
+  const feldEl = document.getElementById("eingabe");
+  if (feldEl && feldEl.tagName === "TEXTAREA") mitwachsen(feldEl);
   setTimeout(() => diktatHoeren(), 400);
+}
+
+/** Textfeld wächst mit dem Inhalt, damit nichts aus dem Bild rutscht. */
+function mitwachsen(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 260) + "px";
 }
 
 /** Satz mit Eingabefeldern an den Lückenstellen. */
@@ -4323,7 +4351,10 @@ function pruefen() {
   if (ok) { L.richtig++; xpGeben(10); }
   else {
     L.falsch++;
-    (L.fehlerIds = L.fehlerIds || []).push(it.id);
+    /* Regeln mitschreiben, nicht nur die ID: Das Diktat des Tages wird zur
+       Laufzeit gebaut und steht in keinem Aufgabenpool. Über die ID allein
+       ließe sich dafür nichts nachbessern. */
+    (L.fehler = L.fehler || []).push({ id: it.id, rules: it.rules || [] });
     (it.rules || []).forEach(r => L.regelFehler[r] = (L.regelFehler[r] || 0) + 1);
   }
 
@@ -4503,7 +4534,7 @@ function renderErgebnis() {
   const score = L.items.length ? L.richtig / L.items.length : 0;
   const pct = Math.round(score * 100);
   const wort = pct >= 90 ? "Fantastisch!" : pct >= 70 ? "Gut gemacht!" :
-               pct >= 50 ? "Solide Runde." : "Das üben wir nochmal.";
+               pct >= 50 ? "Solide Runde." : "Das war knifflig.";
 
   /* Bewusst ohne Prozentzahl: Die Zahl allein lädt zum Punktejagen ein.
      „8 von 10 richtig" sagt dasselbe, ohne nach Note zu klingen. */
@@ -4516,16 +4547,20 @@ function renderErgebnis() {
 
   /* Nachbessern anbieten, solange die Fehler frisch sind. Rückmeldung wirkt
      am stärksten, wenn gleich danach die Gelegenheit kommt, sie anzuwenden. */
-  if ((L.fehlerIds || []).length && L.lekId !== "nachbessern") {
-    const ids = JSON.stringify(L.fehlerIds).replace(/"/g, "&quot;");
+  /* Nur anbieten, wenn sich daraus auch wirklich eine Runde bauen lässt —
+     sonst erschien ein Hinweis „nichts zum Nachbessern", obwohl etwas falsch war. */
+  const nachbesserbar = (L.fehler || []).length && L.lekId !== "nachbessern"
+    ? baueNachbesserung(L.fehler, L.fach) : [];
+  if (nachbesserbar.length) {
+    const daten = JSON.stringify(L.fehler).replace(/"/g, "&quot;");
+    const n = L.fehler.length;
     h += `<div class="card">
       <h2>Nochmal anschauen?</h2>
-      <p class="sub">${L.fehlerIds.length} Aufgabe${L.fehlerIds.length === 1 ? "" : "n"}
-      ${L.fehlerIds.length === 1 ? "hat" : "haben"} noch nicht geklappt. Du kannst sie
-      dir gleich nochmal vornehmen — das verbessert deine Regeln. Dein Ergebnis von
-      eben bleibt, wie es ist.</p>
+      <p class="sub">${n} Aufgabe${n === 1 ? "" : "n"} ${n === 1 ? "hat" : "haben"}
+      noch nicht geklappt. ${nachbesserbar.length} passende Übungen warten —
+      das verbessert deine Regeln. Dein Ergebnis von eben bleibt, wie es ist.</p>
       <div style="height:11px"></div>
-      <button class="btn ok" onclick='nachbessernStarten("${L.fach}", ${ids})'>
+      <button class="btn ok" onclick='nachbessernStarten("${L.fach}", ${daten})'>
         Das üben wir nochmal</button>
     </div>`;
   }
@@ -4554,7 +4589,7 @@ function renderErgebnis() {
 
   const schwach = Object.entries(L.regelFehler).sort((a, b) => b[1] - a[1]).slice(0, 3);
   if (schwach.length) {
-    h += `<div class="card"><h2>Das üben wir nochmal</h2>` +
+    h += `<div class="card"><h2>Woran wir arbeiten</h2>` +
       schwach.map(([r, n]) => {
         const d = REGEL_MAP[r];
         return `<div class="wk"><b>${esc(d?.name || r)}</b>
