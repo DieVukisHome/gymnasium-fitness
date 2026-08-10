@@ -154,6 +154,9 @@ input[type=text],textarea{width:100%;background:#0f0b2b;border:3px solid var(--l
   font-weight:600;outline:none}
 input[type=text]:focus,textarea:focus{border-color:var(--de);
   box-shadow:0 0 0 4px #5b8cff2a}
+.spellwort{font-size:38px;font-weight:800;letter-spacing:2px;
+  background:linear-gradient(180deg,#fff,#e9d5ff);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;padding:6px 0}
 textarea{resize:none;min-height:76px;line-height:1.6;overflow:hidden}
 #eingabe{font-size:19px}
 .uml{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
@@ -1696,19 +1699,19 @@ const LEKTIONEN_EN = {
     nr: 1, titel: "Alphabet, Spelling & Numbers",
     intro: "Englisch schreibt man anders, als man es spricht. Heute schaust du dir das Wortbild genau an.",
     items: [
-      { id: "en-01-01", type: "mc", rules: ["en.sp.spelling"],
-        prompt: "Wie schreibt man das Wort für „Freund“?",
-        correct: "friend",
-        opts: [{ t: "friend" }, { t: "frend", miss: "en.sp.gehoert-geschrieben" },
-               { t: "freind", miss: "en.sp.ie-ei-vertauscht" }],
-        speak: "friend" },
+      {
+      id: "en-01-01", type: "spell", rules: ["en.sp.spelling"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "friend", bedeutung: "Freund",
+      hint: "Am Ende steckt END drin: fri-END.", speak: "friend"
+    },
 
-      { id: "en-01-02", type: "mc", rules: ["en.sp.spelling"],
-        prompt: "Wie schreibt man das Wort für „weil“?",
-        correct: "because",
-        opts: [{ t: "because" }, { t: "becaus", miss: "en.sp.endung-fehlt" },
-               { t: "becouse", miss: "en.sp.vokal-vertauscht" }],
-        speak: "because" },
+      {
+      id: "en-01-02", type: "spell", rules: ["en.sp.spelling"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "because", bedeutung: "weil",
+      hint: "be + cause. Das Wort cause heißt Ursache — daran kannst du es dir merken.", speak: "because"
+    },
 
       { id: "en-01-03", type: "type", rules: ["en.sp.spelling"],
         prompt: "Wie schreibt man „Farbe“ auf Englisch? (britisch)",
@@ -1732,12 +1735,12 @@ const LEKTIONEN_EN = {
                 { w: "eighteen", b: "-teen (13–19)" }, { w: "eighty", b: "-ty (20–90)" },
                 { w: "sixteen", b: "-teen (13–19)" }, { w: "sixty", b: "-ty (20–90)" }] },
 
-      { id: "en-01-07", type: "mc", rules: ["en.sp.spelling"],
-        prompt: "Welche Schreibweise ist richtig?",
-        correct: "beautiful",
-        opts: [{ t: "beautiful" }, { t: "beatiful", miss: "en.sp.buchstabe-fehlt" },
-               { t: "beautifull", miss: "en.sp.doppelter-konsonant" }],
-        speak: "beautiful" },
+      {
+      id: "en-01-07", type: "spell", rules: ["en.sp.spelling"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "beautiful", bedeutung: "schön",
+      hint: "Sprich es beim Schreiben in vier Teilen: be-au-ti-ful. Am Ende nur ein l.", speak: "beautiful"
+    },
 
       { id: "en-01-08", type: "match", rules: ["en.sp.spelling", "en.voc.zahlen"],
         prompt: "Ordne Zahl und Wort zu.",
@@ -1754,26 +1757,26 @@ const LEKTIONEN_EN = {
 
       /* ---- Stufe 1: Wiedererkennen ---- */
 
-      { id: "en-01-11", type: "mc", rules: ["en.sp.spelling"],
-        prompt: "Welche Schreibweise ist richtig?",
-        correct: "people",
-        opts: [{ t: "people" }, { t: "peaple", miss: "en.sp.vokal-vertauscht" },
-               { t: "pepole", miss: "en.sp.buchstabendreher" }],
-        speak: "people" },
+      {
+      id: "en-01-11", type: "spell", rules: ["en.sp.spelling"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "people", bedeutung: "Leute, Menschen",
+      hint: "peo-ple. Das o hört man nicht, geschrieben wird es trotzdem.", speak: "people"
+    },
 
-      { id: "en-01-12", type: "mc", rules: ["en.sp.spelling"],
-        prompt: "Welche Schreibweise ist richtig?",
-        correct: "favourite",
-        opts: [{ t: "favourite" }, { t: "favorit", miss: "en.sp.deutsche-endung" },
-               { t: "faverite", miss: "en.sp.vokal-vertauscht" }],
-        speak: "favourite" },
+      {
+      id: "en-01-12", type: "spell", rules: ["en.sp.spelling"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "favourite", bedeutung: "Lieblings-",
+      hint: "Britisch mit u: fav-our-ite. Mittendrin steckt das Wort our.", speak: "favourite"
+    },
 
-      { id: "en-01-13", type: "mc", rules: ["en.sp.spelling"],
-        prompt: "Welche Schreibweise ist richtig?",
-        correct: "Wednesday",
-        opts: [{ t: "Wednesday" }, { t: "Wensday", miss: "en.sp.stummer-buchstabe" },
-               { t: "Wendsday", miss: "en.sp.buchstabendreher" }],
-        speak: "Wednesday" },
+      {
+      id: "en-01-13", type: "spell", rules: ["en.sp.spelling"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "Wednesday", bedeutung: "Mittwoch",
+      hint: "Sag beim Schreiben übertrieben Wed-nes-day, dann vergisst du das d nicht.", speak: "Wednesday"
+    },
 
       { id: "en-01-14", type: "tf", rules: ["en.voc.zahlen"],
         prompt: "Richtig oder falsch?",
@@ -2231,11 +2234,12 @@ const LEKTIONEN_EN = {
         prompt: "Wie heißt „Schwester“ auf Englisch?",
         answer: "sister", caseSensitive: false, speak: "sister" },
 
-      { id: "en-05-06", type: "mc", rules: ["en.voc.schule", "en.sp.spelling"],
-        prompt: "Welche Schreibweise ist richtig?",
-        correct: "exercise book",
-        opts: [{ t: "exercise book" }, { t: "excercise book", miss: "en.sp.buchstabe-zuviel" },
-               { t: "exersize book", miss: "en.sp.gehoert-geschrieben" }] },
+      {
+      id: "en-05-06", type: "spell", rules: ["en.voc.schule", "en.sp.spelling"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "exercise book", bedeutung: "das Heft",
+      hint: "ex-er-cise — nur ein c, und hinten -se.", speak: "exercise book"
+    },
 
       { id: "en-05-07", type: "sort", rules: ["en.voc.schule", "en.voc.familie"],
         prompt: "Schule oder Familie?",
@@ -2858,13 +2862,22 @@ function zerfallAnwenden() {
 }
 
 /** Mastery einer Regel nach einer Antwort fortschreiben. */
-function masteryUpdate(regelId, ok) {
+/**
+ * Beherrschung fortschreiben.
+ *
+ * `ergebnis` ist normalerweise true oder false. Ein Diktat liefert aber eine
+ * Quote: Wer 22 von 24 Wörtern richtig schreibt, hat nicht versagt. Als
+ * Alles-oder-nichts gewertet wäre ein einziger Fehler dasselbe wie ein leeres
+ * Blatt — und die Diagnose, auf der die ganze Anpassung beruht, wäre falsch.
+ */
+function masteryUpdate(regelId, ergebnis) {
   const r = S.rules[regelId] || (S.rules[regelId] = {
     seen: 0, correct: 0, mastery: 0.5, lastSeen: null, days: 0, tage: []
   });
+  const q = Math.min(1, Math.max(0, typeof ergebnis === "number" ? ergebnis : (ergebnis ? 1 : 0)));
   r.seen++;
-  if (ok) r.correct++;
-  r.mastery = r.mastery + ALPHA * ((ok ? 1 : 0) - r.mastery);
+  if (q >= 0.999) r.correct++;
+  r.mastery = r.mastery + ALPHA * (q - r.mastery);
   r.mastery = Math.min(1, Math.max(0, r.mastery));
   const h = heute();
   if (r.lastSeen !== h) { r.tage = r.tage || []; if (!r.tage.includes(h)) r.tage.push(h); }
@@ -2927,7 +2940,11 @@ function schwierigkeit(it) {
   if (it.difficulty) return it.difficulty;
   return { mc: 1, tf: 1, match: 1, sort: 1,
            tap: 2, order: 2,
-           type: 3, fehler: 3, diktat: 3 }[it.type] || 2;
+           type: 3, fehler: 3, diktat: 3,
+           /* spell zeigt das Wort vorher — geführtes Produzieren, Stufe 2.
+              Auf Stufe 3 käme es erst im zweiten Durchgang, und gerade die
+              Rechtschreibung soll sie von Anfang an üben. */
+           spell: 2 }[it.type] || 2;
 }
 
 /** Welche Stufen in welchem Durchgang drankommen. */
@@ -3888,7 +3905,8 @@ function renderItem() {
 
   h += ({
     mc: rMC, type: rType, tf: rTF, sort: rSort, tap: rTap,
-    order: rOrder, match: rMatch, diktat: rDiktat, fehler: rFehler
+    order: rOrder, match: rMatch, diktat: rDiktat, fehler: rFehler,
+    spell: rSpell
   }[it.type] || (() => `<p class="muted">Unbekannter Aufgabentyp.</p>`))(it);
 
   h += `</div><div id="fb"></div>
@@ -3899,6 +3917,7 @@ function renderItem() {
     if (inp) { inp.oninput = () => btnAn(inp.value.trim().length > 0); }
   }
   if (it.type === "diktat") diktatInit(it);
+  if (it.type === "spell") setTimeout(() => sprich(it.word, "en-GB"), 350);
 }
 
 const btnAn = an => { const b = document.getElementById("pruefen"); if (b) b.disabled = !an; };
@@ -3936,6 +3955,52 @@ function einfuegen(c) {
   i.value = i.value.slice(0, s) + c + i.value.slice(i.selectionEnd ?? s);
   i.focus(); i.selectionStart = i.selectionEnd = s + 1;
   btnAn(i.value.trim().length > 0);
+}
+
+/**
+ * Rechtschreibung: erst sehen, dann aus dem Gedächtnis tippen.
+ *
+ * Vorher stand hier Multiple Choice — „people / peaple / pepole". Wer die
+ * richtige Form noch nicht im Kopf hat, sieht dabei vor allem zwei falsche
+ * Schreibweisen und muss raten. Genau das ist passiert: zweimal dasselbe Wort
+ * falsch, beide Male anders falsch. Deshalb bekommt sie das Wort jetzt zuerst
+ * korrekt zu sehen und zu hören, und ruft es danach selbst ab. Falsche
+ * Schreibweisen kommen in dieser Aufgabe überhaupt nicht mehr vor.
+ */
+function rSpell(it) {
+  A = { phase: "zeigen" };
+  return `<div id="spellbox">${spellZeigenHtml(it)}</div>`;
+}
+
+function spellZeigenHtml(it) {
+  return `<div class="center" style="padding:6px 0 2px">
+      <div class="spellwort">${esc(it.word)}</div>
+      ${it.bedeutung ? `<p class="sub" style="margin:6px 0 0">${esc(it.bedeutung)}</p>` : ""}
+      <div class="row" style="justify-content:center;margin-top:12px">
+        <button class="chip" onclick="sprich('${esc(it.word)}','en-GB')">🔊 Anhören</button>
+      </div>
+      ${it.hint ? `<p class="muted" style="margin:12px 0 0">💡 ${esc(it.hint)}</p>` : ""}
+      <p class="muted" style="margin:14px 0 10px">
+        Schau es dir in Ruhe an. Wenn du es dir gemerkt hast, geht es weiter.</p>
+      <button class="btn" onclick="spellVerdecken()">Ich kann's — verdecken</button>
+    </div>`;
+}
+
+/** Wort verdecken und tippen lassen. Ab hier gibt es nur noch den Klang. */
+function spellVerdecken() {
+  const it = L.items[L.i];
+  A.phase = "tippen";
+  document.getElementById("spellbox").innerHTML = `
+    ${it.bedeutung ? `<p class="sub" style="margin:0 0 10px">${esc(it.bedeutung)}</p>` : ""}
+    <div class="row" style="margin-bottom:10px">
+      <button class="chip" onclick="sprich('${esc(it.word)}','en-GB')">🔊 Nochmal hören</button>
+    </div>
+    <input type="text" id="eingabe" autocomplete="off" autocorrect="off"
+      autocapitalize="off" spellcheck="false" placeholder="Wort schreiben">
+    ${it.hint ? `<p class="muted" style="margin-top:9px">💡 ${esc(it.hint)}</p>` : ""}`;
+  const inp = document.getElementById("eingabe");
+  if (inp) { inp.oninput = () => btnAn(inp.value.trim().length > 0); inp.focus(); }
+  sprich(it.word, "en-GB");
 }
 
 function rTF(it) {
@@ -4276,6 +4341,9 @@ function diktatWeiter() {
 function pruefen() {
   const it = L.items[L.i];
   let ok = false, miss = null, loesung = "", extra = "";
+  /* quote bleibt null, solange es nur richtig oder falsch gibt. Das Diktat
+     setzt sie auf den Anteil richtig geschriebener Wörter. */
+  let quote = null, diktatInfo = null;
 
   switch (it.type) {
     case "mc": {
@@ -4295,6 +4363,15 @@ function pruefen() {
       const kand = [it.answer, ...(it.alt || [])];
       ok = kand.some(k => norm(k, cs) === norm(v, cs));
       loesung = it.answer;
+      break;
+    }
+    case "spell": {
+      const v = (document.getElementById("eingabe")?.value || "").trim();
+      ok = v.toLowerCase() === it.word.toLowerCase();
+      loesung = it.word;
+      /* Kein Tippfehler-Bonus: Bei einer Rechtschreibaufgabe ist der
+         Buchstabe genau das, worum es geht. */
+      if (!ok && v) extra = `Du hattest: <b>${esc(v)}</b>`;
       break;
     }
     case "tf":
@@ -4356,6 +4433,11 @@ function pruefen() {
     case "diktat": {
       const res = diktatAuswerten(it);
       ok = res.fehler === 0;
+      quote = res.quote;                      // anteilig, nicht alles-oder-nichts
+      diktatInfo = { fehler: res.fehler, woerter: res.woerter };
+      L.diktatQuote = res.quote;
+      L.diktatWoerter = res.woerter;
+      L.diktatRichtig = res.woerter - res.fehler;
       extra = res.html;
       if (ok) S.stats.perfekteDiktate = (S.stats.perfekteDiktate || 0) + 1;
       break;
@@ -4363,11 +4445,14 @@ function pruefen() {
   }
 
   /* --- Mastery und Protokoll fortschreiben --- */
-  (it.rules || []).forEach(r => masteryUpdate(r, ok));
+  (it.rules || []).forEach(r => masteryUpdate(r, quote === null ? ok : quote));
   srsPlanen(it.id, ok);
   S.log.push({ item: it.id, ok, rules: it.rules || [], miss: miss || null,
                ms: Date.now() - (L.itemStart || L.start), tag: programmTag(),
-               lektion: L.lekId });
+               lektion: L.lekId,
+               /* Beim Diktat sagt „falsch" allein nichts: ein Fehler oder zehn
+                  sind zwei verschiedene Befunde. Deshalb kommt die Zahl mit. */
+               ...(diktatInfo ? { fehler: diktatInfo.fehler, woerter: diktatInfo.woerter } : {}) });
   if (S.log.length > 300) S.log = S.log.slice(-300);
 
   if (ok) { L.richtig++; xpGeben(10); }
@@ -4451,11 +4536,19 @@ function diktatAuswerten(it) {
     return soll.map((w, wi) => wort(w, ist[wi] || "")).join(" ");
   });
 
+  /* Wie viele Wörter waren zu schreiben? Beim Lückendiktat nur die Lücken. */
+  const woerter = A.modus === "luecke"
+    ? it.sentences.reduce((n, s) => n + (s.luecken || []).length, 0)
+    : it.sentences.reduce((n, s) => n + s.text.split(/\s+/).length, 0);
+  const quote = woerter ? Math.max(0, (woerter - fehler) / woerter) : 0;
+
   return {
-    fehler,
+    fehler, tippfehler, woerter, quote,
     html: `<div class="diff">${zeilen.join("<br>")}</div>
       <div class="muted" style="margin-top:8px">
-        ${fehler} Rechtschreibfehler${tippfehler ? ` · ${tippfehler} Tippfehler (zählen nicht)` : ""}</div>`
+        ${woerter - fehler} von ${woerter} Wörtern richtig${
+          fehler ? ` · ${fehler} Rechtschreibfehler` : ""}${
+          tippfehler ? ` · ${tippfehler} Tippfehler (zählen nicht)` : ""}</div>`
   };
 }
 
@@ -4466,7 +4559,11 @@ function weiter() {
 }
 
 function beenden() {
-  const score = L.items.length ? L.richtig / L.items.length : 0;
+  /* Beim Diktat ist die Wortquote das ehrlichere Maß: Ein Fehler in vier
+     Sätzen ergäbe sonst glatte null Prozent. */
+  const score = L.lekId === "diktat" && typeof L.diktatQuote === "number"
+    ? L.diktatQuote
+    : (L.items.length ? L.richtig / L.items.length : 0);
   streakPruefen();
   S.stats.sessions = (S.stats.sessions || 0) + 1;
   S.completed[L.lekId] = { score, date: heute() };
@@ -4553,7 +4650,11 @@ function diktatStarten() {
 }
 
 function renderErgebnis() {
-  const score = L.items.length ? L.richtig / L.items.length : 0;
+  /* Beim Diktat zählen Wörter, nicht Aufgaben — sonst stünde nach einem
+     einzigen Fehler „0 von 1 richtig" unter vier fehlerfrei getroffenen Sätzen. */
+  const diktat = L.lekId === "diktat" && typeof L.diktatQuote === "number";
+  const score = diktat ? L.diktatQuote
+                       : (L.items.length ? L.richtig / L.items.length : 0);
   const pct = Math.round(score * 100);
   const wort = pct >= 90 ? "Fantastisch!" : pct >= 70 ? "Gut gemacht!" :
                pct >= 50 ? "Solide Runde." : "Das war knifflig.";
@@ -4561,10 +4662,13 @@ function renderErgebnis() {
   /* Bewusst ohne Prozentzahl: Die Zahl allein lädt zum Punktejagen ein.
      „8 von 10 richtig" sagt dasselbe, ohne nach Note zu klingen. */
   const zustand = pct >= 90 ? "super" : pct >= 70 ? "gut" : "uebung";
+  const bilanz = diktat
+    ? `${L.diktatRichtig} von ${L.diktatWoerter} Wörtern richtig`
+    : `${L.richtig} von ${L.items.length} richtig`;
   let h = `<div class="card center">
     <div class="jubel">${kristall(zustand, 86)}</div>
     <h2 style="margin-top:10px">${wort}</h2>
-    <p class="sub">${L.richtig} von ${L.items.length} richtig</p>
+    <p class="sub">${bilanz}</p>
   </div>`;
 
   /* Nachbessern anbieten, solange die Fehler frisch sind. Rückmeldung wirkt
@@ -4645,13 +4749,18 @@ function renderErgebnis() {
 function exportPaket() {
   zerfallAnwenden();
   return {
-    app: "gymnasium-fitness", version: 1, erstellt: new Date().toISOString(),
+    app: "gymnasium-fitness", version: 2, erstellt: new Date().toISOString(),
     tag: programmTag(),
     xp: S.xp, level: S.level, streak: S.streak.count,
     sessions: S.stats.sessions,
     completed: S.completed,
     lektionen: S.lektionen,
     diktate: (S.diktat.erledigt || []).length,
+    /* Vollständig, damit ein Gerätewechsel nichts kostet: Ohne den
+       Wiederholungsplan begänne das Nachholen bei null, und ohne die
+       Diktathistorie käme dasselbe Diktat noch einmal. */
+    srsPlan: S.srs, diktatStand: S.diktat, statistik: S.stats,
+    streakStand: S.streak,
     rules: S.rules,
     schwaechen: schwaechen().map(s => ({ id: s.id, name: s.def.name,
       mastery: +s.mastery.toFixed(2), seen: s.seen, correct: s.correct })),
@@ -4736,6 +4845,14 @@ function importDialog() {
           S.lektionen = p.lektionen || S.lektionen;
           S.rules = p.rules || S.rules;
           S.badges = p.badges || S.badges;
+          /* Auch Wiederholungsplan, Diktathistorie und Zähler mitnehmen —
+             sonst käme nach einem Gerätewechsel dasselbe Diktat noch einmal
+             und die Wiederholungen begännen bei null. */
+          if (p.srsPlan) S.srs = p.srsPlan;
+          if (p.diktatStand) S.diktat = p.diktatStand;
+          if (p.statistik) S.stats = { ...S.stats, ...p.statistik };
+          if (p.streakStand) S.streak = p.streakStand;
+          else if (typeof p.streak === "number") S.streak.count = p.streak;
           sichern();
           alert("Fortschritt geladen!");
           zeige("home"); return;
