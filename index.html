@@ -2620,7 +2620,7 @@ function leerState() {
     diktat: { erledigt: [], letzterTag: null },
     stats: { perfekteDiktate: 0, sessions: 0 },
     settings: { satzzeichenSprechen: true, tempo: 0.85, umlautLeiste: false, klang: true },
-    lastExport: null, startDatum: heute()
+    lastExport: null, schwaechenBeiExport: 0, startDatum: heute()
   };
 }
 
@@ -3247,16 +3247,37 @@ function badgesPruefen() {
   return neu;
 }
 
-/** Soll die Export-Erinnerung erscheinen? */
+/** Sperrfrist: nach einem Export mindestens so viele Tage Ruhe. */
+const EXPORT_PAUSE = 5;
+
+/** Soll die Export-Erinnerung erscheinen?
+ *
+ *  Zwei Dinge waren hier falsch. Erstens kam die Aufforderung schon nach der
+ *  ersten gemeisterten Lektion — aus einer Lektion lässt sich aber kaum etwas
+ *  ablesen, was nicht auch Zufall sein könnte. Zweitens hatte „viele
+ *  Schwächen" keine Sperrfrist: Nach dem Export waren die Schwächen ja noch
+ *  da, also erschien der Hinweis sofort wieder. Ein Hinweis, der immer da
+ *  steht, wird übersehen — und dann auch dann, wenn er einmal zählt. */
 function exportFaellig() {
-  // Meilenstein: gerade wurde eine Lektion gemeistert
-  const meilenstein = Object.keys(S.lektionen).some(id => {
-    const fach = id.startsWith("de") ? "de" : "en";
-    return S.lektionen[id].graduiert && !S.lektionen[id].gemeldet;
-  });
-  const vieleSchwaechen = schwaechen().length >= 3;
-  const langeHer = S.lastExport ? tageZwischen(S.lastExport, heute()) >= 7 : S.stats.sessions >= 3;
-  return meilenstein || vieleSchwaechen || langeHer;
+  /* Frisch exportiert? Dann für ein paar Tage Ruhe, egal was sonst zutrifft. */
+  if (S.lastExport && tageZwischen(S.lastExport, heute()) < EXPORT_PAUSE) return false;
+
+  /* Meilenstein: ab der zweiten gemeisterten Lektion in einem Fach. */
+  const graduiert = Object.keys(S.lektionen)
+    .filter(id => S.lektionen[id].graduiert);
+  const proFach = f => graduiert.filter(id => id.startsWith(f)).length;
+  const offen = graduiert.some(id => !S.lektionen[id].gemeldet);
+  const meilenstein = offen && (proFach("de") >= 2 || proFach("en") >= 2);
+
+  /* Schwächen zählen nur, wenn sie seit dem letzten Export dazugekommen sind. */
+  const jetzt = schwaechen().length;
+  const neueSchwaechen = jetzt - (S.schwaechenBeiExport || 0) >= 3;
+
+  const langeHer = S.lastExport
+    ? tageZwischen(S.lastExport, heute()) >= 10
+    : S.stats.sessions >= 6;
+
+  return meilenstein || neueSchwaechen || langeHer;
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -3347,10 +3368,11 @@ function viewHome() {
 
   if (exportFaellig()) {
     h += `<div class="banner">
-      <b>📮 Zeit für neue Aufgaben!</b>
+      <b>📮 Zeig das kurz deinen Eltern</b>
       <p class="sub" style="margin:5px 0 11px">
-        Schick deinen Fortschritt — dann bekommst du ein Übungspaket, das genau zu dir passt.</p>
-      <button class="btn sm" onclick="zeige('export')">Fortschritt senden</button>
+        Sie können deinen Fortschritt sichern. Danach gibt es Übungen,
+        die besser zu dir passen.</p>
+      <button class="btn sm" onclick="zeige('export')">Fortschritt sichern</button>
     </div>`;
   }
 
@@ -4606,10 +4628,10 @@ function renderErgebnis() {
   }
 
   if (exportFaellig()) {
-    h += `<div class="banner"><b>📮 Zeit für neue Aufgaben!</b>
-      <p class="sub" style="margin:5px 0 11px">Schick deinen Fortschritt und hol dir
-      Übungen, die genau zu deinen Fehlern passen.</p>
-      <button class="btn sm" onclick="zeige('export')">Fortschritt senden</button></div>`;
+    h += `<div class="banner"><b>📮 Zeig das kurz deinen Eltern</b>
+      <p class="sub" style="margin:5px 0 11px">Sie können deinen Fortschritt sichern.
+      Danach gibt es Übungen, die besser zu dir passen.</p>
+      <button class="btn sm" onclick="zeige('export')">Fortschritt sichern</button></div>`;
   }
 
   h += `<button class="btn" onclick="zeige('home')">Weiter zur Übersicht</button>`;
@@ -4687,6 +4709,9 @@ async function exportKopieren() {
 function exportNotieren() {
   S.lastExport = heute();
   Object.values(S.lektionen).forEach(p => { if (p.graduiert) p.gemeldet = true; });
+  /* Merken, wie viele Schwächen beim Export offen waren — sonst löst allein
+     ihr Fortbestehen die nächste Aufforderung aus. */
+  S.schwaechenBeiExport = schwaechen().length;
   const neu = badgesPruefen();
   sichern();
   if (neu.length) alert("🎁 Neues Abzeichen: " + neu.map(b => b.name).join(", "));
