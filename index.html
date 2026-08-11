@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gymnasium Fitness</title>
-<!-- Erzeugt von tools/bauen.js am 2026-08-10. Nicht direkt bearbeiten —
+<!-- Erzeugt von tools/bauen.js am 2026-08-11. Nicht direkt bearbeiten —
      Änderungen gehören in index.html und data/*.js. -->
 
 <!-- Als App auf den Home-Bildschirm: iPad und iPhone starten dann ohne
@@ -2975,7 +2975,7 @@ const LEKTIONEN_EN = {
         hint: "par + ents. Mit e in der Mitte, nicht mit a.", speak: "parents" },
       { id: "en-05-17", type: "spell", rules: ["en.voc.familie", "en.sp.spelling"],
         prompt: "Präg dir die Schreibweise ein.",
-        word: "cousin", bedeutung: "der Cousin, die Cousine",
+        word: "cousin", bedeutung: "Kind von Tante oder Onkel",
         hint: "cou + sin. Man hört ein a, geschrieben wird ou.", speak: "cousin" },
       { id: "en-05-18", type: "spell", rules: ["en.voc.schule", "en.sp.spelling"],
         prompt: "Präg dir die Schreibweise ein.",
@@ -4946,8 +4946,10 @@ function spellVerdecken() {
       <button class="chip" onclick="sprich('${esc(it.word)}','en-GB')">🔊 Nochmal hören</button>
     </div>
     <input type="text" id="eingabe" autocomplete="off" autocorrect="off"
-      autocapitalize="off" spellcheck="false" placeholder="Wort schreiben">
-    ${it.hint ? `<p class="muted" style="margin-top:9px">💡 ${esc(it.hint)}</p>` : ""}`;
+      autocapitalize="off" spellcheck="false" placeholder="Wort schreiben">`;
+  /* Die Merkhilfe bleibt bewusst NICHT stehen. „be + cause“ oder „fri-END“
+     buchstabieren das Wort — sie müsste es dann nur abschreiben statt aus dem
+     Gedächtnis zu holen. Nach dem Prüfen kommt sie zurück, dort hilft sie. */
   const inp = document.getElementById("eingabe");
   if (inp) { inp.oninput = () => btnAn(inp.value.trim().length > 0); inp.focus(); }
   sprich(it.word, "en-GB");
@@ -5322,6 +5324,9 @@ function pruefen() {
       /* Kein Tippfehler-Bonus: Bei einer Rechtschreibaufgabe ist der
          Buchstabe genau das, worum es geht. */
       if (!ok && v) extra = `Du hattest: <b>${esc(v)}</b>`;
+      /* Jetzt ist die Merkhilfe wieder sinnvoll — beim Nachdenken über den
+         Fehler, nicht beim Abschreiben. */
+      if (it.hint) extra += `<p class="muted" style="margin-top:8px">💡 ${esc(it.hint)}</p>`;
       break;
     }
     case "tf":
