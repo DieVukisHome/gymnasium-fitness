@@ -154,6 +154,14 @@ input[type=text],textarea{width:100%;background:#0f0b2b;border:3px solid var(--l
   font-weight:600;outline:none}
 input[type=text]:focus,textarea:focus{border-color:var(--de);
   box-shadow:0 0 0 4px #5b8cff2a}
+.baustein{font-family:ui-monospace,Menlo,monospace;font-size:17px;letter-spacing:.5px}
+.bauwort{display:inline-block;margin-left:10px;font-size:17px;font-weight:700;
+  color:#e9d5ff;letter-spacing:.5px}
+.lesetext{background:rgba(255,255,255,.06);border-radius:14px;padding:14px 16px;
+  font-size:16px;line-height:1.65;border:1px solid rgba(196,160,255,.22)}
+.saetze{margin:6px 0 12px}
+.satz{background:rgba(255,255,255,.06);border-radius:12px;padding:9px 13px;
+  margin:6px 0;font-size:16px;border-left:3px solid var(--lila,#a855f7)}
 .spellwort{font-size:38px;font-weight:800;letter-spacing:2px;
   background:linear-gradient(180deg,#fff,#e9d5ff);-webkit-background-clip:text;
   -webkit-text-fill-color:transparent;background-clip:text;padding:6px 0}
@@ -466,6 +474,12 @@ const REGELN = [
   { id: "de.txt.lesestrategie", fach: "de", bereich: "Texte", introDay: 20,
     name: "Lesestrategien",
     strategie: "Überfliegen, Fragen stellen, Schlüsselwörter markieren, zusammenfassen." },
+  { id: "de.txt.satzbau", fach: "de", bereich: "Texte", introDay: 17,
+    name: "Sätze verbinden",
+    strategie: "Was doppelt vorkommt, fliegt raus. Verbinde mit und, aber, weil, der, die, das." },
+  { id: "de.txt.leseverstehen", fach: "de", bereich: "Texte", introDay: 17,
+    name: "Aus einem Text herauslesen",
+    strategie: "Erst die Frage lesen, dann im Text die Stelle suchen — nicht raten." },
   { id: "de.txt.diktat", fach: "de", bereich: "Texte", introDay: 4,
     name: "Diktat schreiben",
     strategie: "Erst zuhören, dann schreiben, am Schluss nochmal durchlesen." },
@@ -993,6 +1007,108 @@ const LERNKARTEN = {
     frage: "Plural von <b>city</b>?",
     antwort: "cities",
     erklaerung: "Konsonant + y → das y wird zu <b>ies</b>." }
+]
+
+,
+
+"de-l7": [
+  { typ: "regel", rules: ["de.txt.leseverstehen", "de.txt.lesestrategie"],
+    titel: "Erst die Frage, dann der Text",
+    text: "Wer den Text liest, ohne zu wissen wonach, liest ihn zweimal. Lies zuerst " +
+          "die Frage — dann weißt du beim Lesen schon, worauf du achten musst.",
+    merke: "Die Antwort steht im Text. Was nur gut klingt, ist geraten." },
+
+  { typ: "beispiele", rules: ["de.txt.leseverstehen"],
+    titel: "Steht das wirklich da?",
+    hinweis: "Text: „Mia holt eine Schale Wasser und stellt sie auf die Treppe.“",
+    zeilen: [["Mia stellt Wasser hinaus.", "<b>steht da</b>"],
+             ["Der Igel hat Durst.", "<b>geraten</b> — klingt logisch, steht aber nicht da"],
+             ["Mia ist leise.", "<b>steht da</b>, wenn „leise“ im Satz vorkommt"]] },
+
+  { typ: "regel", rules: ["de.txt.satzbau"],
+    titel: "Zwei Sätze, ein guter Satz",
+    text: "Kurze Sätze hintereinander klingen abgehackt. Zieh sie zusammen: Was " +
+          "<b>doppelt</b> vorkommt, fliegt raus. Der Rest wird mit einem Bindewort " +
+          "oder einem Beiwort verbunden.",
+    merke: "Der Hund ist klein. Der Hund bellt. → Der <b>kleine</b> Hund bellt." },
+
+  { typ: "beispiele", rules: ["de.txt.satzbau"],
+    titel: "Vier Wege, Sätze zu verbinden",
+    zeilen: [["Beiwort davor", "Das Fahrrad ist rot. → ein <b>rotes</b> Fahrrad"],
+             ["und / aber", "Sie übt <b>und</b> spielt schon gut."],
+             ["weil / obwohl", "<b>Weil</b> es regnet, bleiben wir da."],
+             ["der / die / das", "ein Baum, <b>der</b> Äpfel trägt"]] },
+
+  { typ: "beispiele", rules: ["de.txt.satzbau"],
+    titel: "Grund oder Gegensatz?",
+    hinweis: "Das Bindewort verrät, wie die zwei Teile zusammenhängen.",
+    zeilen: [["<b>weil, denn, deshalb</b>", "der eine Teil ist der Grund"],
+             ["<b>obwohl, aber, trotzdem</b>", "die Teile widersprechen einander"],
+             ["<b>als, während, bevor</b>", "es geht um die Zeit"]] },
+
+  { typ: "beispiele", rules: ["de.txt.erzaehlung"],
+    titel: "So ist eine Erzählung gebaut",
+    hinweis: "In der 1. Klasse wird das zur Schularbeit — im Präteritum erzählt.",
+    zeilen: [["Einleitung", "Wer? Wo? Wann?"],
+             ["Hauptteil", "Was passiert, Schritt für Schritt"],
+             ["Höhepunkt", "der spannendste Moment — am Ende des Hauptteils"],
+             ["Schluss", "kurz: wie es ausgeht"]] },
+
+  { typ: "regel", rules: ["de.txt.erzaehlung"],
+    titel: "Genaue Verben statt blasser",
+    text: "„Sie ging schnell weg“ sagt wenig. „Sie <b>rannte</b> weg“ sieht man vor sich. " +
+          "Ein genaues Verb ersetzt zwei blasse Wörter.",
+    merke: "sagen → rufen, flüstern, murmeln · gehen → rennen, schleichen, stapfen" },
+
+  { typ: "regel", rules: ["de.txt.beschreibung"],
+    titel: "Beschreiben heißt sachlich bleiben",
+    text: "Eine Beschreibung sagt, wie etwas <b>ist</b> — nicht, wie du es findest. " +
+          "Sie steht im Präsens und geht vom Großen zum Kleinen.",
+    merke: "„Der Käfer ist drei Zentimeter lang.“ ✓  „Der Käfer ist eklig.“ ✗" },
+
+  { typ: "probe", rules: ["de.txt.satzbau"],
+    frage: "Verbinde: <b>Es war dunkel. Wir fanden den Weg.</b>",
+    antwort: "Obwohl es dunkel war, fanden wir den Weg.",
+    erklaerung: "Die zwei Teile widersprechen einander — also <b>obwohl</b>." }
+],
+
+"de-l8": [
+  { typ: "regel", rules: ["de.zs.woertliche-rede"],
+    titel: "Wörtliche Rede: alles hängt an der Stellung",
+    text: "Steht der Begleitsatz <b>vorne</b>, folgt ein <b>Doppelpunkt</b>. Steht die " +
+          "Rede vorne, folgt ein <b>Komma</b> — und der Punkt fällt weg.",
+    merke: "Anna sagt<b>:</b> „Ich komme.“   ·   „Ich komme“<b>,</b> sagt Anna." },
+
+  { typ: "beispiele", rules: ["de.zs.woertliche-rede"],
+    titel: "Die vier Fälle im Überblick",
+    zeilen: [["Begleitsatz vorne, Aussage", "Er sagt: „Es regnet.“"],
+             ["Rede vorne, Aussage", "„Es regnet“, sagt er."],
+             ["Begleitsatz vorne, Frage", "Sie fragt: „Regnet es?“"],
+             ["Rede vorne, Frage", "„Regnet es?“, fragt sie."]] },
+
+  { typ: "regel", rules: ["de.zs.woertliche-rede"],
+    titel: "Der Punkt fällt weg, das Fragezeichen bleibt",
+    text: "Wenn die Rede vorne steht, ersetzt das Komma den <b>Punkt</b>. Ein " +
+          "<b>Frage-</b> oder <b>Rufzeichen</b> bleibt dagegen stehen — es gehört zur Rede.",
+    merke: "„Ich komme“, sagt sie.   aber:   „Kommst du?“, fragt sie." },
+
+  { typ: "beispiele", rules: ["de.zs.komma-aufzaehlung"],
+    titel: "Kommas in Aufzählungen",
+    hinweis: "Zwischen die Glieder — aber nicht vor das letzte „und“.",
+    zeilen: [["Brot<b>,</b> Käse<b>,</b> Obst <b>und</b> Wasser", "drei Kommas? Nein: zwei"],
+             ["Rot<b>,</b> Gelb <b>und</b> Blau", "ein Komma"],
+             ["Rot, Gelb<b>,</b> und Blau", "falsch — vor „und“ steht keines"]] },
+
+  { typ: "regel", rules: ["de.zs.komma-satzverbindung"],
+    titel: "Diese Wörter ziehen ein Komma nach sich",
+    text: "Vor <b>weil, dass, wenn, obwohl, damit, als, bevor, bis</b> steht ein Komma. " +
+          "Vor <b>und</b> und <b>oder</b> steht keines.",
+    merke: "Ich bleibe daheim<b>,</b> weil ich krank bin." },
+
+  { typ: "probe", rules: ["de.zs.woertliche-rede"],
+    frage: "Setze die Zeichen: <b>Mama ruft Das Essen ist fertig</b>",
+    antwort: "Mama ruft: „Das Essen ist fertig!“",
+    erklaerung: "Begleitsatz vorne → Doppelpunkt. Ein Ruf bekommt ein Rufzeichen." }
 ]
 
 };
@@ -2143,6 +2259,90 @@ const LEKTIONEN_DE = {
         answer: false,
         erklaerung: "Umgekehrt: Der doppelte Mitlaut kommt nach einem KURZ gesprochenen Selbstlaut." }
     ]
+  },
+
+  "de-l7": {
+    nr: 7, titel: "Lesen und Schreiben",
+    intro: "Texte verstehen — und aus kurzen Sätzen gute machen.",
+    items: [
+      {"id":"de-07-01","type":"lesen","rules":["de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Mia wacht auf, weil draußen etwas klappert. Sie schaut aus dem Fenster. Im Hof steht ein Igel und schiebt eine leere Dose vor sich her. Mia holt eine Schale Wasser und stellt sie leise auf die Treppe. Am Morgen ist die Schale leer.","frage":"Warum wacht Mia auf?","correct":"Weil draußen etwas klappert.","beleg":"Mia wacht auf, weil draußen etwas klappert.","opts":[{"t":"Weil draußen etwas klappert."},{"t":"Weil der Igel sie ruft.","miss":"de.txt.hineingelesen"},{"t":"Weil sie Durst hat.","miss":"de.txt.hineingelesen"}]},
+      {"id":"de-07-02","type":"lesen","rules":["de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Mia wacht auf, weil draußen etwas klappert. Sie schaut aus dem Fenster. Im Hof steht ein Igel und schiebt eine leere Dose vor sich her. Mia holt eine Schale Wasser und stellt sie leise auf die Treppe. Am Morgen ist die Schale leer.","frage":"Was ist am Morgen anders?","correct":"Die Schale ist leer.","beleg":"Am Morgen ist die Schale leer.","opts":[{"t":"Die Schale ist leer."},{"t":"Der Igel sitzt auf der Treppe.","miss":"de.txt.hineingelesen"},{"t":"Die Dose ist weg.","miss":"de.txt.hineingelesen"}]},
+      {"id":"de-07-03","type":"lesen","rules":["de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Mia wacht auf, weil draußen etwas klappert. Sie schaut aus dem Fenster. Im Hof steht ein Igel und schiebt eine leere Dose vor sich her. Mia holt eine Schale Wasser und stellt sie leise auf die Treppe. Am Morgen ist die Schale leer.","frage":"Was steht NICHT im Text?","correct":"Der Igel hat Hunger.","beleg":"Mia holt eine Schale Wasser","opts":[{"t":"Der Igel hat Hunger."},{"t":"Mia stellt Wasser hinaus.","miss":"de.txt.steht-doch-da"},{"t":"Der Igel schiebt eine Dose.","miss":"de.txt.steht-doch-da"}]},
+      {"id":"de-07-04","type":"lesen","rules":["de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Der Wanderfalke ist der schnellste Vogel der Welt. Im Sturzflug erreicht er über 300 Stundenkilometer. Dabei legt er die Flügel eng an den Körper. Seine Augen sind so scharf, dass er eine Taube aus einem Kilometer Entfernung erkennt. Gejagt wird meist am frühen Morgen.","frage":"Wie schnell wird der Wanderfalke im Sturzflug?","correct":"über 300 km/h","beleg":"Im Sturzflug erreicht er über 300 Stundenkilometer.","opts":[{"t":"über 300 km/h"},{"t":"über 100 km/h","miss":"de.txt.zahl-verwechselt"},{"t":"über 1000 km/h","miss":"de.txt.zahl-verwechselt"}]},
+      {"id":"de-07-05","type":"lesen","rules":["de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Der Wanderfalke ist der schnellste Vogel der Welt. Im Sturzflug erreicht er über 300 Stundenkilometer. Dabei legt er die Flügel eng an den Körper. Seine Augen sind so scharf, dass er eine Taube aus einem Kilometer Entfernung erkennt. Gejagt wird meist am frühen Morgen.","frage":"Warum legt er die Flügel an?","correct":"Das steht nicht im Text.","beleg":"Dabei legt er die Flügel eng an den Körper.","opts":[{"t":"Das steht nicht im Text."},{"t":"Damit er schneller wird.","miss":"de.txt.hineingelesen"},{"t":"Damit er besser sieht.","miss":"de.txt.hineingelesen"}]},
+      {"id":"de-07-06","type":"lesen","rules":["de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Am Freitag war Schulfest. Um zwei Uhr bauten die vierten Klassen die Stände auf. Es gab Waffeln, ein Glücksrad und eine Hüpfburg. Gegen vier Uhr begann es zu regnen. Die Hüpfburg musste abgebaut werden, aber die Waffeln gingen trotzdem aus.","frage":"In welcher Reihenfolge passierte es?","correct":"Stände aufbauen – Regen – Hüpfburg abbauen","beleg":"Gegen vier Uhr begann es zu regnen.","opts":[{"t":"Stände aufbauen – Regen – Hüpfburg abbauen"},{"t":"Regen – Stände aufbauen – Waffeln","miss":"de.txt.reihenfolge"},{"t":"Hüpfburg abbauen – Regen – Waffeln","miss":"de.txt.reihenfolge"}]},
+      {"id":"de-07-07","type":"lesen","rules":["de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Am Freitag war Schulfest. Um zwei Uhr bauten die vierten Klassen die Stände auf. Es gab Waffeln, ein Glücksrad und eine Hüpfburg. Gegen vier Uhr begann es zu regnen. Die Hüpfburg musste abgebaut werden, aber die Waffeln gingen trotzdem aus.","frage":"Was bedeutet „die Waffeln gingen aus“?","correct":"Sie waren alle aufgegessen.","beleg":"aber die Waffeln gingen trotzdem aus","opts":[{"t":"Sie waren alle aufgegessen."},{"t":"Sie wurden kalt.","miss":"de.txt.wendung-woertlich"},{"t":"Sie fielen zu Boden.","miss":"de.txt.wendung-woertlich"}]},
+      {"id":"de-07-08","type":"mc","rules":["de.txt.lesestrategie"],"prompt":"Was machst du zuerst, wenn du einen Text mit Fragen bekommst?","correct":"Die Fragen lesen, dann den Text.","opts":[{"t":"Die Fragen lesen, dann den Text."},{"t":"Den Text auswendig lernen.","miss":"de.txt.strategie-aufwand"},{"t":"Gleich die erste Antwort ankreuzen.","miss":"de.txt.strategie-raten"}]},
+      {"id":"de-07-09","type":"tf","rules":["de.txt.leseverstehen"],"prompt":"Richtig oder falsch?","statement":"Eine Antwort ist auch dann richtig, wenn sie zwar gut klingt, aber nicht im Text steht.","answer":false,"erklaerung":"Was nicht im Text steht, ist geraten — auch wenn es stimmen könnte."},
+      {"id":"de-07-10","type":"mc","rules":["de.txt.lesestrategie"],"prompt":"Du verstehst ein Wort im Text nicht. Was hilft zuerst?","correct":"Weiterlesen — oft erklärt der Satz danach das Wort.","opts":[{"t":"Weiterlesen — oft erklärt der Satz danach das Wort."},{"t":"Aufhören und raten.","miss":"de.txt.strategie-raten"},{"t":"Den ganzen Text nochmal von vorne lesen.","miss":"de.txt.strategie-aufwand"}]},
+      {"id":"de-07-11","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Der Hund ist klein.","Der Hund bellt laut."],"pflicht":["Hund","klein","bellt"],"muster":"Der kleine Hund bellt laut.","tipp":"Das Adjektiv kann vor das Nomen wandern."},
+      {"id":"de-07-12","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Die Sonne scheint.","Wir gehen ins Freibad."],"pflicht":["Sonne","scheint","Freibad"],"muster":"Weil die Sonne scheint, gehen wir ins Freibad.","tipp":"Ein Bindewort wie weil oder deshalb zeigt den Zusammenhang."},
+      {"id":"de-07-13","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Anna hat ein Fahrrad.","Das Fahrrad ist rot."],"pflicht":["Anna","rot","Fahrrad"],"muster":"Anna hat ein rotes Fahrrad.","tipp":"Was zweimal vorkommt, brauchst du nur einmal."},
+      {"id":"de-07-14","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Der Zug hatte Verspätung.","Wir kamen trotzdem pünktlich an."],"pflicht":["Zug","Verspätung","pünktlich"],"muster":"Obwohl der Zug Verspätung hatte, kamen wir pünktlich an.","tipp":"Hier passt ein Gegensatz: obwohl oder aber."},
+      {"id":"de-07-15","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Tom vergaß seine Jause.","Tom hatte den ganzen Tag Hunger."],"pflicht":["Tom","Jause","Hunger"],"muster":"Weil Tom seine Jause vergaß, hatte er den ganzen Tag Hunger.","tipp":"Nenne den Namen nur einmal — danach reicht ein Pronomen."},
+      {"id":"de-07-16","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Im Garten steht ein Baum.","Der Baum trägt Äpfel."],"pflicht":["Garten","Baum","Äpfel"],"muster":"Im Garten steht ein Baum, der Äpfel trägt.","tipp":"Mit der, die oder das kannst du einen Satz anhängen."},
+      {"id":"de-07-17","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Lena übt jeden Tag Klavier.","Lena spielt schon schwierige Stücke."],"pflicht":["Lena","Klavier","schwierige"],"muster":"Lena übt jeden Tag Klavier und spielt schon schwierige Stücke.","tipp":"Wenn beides gleich wichtig ist, reicht ein und."},
+      {"id":"de-07-18","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Es war dunkel.","Wir fanden den Weg."],"pflicht":["dunkel","Weg"],"muster":"Obwohl es dunkel war, fanden wir den Weg.","tipp":"Die zwei Sätze widersprechen einander ein bisschen."},
+      {"id":"de-07-19","type":"mc","rules":["de.txt.satzbau"],"prompt":"Welcher Satz ist besser verbunden?","correct":"Der müde Junge schlief sofort ein.","opts":[{"t":"Der müde Junge schlief sofort ein."},{"t":"Der Junge war müde und der Junge schlief sofort ein.","miss":"de.txt.nur-angehaengt"},{"t":"Der Junge war müde. Er schlief sofort ein.","miss":"de.txt.zwei-saetze-geblieben"}]},
+      {"id":"de-07-20","type":"mc","rules":["de.txt.satzbau"],"prompt":"Welches Bindewort passt? „Ich nehme den Schirm mit, ___ es regnet.“","correct":"weil","opts":[{"t":"weil"},{"t":"obwohl","miss":"de.txt.bindewort-gegenteil"},{"t":"damit","miss":"de.txt.bindewort-absicht"}]},
+      {"id":"de-07-21","type":"mc","rules":["de.txt.satzbau"],"prompt":"Welches Bindewort passt? „Wir gingen spazieren, ___ es kalt war.“","correct":"obwohl","opts":[{"t":"obwohl"},{"t":"weil","miss":"de.txt.bindewort-gegenteil"},{"t":"damit","miss":"de.txt.bindewort-absicht"}]},
+      {"id":"de-07-22","type":"sort","rules":["de.txt.satzbau"],"prompt":"Was sagt das Bindewort?","buckets":["Grund","Gegensatz"],"words":[{"w":"weil","b":"Grund"},{"w":"obwohl","b":"Gegensatz"},{"w":"denn","b":"Grund"},{"w":"aber","b":"Gegensatz"},{"w":"deshalb","b":"Grund"},{"w":"trotzdem","b":"Gegensatz"}]},
+      {"id":"de-07-23","type":"order","rules":["de.txt.erzaehlung"],"prompt":"Bring die Teile einer Erzählung in die richtige Reihenfolge.","words":["Höhepunkt","Einleitung","Schluss","Hauptteil"],"solution":["Einleitung","Hauptteil","Höhepunkt","Schluss"]},
+      {"id":"de-07-24","type":"mc","rules":["de.txt.erzaehlung"],"prompt":"Was gehört in die Einleitung einer Erzählung?","correct":"Wer, wo und wann.","opts":[{"t":"Wer, wo und wann."},{"t":"Der spannendste Moment.","miss":"de.txt.hoehepunkt-vorweg"},{"t":"Wie es ausgeht.","miss":"de.txt.schluss-vorweg"}]},
+      {"id":"de-07-25","type":"mc","rules":["de.txt.erzaehlung"],"prompt":"In welcher Zeitform erzählt man normalerweise?","correct":"Präteritum (Mitvergangenheit)","opts":[{"t":"Präteritum (Mitvergangenheit)"},{"t":"Futur (Zukunft)","miss":"de.txt.zeitform-falsch"},{"t":"Immer im Präsens","miss":"de.txt.zeitform-falsch"}]},
+      {"id":"de-07-26","type":"mc","rules":["de.txt.erzaehlung"],"prompt":"Welcher Satz macht eine Erzählung spannender?","correct":"Mit zitternden Fingern öffnete sie die Tür.","opts":[{"t":"Mit zitternden Fingern öffnete sie die Tür."},{"t":"Sie öffnete die Tür.","miss":"de.txt.zu-knapp"},{"t":"Die Tür wurde geöffnet.","miss":"de.txt.passiv-blass"}]},
+      {"id":"de-07-27","type":"sort","rules":["de.txt.erzaehlung","de.txt.beschreibung"],"prompt":"Erzählung oder Beschreibung?","buckets":["Erzählung","Beschreibung"],"words":[{"w":"Plötzlich krachte es.","b":"Erzählung"},{"w":"Der Käfer ist drei Zentimeter lang.","b":"Beschreibung"},{"w":"Dann rannte sie los.","b":"Erzählung"},{"w":"Sein Panzer glänzt grünlich.","b":"Beschreibung"},{"w":"Am Ende lachten alle.","b":"Erzählung"},{"w":"Er hat sechs Beine.","b":"Beschreibung"}]},
+      {"id":"de-07-28","type":"mc","rules":["de.txt.beschreibung"],"prompt":"In welcher Reihenfolge beschreibt man einen Gegenstand?","correct":"Vom Großen zum Kleinen.","opts":[{"t":"Vom Großen zum Kleinen."},{"t":"Wie es einem gerade einfällt.","miss":"de.txt.ohne-ordnung"},{"t":"Von hinten nach vorne.","miss":"de.txt.ohne-ordnung"}]},
+      {"id":"de-07-29","type":"mc","rules":["de.txt.beschreibung"],"prompt":"Welcher Satz gehört NICHT in eine sachliche Beschreibung?","correct":"Ich finde diesen Käfer richtig eklig.","opts":[{"t":"Ich finde diesen Käfer richtig eklig."},{"t":"Der Käfer ist etwa drei Zentimeter lang.","miss":"de.txt.sachlich-erkannt"},{"t":"Seine Flügel sind unter dem Panzer verborgen.","miss":"de.txt.sachlich-erkannt"}]},
+      {"id":"de-07-30","type":"tf","rules":["de.txt.beschreibung"],"prompt":"Richtig oder falsch?","statement":"Eine Beschreibung steht meistens im Präsens.","answer":true,"erklaerung":"Was beschrieben wird, gilt ja gerade jetzt — deshalb Gegenwart."},
+      {"id":"de-07-31","type":"type","rules":["de.txt.erzaehlung"],"prompt":"Ersetze das blasse Verb durch ein genaueres: „Sie ging schnell weg.“ → Sie ____ weg.","answer":"rannte","alt":["lief","eilte","stürmte","hastete"],"caseSensitive":false},
+      {"id":"de-07-32","type":"type","rules":["de.txt.erzaehlung"],"prompt":"Ersetze das blasse Verb: „Er sagte laut: …“ → Er ____ .","answer":"rief","alt":["schrie","brüllte"],"caseSensitive":false},
+      {"id":"de-07-33","type":"verbinden","rules":["de.txt.satzbau","de.txt.erzaehlung"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Der Sturm wurde stärker.","Wir suchten einen Unterstand."],"pflicht":["Sturm","stärker","Unterstand"],"muster":"Als der Sturm stärker wurde, suchten wir einen Unterstand.","tipp":"Mit als kannst du zwei Dinge zeitlich verbinden."},
+      {"id":"de-07-34","type":"verbinden","rules":["de.txt.satzbau","de.txt.beschreibung"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Die Kirche hat einen Turm.","Der Turm ist 40 Meter hoch."],"pflicht":["Kirche","Turm","Meter"],"muster":"Die Kirche hat einen 40 Meter hohen Turm.","tipp":"Die Angabe kann direkt vor das Nomen."},
+      {"id":"de-07-35","type":"mc","rules":["de.txt.erzaehlung"],"prompt":"Wo steht der Höhepunkt einer Erzählung?","correct":"Am Ende des Hauptteils.","opts":[{"t":"Am Ende des Hauptteils."},{"t":"Ganz am Anfang.","miss":"de.txt.hoehepunkt-vorweg"},{"t":"Nach dem Schluss.","miss":"de.txt.aufbau-unklar"}]}
+    ]
+  },
+
+  "de-l8": {
+    nr: 8, titel: "Zeichensetzung und wörtliche Rede",
+    intro: "Wo Kommas hingehören — und wie man aufschreibt, was jemand sagt.",
+    items: [
+      {"id":"de-08-01","type":"mc","rules":["de.zs.woertliche-rede"],"prompt":"Welche Schreibweise ist richtig?","correct":"Anna sagt: „Ich komme gleich.“","opts":[{"t":"Anna sagt: „Ich komme gleich.“"},{"t":"Anna sagt, „Ich komme gleich.“","miss":"de.zs.komma-statt-doppelpunkt"},{"t":"Anna sagt „Ich komme gleich.“","miss":"de.zs.doppelpunkt-fehlt"}]},
+      {"id":"de-08-02","type":"mc","rules":["de.zs.woertliche-rede"],"prompt":"Welche Schreibweise ist richtig?","correct":"„Ich komme gleich“, sagt Anna.","opts":[{"t":"„Ich komme gleich“, sagt Anna."},{"t":"„Ich komme gleich.“, sagt Anna.","miss":"de.zs.punkt-zuviel"},{"t":"„Ich komme gleich“ sagt Anna.","miss":"de.zs.komma-fehlt"}]},
+      {"id":"de-08-03","type":"mc","rules":["de.zs.woertliche-rede"],"prompt":"Der Begleitsatz steht vorne. Welches Zeichen kommt danach?","correct":"ein Doppelpunkt","opts":[{"t":"ein Doppelpunkt"},{"t":"ein Komma","miss":"de.zs.komma-statt-doppelpunkt"},{"t":"gar nichts","miss":"de.zs.doppelpunkt-fehlt"}]},
+      {"id":"de-08-04","type":"mc","rules":["de.zs.woertliche-rede"],"prompt":"Welche Schreibweise ist richtig?","correct":"Tom fragt: „Kommst du mit?“","opts":[{"t":"Tom fragt: „Kommst du mit?“"},{"t":"Tom fragt: „Kommst du mit.“","miss":"de.zs.fragezeichen-fehlt"},{"t":"Tom fragt: „Kommst du mit“?","miss":"de.zs.zeichen-ausserhalb"}]},
+      {"id":"de-08-05","type":"mc","rules":["de.zs.woertliche-rede"],"prompt":"Welche Schreibweise ist richtig?","correct":"„Kommst du mit?“, fragt Tom.","opts":[{"t":"„Kommst du mit?“, fragt Tom."},{"t":"„Kommst du mit?“ fragt Tom.","miss":"de.zs.komma-fehlt"},{"t":"„Kommst du mit,“ fragt Tom?","miss":"de.zs.zeichen-verschoben"}]},
+      {"id":"de-08-06","type":"tf","rules":["de.zs.woertliche-rede"],"prompt":"Richtig oder falsch?","statement":"Steht die wörtliche Rede vorne, ersetzt das Komma den Punkt.","answer":true,"erklaerung":"„Ich komme“, sagt Anna. — Der Punkt fällt weg, das Komma steht nach dem Anführungszeichen."},
+      {"id":"de-08-07","type":"tf","rules":["de.zs.woertliche-rede"],"prompt":"Richtig oder falsch?","statement":"Ein Frage- oder Rufzeichen bleibt auch dann stehen, wenn die Rede vorne steht.","answer":true,"erklaerung":"„Kommst du?“, fragt Tom. — anders als der Punkt bleibt es erhalten."},
+      {"id":"de-08-08","type":"fehler","rules":["de.zs.woertliche-rede"],"prompt":"Tippe das falsche Zeichen an.","tokens":["Mama","ruft",",","„Das","Essen","ist","fertig!“"],"wrong":{"2":":"}},
+      {"id":"de-08-09","type":"order","rules":["de.zs.woertliche-rede"],"prompt":"Bring den Satz in die richtige Reihenfolge.","words":["„Ich","sagt","Papa","gleich“,","komme"],"solution":["„Ich","komme","gleich“,","sagt","Papa"]},
+      {"id":"de-08-10","type":"type","rules":["de.zs.woertliche-rede"],"prompt":"Welches Zeichen steht nach einem Begleitsatz am Anfang? Tippe nur das Zeichen.","answer":":","caseSensitive":false},
+      {"id":"de-08-11","type":"mc","rules":["de.zs.komma-aufzaehlung"],"prompt":"Welche Schreibweise ist richtig?","correct":"Ich packe Brot, Käse, Obst und Wasser ein.","opts":[{"t":"Ich packe Brot, Käse, Obst und Wasser ein."},{"t":"Ich packe Brot, Käse, Obst, und Wasser ein.","miss":"de.zs.komma-vor-und"},{"t":"Ich packe Brot Käse Obst und Wasser ein.","miss":"de.zs.kommas-fehlen"}]},
+      {"id":"de-08-12","type":"tf","rules":["de.zs.komma-aufzaehlung"],"prompt":"Richtig oder falsch?","statement":"Vor dem „und“ einer Aufzählung steht ein Komma.","answer":false,"erklaerung":"Genau dort steht keines — das „und“ ersetzt das letzte Komma."},
+      {"id":"de-08-13","type":"fehler","rules":["de.zs.komma-aufzaehlung"],"prompt":"Tippe das überflüssige Zeichen an.","tokens":["Wir","kauften","Äpfel,","Birnen,","und","Trauben","."],"wrong":{"3":"Birnen"}},
+      {"id":"de-08-14","type":"type","rules":["de.zs.komma-aufzaehlung"],"prompt":"Wie viele Kommas braucht der Satz? „Ich mag Blau Grün und Rot.“ Tippe nur die Zahl.","answer":"1","caseSensitive":false},
+      {"id":"de-08-15","type":"mc","rules":["de.zs.komma-satzverbindung"],"prompt":"Welche Schreibweise ist richtig?","correct":"Ich bleibe daheim, weil ich krank bin.","opts":[{"t":"Ich bleibe daheim, weil ich krank bin."},{"t":"Ich bleibe daheim weil ich krank bin.","miss":"de.zs.komma-fehlt"},{"t":"Ich bleibe daheim, weil, ich krank bin.","miss":"de.zs.komma-zuviel"}]},
+      {"id":"de-08-16","type":"mc","rules":["de.zs.komma-satzverbindung"],"prompt":"Vor welchem Wort steht ein Komma?","correct":"dass","opts":[{"t":"dass"},{"t":"und","miss":"de.zs.komma-vor-und"},{"t":"oder","miss":"de.zs.komma-vor-und"}]},
+      {"id":"de-08-17","type":"sort","rules":["de.zs.komma-satzverbindung"],"prompt":"Steht davor ein Komma?","buckets":["Komma","kein Komma"],"words":[{"w":"weil","b":"Komma"},{"w":"und","b":"kein Komma"},{"w":"obwohl","b":"Komma"},{"w":"oder","b":"kein Komma"},{"w":"dass","b":"Komma"},{"w":"sowie","b":"kein Komma"}]},
+      {"id":"de-08-18","type":"fehler","rules":["de.zs.komma-satzverbindung"],"prompt":"Tippe das Wort an, vor dem ein Komma fehlt.","tokens":["Ich","weiß","dass","du","recht","hast","."],"wrong":{"2":", dass"}},
+      {"id":"de-08-19","type":"type","rules":["de.zs.komma-satzverbindung"],"prompt":"Setze das fehlende Wort ein: „Er blieb liegen, ____ er müde war.“","answer":"weil","alt":["da"],"caseSensitive":false},
+      {"id":"de-08-20","type":"mc","rules":["de.zs.satzschluss"],"prompt":"Welches Zeichen gehört ans Ende? „Wie schön das ist“","correct":"!","opts":[{"t":"!"},{"t":"?","miss":"de.zs.ausruf-als-frage"},{"t":".","miss":"de.zs.ausruf-nicht-erkannt"}]},
+      {"id":"de-08-21","type":"sort","rules":["de.zs.satzschluss"],"prompt":"Welches Satzzeichen passt?","buckets":["Punkt","Rufzeichen"],"words":[{"w":"Der Zug fährt ab","b":"Punkt"},{"w":"Pass doch auf","b":"Rufzeichen"},{"w":"Es ist Montag","b":"Punkt"},{"w":"Wie toll","b":"Rufzeichen"},{"w":"Wir essen um zwölf","b":"Punkt"},{"w":"Komm sofort her","b":"Rufzeichen"}]},
+      {"id":"de-08-22","type":"lesen","rules":["de.zs.woertliche-rede","de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Der Bauer stand am Zaun und schaute auf die Wiese. „Wo ist die braune Kuh?“, fragte er. Sein Sohn zeigte zum Wald und antwortete: „Dort hinten, beim Bach.“ Beide machten sich auf den Weg.","frage":"Wer sagt „Dort hinten, beim Bach“?","correct":"der Sohn","beleg":"Sein Sohn zeigte zum Wald und antwortete","opts":[{"t":"der Sohn"},{"t":"der Bauer","miss":"de.zs.sprecher-verwechselt"},{"t":"das steht nicht da","miss":"de.txt.hineingelesen"}]},
+      {"id":"de-08-23","type":"lesen","rules":["de.zs.woertliche-rede"],"prompt":"Lies den Text und beantworte die Frage.","text":"Der Bauer stand am Zaun und schaute auf die Wiese. „Wo ist die braune Kuh?“, fragte er. Sein Sohn zeigte zum Wald und antwortete: „Dort hinten, beim Bach.“ Beide machten sich auf den Weg.","frage":"Warum steht einmal ein Doppelpunkt und einmal nicht?","correct":"Weil der Begleitsatz einmal vorne und einmal hinten steht.","beleg":"„Wo ist die braune Kuh?“, fragte er.","opts":[{"t":"Weil der Begleitsatz einmal vorne und einmal hinten steht."},{"t":"Weil einmal gefragt und einmal geantwortet wird.","miss":"de.zs.satzart-statt-stellung"},{"t":"Das ist Zufall.","miss":"de.zs.regel-unklar"}]},
+      {"id":"de-08-24","type":"verbinden","rules":["de.zs.komma-satzverbindung","de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Es hat geschneit.","Die Schule fällt aus."],"pflicht":["geschneit","Schule"],"muster":"Weil es geschneit hat, fällt die Schule aus.","tipp":"Vergiss das Komma vor dem Bindewort nicht."},
+      {"id": "de-08-25", "type": "verbinden", "rules": ["de.zs.komma-satzverbindung", "de.txt.satzbau"], "prompt": "Mach aus den zwei Sätzen einen einzigen.", "saetze": ["Ich habe gehört.", "Du kommst später."], "pflicht": ["gehört", "später", "kommst"], "muster": "Ich habe gehört, dass du später kommst.", "tipp": "Mit dass hängst du an, was du gehört hast."},
+      {"id":"de-08-26","type":"mc","rules":["de.zs.woertliche-rede"],"prompt":"Wie beginnt die wörtliche Rede — groß oder klein?","correct":"immer groß","opts":[{"t":"immer groß"},{"t":"immer klein","miss":"de.zs.gross-vergessen"},{"t":"je nach Wort","miss":"de.zs.regel-unklar"}]},
+      {"id":"de-08-27","type":"fehler","rules":["de.zs.woertliche-rede"],"prompt":"Tippe das falsch geschriebene Wort an.","tokens":["Der","Lehrer","sagt",":","„setzt","euch","hin.“"],"wrong":{"4":"„Setzt"}},
+      {"id":"de-08-28","type":"match","rules":["de.zs.woertliche-rede"],"prompt":"Welches Zeichen gehört wohin?","pairs":[["Begleitsatz vorne","Doppelpunkt danach"],["Rede vorne","Komma nach dem Anführungszeichen"],["Frage in der Rede","Fragezeichen bleibt"],["Aussage in der Rede vorne","Punkt fällt weg"]]},
+      {"id":"de-08-29","type":"tap","rules":["de.zs.komma-satzverbindung"],"prompt":"Tippe das Wort an, vor dem ein Komma stehen muss.","tokens":["Wir","warten","bis","der","Regen","aufhört"],"correctIndex":2},
+      {"id":"de-08-30","type":"tap","rules":["de.zs.komma-aufzaehlung"],"prompt":"Tippe das Wort an, vor dem KEIN Komma steht.","tokens":["Rot","Gelb","und","Blau"],"correctIndex":2},
+      {"id":"de-08-31","type":"type","rules":["de.zs.woertliche-rede"],"prompt":"Schreibe richtig: anna ruft ich bin hier — beginne mit „Anna ruft:“","answer":"Anna ruft: „Ich bin hier.“","alt":["Anna ruft: \"Ich bin hier.\""],"caseSensitive":false},
+      {"id":"de-08-32","type":"mc","rules":["de.zs.komma-satzverbindung"],"prompt":"In welchem Satz fehlt ein Komma?","correct":"Sie lacht wenn sie das hört.","opts":[{"t":"Sie lacht wenn sie das hört."},{"t":"Sie lacht und singt.","miss":"de.zs.komma-vor-und"},{"t":"Sie lacht, weil sie sich freut.","miss":"de.zs.komma-erkannt"}]},
+      {"id":"de-08-33","type":"sort","rules":["de.zs.satzschluss","de.zs.woertliche-rede"],"prompt":"Steht der Begleitsatz vorne oder hinten?","buckets":["vorne","hinten"],"words":[{"w":"Er sagt: „Los geht’s.“","b":"vorne"},{"w":"„Los geht’s“, sagt er.","b":"hinten"},{"w":"Sie fragt: „Warum?“","b":"vorne"},{"w":"„Warum?“, fragt sie.","b":"hinten"}]},
+      {"id":"de-08-34","type":"tf","rules":["de.zs.komma-aufzaehlung"],"prompt":"Richtig oder falsch?","statement":"In einer Aufzählung stehen zwischen allen Gliedern Kommas — außer vor dem letzten „und“.","answer":true,"erklaerung":"Brot, Käse, Obst und Wasser — drei Glieder, zwei Kommas."},
+      {"id":"de-08-35","type":"mc","rules":["de.zs.woertliche-rede"],"prompt":"Welches Verb passt NICHT als Begleitsatz?","correct":"läuft","opts":[{"t":"läuft"},{"t":"flüstert","miss":"de.zs.begleitverb-erkannt"},{"t":"antwortet","miss":"de.zs.begleitverb-erkannt"}]}
+    ]
   }
 };
 
@@ -2356,7 +2556,12 @@ const LEKTIONEN_EN = {
       { id: "en-01-35", type: "type", rules: ["en.sp.spelling"],
         prompt: "Wie schreibt man „Stunde“ auf Englisch?",
         answer: "hour", caseSensitive: false, speak: "hour",
-        hint: "Das h am Anfang bleibt stumm." }
+        hint: "Das h am Anfang bleibt stumm." },
+      {"id": "en-01-40", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "weil", "teile": ["be", "cause"], "stoerer": ["cauze", "bi"], "hint": "cause heißt Ursache — be + cause."},
+      {"id": "en-01-41", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "schön", "teile": ["beauti", "ful"], "stoerer": ["full", "beaty"], "hint": "Wie wonder + ful. Am Ende nur ein l."},
+      {"id": "en-01-42", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "freundlich", "teile": ["friend", "ly"], "stoerer": ["frend", "ley"], "hint": "In friendly steckt friend."},
+      {"id": "en-01-43", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Mittwoch", "teile": ["Wed", "nes", "day"], "stoerer": ["Wen", "dey"], "hint": "Sag beim Bauen übertrieben Wed-nes-day."},
+      {"id": "en-01-44", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Lieblings-", "teile": ["fav", "our", "ite"], "stoerer": ["or", "favor"], "hint": "Britisch mit u — mittendrin steckt our."}
     ]
   },
 
@@ -3046,7 +3251,11 @@ const LEKTIONEN_EN = {
                 ["headmaster", "Direktor"], ["lesson", "Unterrichtsstunde"]] },
       { id: "en-05-35", type: "type", rules: ["en.voc.familie", "en.sp.spelling"],
         prompt: "Wie heißt „Tochter“ auf Englisch?",
-        answer: "daughter", caseSensitive: false, speak: "daughter" }
+        answer: "daughter", caseSensitive: false, speak: "daughter" },
+      {"id": "en-05-40", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Hausübung", "teile": ["home", "work"], "stoerer": ["hous", "werk"], "hint": "Zwei ganze Wörter zusammengeschoben."},
+      {"id": "en-05-41", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Stundenplan", "teile": ["time", "table"], "stoerer": ["tabel", "thyme"], "hint": "Wörtlich: die Zeittafel."},
+      {"id": "en-05-42", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Großmutter", "teile": ["grand", "mother"], "stoerer": ["grant", "muther"], "hint": "grand + mother — wie grandfather."},
+      {"id": "en-05-43", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Klassenzimmer", "teile": ["class", "room"], "stoerer": ["klass", "rume"], "hint": "Zwei Wörter: class + room."}
     ]
   },
 
@@ -3217,7 +3426,10 @@ const LEKTIONEN_EN = {
       { id: "en-06-37", type: "tf", rules: ["en.gr.articles"],
         prompt: "Richtig oder falsch?",
         statement: "Vor „hour“ heißt es „a hour“.", answer: false,
-        erklaerung: "Man hört kein h — es klingt wie „our“. Deshalb: an hour." }
+        erklaerung: "Man hört kein h — es klingt wie „our“. Deshalb: an hour." },
+      {"id": "en-06-40", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "vorsichtig", "teile": ["care", "ful"], "stoerer": ["full", "kare"], "hint": "Dieselbe Endung wie bei beautiful."},
+      {"id": "en-06-41", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "nutzlos", "teile": ["use", "less"], "stoerer": ["lees", "yuse"], "hint": "-less heißt ohne: useless = ohne Nutzen."},
+      {"id": "en-06-42", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "schnell (Art und Weise)", "teile": ["quick", "ly"], "stoerer": ["kwick", "ley"], "hint": "-ly macht aus einem Eigenschaftswort ein Umstandswort."}
     ]
   }
 };
@@ -3920,7 +4132,11 @@ function schwierigkeit(it) {
            /* spell zeigt das Wort vorher — geführtes Produzieren, Stufe 2.
               Auf Stufe 3 käme es erst im zweiten Durchgang, und gerade die
               Rechtschreibung soll sie von Anfang an üben. */
-           spell: 2 }[it.type] || 2;
+           spell: 2,
+           /* Lesen ist Verstehen, Verbinden ist Produzieren. */
+           lesen: 2, verbinden: 3,
+           /* Bausteine zusammensetzen ist leichter als frei tippen. */
+           bauteile: 1 }[it.type] || 2;
 }
 
 /** Welche Stufen in welchem Durchgang drankommen. */
@@ -4882,15 +5098,18 @@ function renderItem() {
   h += ({
     mc: rMC, type: rType, tf: rTF, sort: rSort, tap: rTap,
     order: rOrder, match: rMatch, diktat: rDiktat, fehler: rFehler,
-    spell: rSpell
+    spell: rSpell, verbinden: rVerbinden, lesen: rLesen, bauteile: rBauteile
   }[it.type] || (() => `<p class="muted">Unbekannter Aufgabentyp.</p>`))(it);
 
   h += `</div><div id="fb"></div>
     <button class="btn" id="pruefen" onclick="pruefen()" disabled>Prüfen</button>`;
   app.innerHTML = h;
-  if (it.type === "type") {
+  if (it.type === "type" || it.type === "verbinden") {
     const inp = document.getElementById("eingabe");
-    if (inp) { inp.oninput = () => btnAn(inp.value.trim().length > 0); }
+    if (inp) {
+      inp.oninput = () => { btnAn(inp.value.trim().length > 0);
+                            if (inp.tagName === "TEXTAREA") mitwachsen(inp); };
+    }
   }
   if (it.type === "diktat") diktatInit(it);
   if (it.type === "spell") setTimeout(() => sprich(it.word, "en-GB"), 350);
@@ -4979,6 +5198,108 @@ function spellVerdecken() {
   const inp = document.getElementById("eingabe");
   if (inp) { inp.oninput = () => btnAn(inp.value.trim().length > 0); inp.focus(); }
   sprich(it.word, "en-GB");
+}
+
+/**
+ * Sätze verbinden.
+ *
+ * Isolierte Grammatikübungen verbessern das Schreiben kaum — das ist einer der
+ * robusteren Befunde der Schreibforschung. Was wirkt, ist das Zusammenziehen
+ * einfacher Sätze zu einem guten. Genau das verlangt auch der Lehrplan der
+ * 1. Klasse, der ausdrücklich KEINEN isolierten Grammatikunterricht mehr will,
+ * sondern Grammatik beim Lesen und Schreiben.
+ */
+function rVerbinden(it) {
+  A = {};
+  return `<div class="saetze">${it.saetze.map(x =>
+      `<p class="satz">${esc(x)}</p>`).join("")}</div>
+    <textarea id="eingabe" rows="2" autocomplete="off" autocorrect="off"
+      autocapitalize="sentences" spellcheck="false"
+      placeholder="Dein Satz" oninput="mitwachsen(this)"></textarea>
+    ${it.tipp ? `<p class="muted" style="margin-top:9px">💡 ${esc(it.tipp)}</p>` : ""}`;
+}
+
+/**
+ * Einen verbundenen Satz beurteilen.
+ *
+ * Freien Text kann die App nicht wirklich bewerten — es gibt viele richtige
+ * Lösungen. Sie prüft deshalb drei Dinge, die sich sicher entscheiden lassen,
+ * und zeigt danach immer einen Mustersatz. Der Vergleich mit dem Muster ist
+ * der eigentliche Lerneffekt, nicht das Urteil.
+ */
+function verbindenPruefen(it, eingabe) {
+  const roh = String(eingabe || "").trim();
+  const klein = roh.toLowerCase();
+  const enden = (roh.match(/[.!?]/g) || []).length;
+  if (!roh) return { ok: false, grund: "Da steht noch nichts." };
+  if (enden > 1) return { ok: false,
+    grund: "Das sind noch zwei Sätze. Mach einen einzigen daraus." };
+
+  const woerter = klein.replace(/[.,!?;:„“”"]/g, " ").split(/\s+/).filter(Boolean);
+  const fehlt = (it.pflicht || []).filter(p =>
+    !woerter.some(w => w === p.toLowerCase() || w.startsWith(p.toLowerCase())));
+  if (fehlt.length) return { ok: false,
+    grund: `Es fehlt noch: ${fehlt.join(", ")}` };
+
+  /* Doppelte Inhaltswörter verraten, dass die Sätze nur aneinandergehängt
+     wurden statt wirklich verbunden. */
+  const doppelt = (it.pflicht || []).filter(p =>
+    woerter.filter(w => w === p.toLowerCase() || w.startsWith(p.toLowerCase())).length > 1);
+  if (doppelt.length) return { ok: false,
+    grund: `„${doppelt[0]}“ kommt zweimal vor — geht es kürzer?` };
+
+  return { ok: true };
+}
+
+/**
+ * Lesetext mit einer Frage.
+ *
+ * Vorher hatte keine einzige Aufgabe mehr als zwei Sätze Text. Zum Lehrplan
+ * gehört aber ausdrücklich, Texten Informationen zu entnehmen — und
+ * Grammatikwissen und Leseverständnis hängen eng zusammen.
+ */
+function rLesen(it) {
+  const frage = it.frage ? `<p class="q" style="margin-top:14px">${esc(it.frage)}</p>` : "";
+  return `<div class="lesetext">${esc(it.text).replace(/\n/g, "<br>")}</div>
+    ${frage}${rMC(it)}`;
+}
+
+/**
+ * Wortbausteine.
+ *
+ * Der Typ `spell` lässt sie das Wortbild einprägen — besser als Multiple
+ * Choice, aber im Kern noch Auswendiglernen. Die Übersichtsarbeiten zum
+ * Rechtschreibunterricht sind sich einig, dass Wortstruktur mehr trägt als
+ * Merken: Wer weiß, dass *beautiful* aus *beauty* und *ful* besteht, kann auch
+ * *wonderful* schreiben, ohne es je geübt zu haben. Im Deutschen macht die App
+ * das längst so (Verlängern, Ableiten, Wortfamilien) — hier holt Englisch auf.
+ */
+function rBauteile(it) {
+  A = { gelegt: [] };
+  A.pool = shuffle([...it.teile, ...(it.stoerer || [])]);
+  return `<p class="sub" style="margin:0 0 10px">${esc(it.bedeutung)}</p>
+    <div class="slot" id="slot"></div>
+    <div class="chips" id="pool">${A.pool.map((t, i) =>
+      `<button class="chip2 baustein" id="p${i}" onclick="bauNimm(${i})">${esc(t)}</button>`).join("")}</div>
+    ${it.hint ? `<p class="muted" style="margin-top:11px">💡 ${esc(it.hint)}</p>` : ""}`;
+}
+function bauNimm(i) {
+  const b = document.getElementById("p" + i);
+  if (b.classList.contains("used")) return;
+  b.classList.add("used");
+  A.gelegt.push({ t: A.pool[i], i });
+  bauZeichnen();
+}
+function bauZurueck(k) {
+  const e = A.gelegt.splice(k, 1)[0];
+  document.getElementById("p" + e.i).classList.remove("used");
+  bauZeichnen();
+}
+function bauZeichnen() {
+  document.getElementById("slot").innerHTML =
+    A.gelegt.map((e, k) => `<button class="chip2 baustein" onclick="bauZurueck(${k})">${esc(e.t)}</button>`).join("") +
+    (A.gelegt.length ? `<span class="bauwort">= ${esc(A.gelegt.map(e => e.t).join(""))}</span>` : "");
+  btnAn(A.gelegt.length > 0);
 }
 
 function rTF(it) {
@@ -5330,10 +5651,15 @@ function pruefen() {
   let quote = null, diktatInfo = null;
 
   switch (it.type) {
+    /* Lesen wird wie eine Auswahlfrage beurteilt — nur der Text steht davor. */
+    case "lesen":
     case "mc": {
       const w = A.opts[A.wahl];
       ok = w.t === it.correct; miss = ok ? null : w.miss;
       loesung = it.correct;
+      /* Beim Lesetext zeigen, WO die Antwort steht — die Belegstelle ist der
+         Lerneffekt, nicht das Richtig oder Falsch. */
+      if (it.beleg) extra = `Im Text steht: <i>${esc(it.beleg)}</i>`;
       A.opts.forEach((x, i) => {
         const e = document.getElementById("o" + i);
         if (x.t === it.correct) e.classList.add("good");
@@ -5347,6 +5673,26 @@ function pruefen() {
       const kand = [it.answer, ...(it.alt || [])];
       ok = kand.some(k => norm(k, cs) === norm(v, cs));
       loesung = it.answer;
+      break;
+    }
+    case "verbinden": {
+      const v = (document.getElementById("eingabe")?.value || "").trim();
+      const urteil = verbindenPruefen(it, v);
+      ok = urteil.ok;
+      loesung = it.muster;
+      /* Der Mustersatz kommt immer — auch wenn sie es richtig hatte. Beim
+         Satzbau gibt es mehrere gute Lösungen, und der Vergleich ist der
+         eigentliche Lerneffekt. */
+      extra = (urteil.grund ? `<p>${esc(urteil.grund)}</p>` : "") +
+        `<p class="muted" style="margin-top:8px">So könnte er lauten:<br>
+          <b>${esc(it.muster)}</b></p>`;
+      break;
+    }
+    case "bauteile": {
+      ok = A.gelegt.map(e => e.t).join("") === it.teile.join("");
+      loesung = it.teile.join("");
+      extra = `<p class="muted">${it.teile.map(t => `<b>${esc(t)}</b>`).join(" + ")}
+        = ${esc(it.teile.join(""))}</p>`;
       break;
     }
     case "spell": {
