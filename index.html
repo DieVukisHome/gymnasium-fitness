@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gymnasium Fitness</title>
-<!-- Erzeugt von tools/bauen.js am 2026-08-11. Nicht direkt bearbeiten —
+<!-- Erzeugt von tools/bauen.js am 2026-08-12. Nicht direkt bearbeiten —
      Änderungen gehören in index.html und data/*.js. -->
 
 <!-- Als App auf den Home-Bildschirm: iPad und iPhone starten dann ohne
@@ -3489,6 +3489,14 @@ const LEVEL_NAMEN = [
 const KEY = "gymfit_v2";
 const ALPHA = 0.3;          // Lerngewicht: wie stark die neueste Antwort zählt
 const DECAY = 0.02;         // Zerfall pro Tag ohne Übung
+/* Längste Zeit, die für eine Aufgabe angerechnet wird.
+   Die App misst Wanduhrzeit. Wird sie mitten in einer Aufgabe weggelegt und
+   Stunden später weitergemacht, stünde diese Pause als Bearbeitungszeit im
+   Protokoll — einmal waren es 80 Minuten für eine einzige Aufgabe, was die
+   Auswertung des ganzen Tages unbrauchbar machte. Drei Minuten sind großzügig:
+   Der Median liegt bei etwa 12 Sekunden. */
+const MAX_AUFGABENZEIT = 180000;
+
 const SCHWELLE = 0.7;       // darunter gilt eine Regel als Schwäche
 const MIN_SEEN = 4;         // erst ab so vielen Begegnungen wird gewertet
 
@@ -3695,10 +3703,28 @@ function lektionsRegeln(lekId, fach) {
  * nie geübte Regel als „null Prozent" zu zählen wäre falsch — sie zöge den
  * Schnitt so weit herunter, dass die Lektion nie graduieren könnte.
  */
+/* Ab so vielen Begegnungen zählt eine Regel mit vollem Gewicht. */
+const VOLLES_GEWICHT = 6;
+
+/**
+ * Durchschnittliche Beherrschung der Regeln einer Lektion.
+ *
+ * Gewichtet nach Belegen. Ungewichtet zählte eine Regel, die zweimal
+ * drankam, genauso viel wie eine mit dreißig Begegnungen — eine einmal
+ * gesehene Regel konnte damit eine Lektion blockieren oder durchwinken,
+ * obwohl über sie fast nichts bekannt war. Regeln ohne jede Begegnung
+ * bleiben außen vor: „noch nicht gelernt" ist keine Schwäche.
+ */
 function lektionsMastery(lekId, fach) {
   const geuebt = lektionsRegeln(lekId, fach).filter(r => (S.rules[r]?.seen || 0) > 0);
   if (!geuebt.length) return 0;
-  return geuebt.reduce((a, r) => a + S.rules[r].mastery, 0) / geuebt.length;
+  let summe = 0, gewicht = 0;
+  for (const r of geuebt) {
+    const g = Math.min(S.rules[r].seen, VOLLES_GEWICHT);
+    summe += S.rules[r].mastery * g;
+    gewicht += g;
+  }
+  return gewicht ? summe / gewicht : 0;
 }
 
 /**
@@ -5290,6 +5316,12 @@ function diktatWeiter() {
    6. AUSWERTUNG
    ══════════════════════════════════════════════════════════════════ */
 
+/** Angerechnete Bearbeitungszeit — gedeckelt, siehe MAX_AUFGABENZEIT. */
+function aufgabenZeit() {
+  const roh = Date.now() - (L.itemStart || L.start || Date.now());
+  return Math.max(0, Math.min(roh, MAX_AUFGABENZEIT));
+}
+
 function pruefen() {
   const it = L.items[L.i];
   let ok = false, miss = null, loesung = "", extra = "";
@@ -5403,7 +5435,7 @@ function pruefen() {
   (it.rules || []).forEach(r => masteryUpdate(r, quote === null ? ok : quote));
   srsPlanen(it.id, ok);
   S.log.push({ item: it.id, ok, rules: it.rules || [], miss: miss || null,
-               ms: Date.now() - (L.itemStart || L.start), tag: programmTag(),
+               ms: aufgabenZeit(), tag: programmTag(),
                lektion: L.lekId,
                /* Beim Diktat sagt „falsch" allein nichts: ein Fehler oder zehn
                   sind zwei verschiedene Befunde. Deshalb kommt die Zahl mit. */
