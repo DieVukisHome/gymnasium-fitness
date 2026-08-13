@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gymnasium Fitness</title>
-<!-- Erzeugt von tools/bauen.js am 2026-08-12. Nicht direkt bearbeiten —
+<!-- Erzeugt von tools/bauen.js am 2026-08-13. Nicht direkt bearbeiten —
      Änderungen gehören in index.html und data/*.js. -->
 
 <!-- Als App auf den Home-Bildschirm: iPad und iPhone starten dann ohne
@@ -1177,12 +1177,7 @@ const LEKTIONEN_DE = {
         answer: true,
         erklaerung: "Genau — das ist die Artikelprobe, dein wichtigster Test." },
 
-      { id: "de-01-07", type: "mc", rules: ["de.gr.wortart.verb"],
-        prompt: "In welchem Satz steckt KEIN Verb?",
-        correct: "Ein wunderschöner Sommertag am See.",
-        opts: [{ t: "Ein wunderschöner Sommertag am See." },
-               { t: "Anna schwimmt im See.", miss: "verb-uebersehen" },
-               { t: "Der Tag ist schön.", miss: "sein-nicht-als-verb" }] },
+      {"id": "de-01-07", "type": "mc", "rules": ["de.gr.wortart.verb"], "prompt": "In welchem Satz steckt KEIN Verb?", "correct": "Ein wunderschöner Sommertag am See.", "opts": [{"t": "Ein wunderschöner Sommertag am See."}, {"t": "Anna schwimmt im kühlen Bergsee.", "miss": "verb-uebersehen"}, {"t": "Der Tag am See ist wunderschön.", "miss": "sein-nicht-als-verb"}]},
 
       { id: "de-01-08", type: "sort", rules: ["de.gr.wortart.artikel"],
         prompt: "Bestimmter oder unbestimmter Artikel?",
@@ -1221,11 +1216,7 @@ const LEKTIONEN_DE = {
         correct: "die",
         opts: [{ t: "die" }, { t: "der", miss: "genus-raten" }, { t: "das", miss: "genus-raten" }] },
 
-      { id: "de-01-14", type: "tf", rules: ["de.gr.wortart.verb"],
-        prompt: "Richtig oder falsch?",
-        statement: "Die Grundform eines Verbs endet fast immer auf -en.",
-        answer: true,
-        erklaerung: "Ja: laufen, singen, denken, lesen. Nur wenige enden auf -n, etwa „sammeln“." },
+      {"id": "de-01-14", "type": "tf", "rules": ["de.gr.wortart.verb"], "prompt": "Richtig oder falsch?", "statement": "Die Grundform eines Verbs endet fast immer auf -st.", "answer": false, "erklaerung": "Sie endet auf <b>-en</b>: lachen, gehen, schreiben. Das -st gehört zur du-Form."},
 
       { id: "de-01-15", type: "tf", rules: ["de.rs.gross-klein.nomen"],
         prompt: "Richtig oder falsch?",
@@ -1248,12 +1239,7 @@ const LEKTIONEN_DE = {
         words: [{ w: "Fenster", b: "Nomen" }, { w: "springen", b: "Verb" }, { w: "eine", b: "Artikel" },
                 { w: "Gedanke", b: "Nomen" }, { w: "lachen", b: "Verb" }, { w: "der", b: "Artikel" }] },
 
-      { id: "de-01-19", type: "sort", rules: ["de.rs.gross-klein.nomen"],
-        prompt: "Groß oder klein geschrieben?",
-        buckets: ["groß", "klein"],
-        words: [{ w: "Hoffnung", b: "groß" }, { w: "hoffen", b: "klein" },
-                { w: "Bewegung", b: "groß" }, { w: "bewegen", b: "klein" },
-                { w: "Wunsch", b: "groß" }, { w: "wünschen", b: "klein" }] },
+      {"id": "de-01-19", "type": "sort", "rules": ["de.gr.wortart.nomen", "de.rs.gross-klein.nomen"], "prompt": "Alle Wörter stehen klein. Welche MÜSSEN großgeschrieben werden?", "buckets": ["groß", "klein"], "words": [{"w": "hoffnung", "b": "groß"}, {"w": "hoffen", "b": "klein"}, {"w": "bewegung", "b": "groß"}, {"w": "bewegen", "b": "klein"}, {"w": "wunsch", "b": "groß"}, {"w": "wünschen", "b": "klein"}]},
 
       { id: "de-01-20", type: "mc", rules: ["de.gr.wortart.nomen"],
         prompt: "Auch Gefühle sind Nomen. Welches Wort gehört dazu?",
@@ -1711,10 +1697,7 @@ const LEKTIONEN_DE = {
         prompt: "Welches Pronomen ersetzt das Nomen?",
         pairs: [["der Vater", "er"], ["die Mutter", "sie"],
                 ["das Kind", "es"], ["die Eltern", "sie (mehrere)"]] },
-      { id: "de-03-36", type: "tf", rules: ["de.gr.wortart.pronomen"],
-        prompt: "Richtig oder falsch?",
-        statement: "Ein Pronomen steht anstelle eines Nomens.", answer: true,
-        erklaerung: "Genau dafür ist es da — damit man dasselbe Wort nicht ständig wiederholen muss." }
+      {"id": "de-03-36", "type": "tf", "rules": ["de.gr.wortart.pronomen"], "prompt": "Richtig oder falsch?", "statement": "Ein Pronomen steht anstelle eines Verbs.", "answer": false, "erklaerung": "Es steht anstelle eines <b>Nomens</b> — damit man dasselbe Wort nicht ständig wiederholen muss."}
     ]
   },
 
@@ -1770,21 +1753,13 @@ const LEKTIONEN_DE = {
         statement: "Der 2. Fall antwortet auf die Frage „Wessen?“",
         answer: true,
         erklaerung: "Genau: Das Fahrrad DES MÄDCHENS — wessen Fahrrad? Des Mädchens." },
-      { id: "de-04-11", type: "mc", rules: ["de.gr.nomen.faelle"],
-        prompt: "Mit welcher Frage findest du den 4. Fall?",
-        correct: "Wen oder was?",
-        opts: [{ t: "Wen oder was?" }, { t: "Wem?", miss: "fall3-fall4-verwechselt" },
-               { t: "Wessen?", miss: "fall4-fall2-verwechselt" }] },
+      {"id": "de-04-11", "type": "mc", "rules": ["de.gr.nomen.faelle"], "prompt": "Mit welcher Frage findest du den 4. Fall?", "correct": "Wen oder was?", "opts": [{"t": "Wen oder was?"}, {"t": "Wer oder was?", "miss": "fall4-fall1-verwechselt"}, {"t": "Wem gehört das?", "miss": "fall4-fall2-verwechselt"}]},
       { id: "de-04-12", type: "mc", rules: ["de.gr.nomen.faelle"],
         prompt: "Mit welcher Frage findest du den 2. Fall?",
         correct: "Wessen?",
         opts: [{ t: "Wessen?" }, { t: "Wem?", miss: "fall2-fall3-verwechselt" },
                { t: "Wer oder was?", miss: "fall2-fall1-verwechselt" }] },
-      { id: "de-04-13", type: "mc", rules: ["de.gr.nomen.faelle"],
-        prompt: "In welchem Fall steht „den Ball“ in: „Ich gebe dem Kind den Ball.“?",
-        correct: "4. Fall",
-        opts: [{ t: "4. Fall" }, { t: "3. Fall", miss: "fall3-fall4-verwechselt" },
-               { t: "1. Fall", miss: "fall-raten" }] },
+      {"id": "de-04-13", "type": "mc", "rules": ["de.gr.nomen.faelle"], "prompt": "In welchem Fall steht „der Freundin“ in: „Ich schreibe der Freundin einen Brief.“?", "correct": "3. Fall", "opts": [{"t": "3. Fall"}, {"t": "4. Fall", "miss": "fall3-fall4-verwechselt"}, {"t": "2. Fall", "miss": "fall3-fall2-verwechselt"}]},
       { id: "de-04-14", type: "mc", rules: ["de.gr.nomen.faelle"],
         prompt: "In welchem Fall steht „der Hund“ in: „Der Hund bellt laut.“?",
         correct: "1. Fall",
@@ -1872,10 +1847,7 @@ const LEKTIONEN_DE = {
         prompt: "Tippe die falsche Mehrzahl an.",
         tokens: ["Auf", "dem", "Tisch", "liegen", "drei", "Buchs", "."],
         wrong: { "5": "Bücher" } },
-      { id: "de-04-34", type: "tf", rules: ["de.gr.nomen.plural"],
-        prompt: "Richtig oder falsch?",
-        statement: "Im 1. Fall heißt der Artikel in der Mehrzahl immer „die“.", answer: true,
-        erklaerung: "Egal ob das Nomen in der Einzahl der, die oder das hat — in der Mehrzahl steht „die“." },
+      {"id": "de-04-34", "type": "tf", "rules": ["de.gr.nomen.plural"], "prompt": "Richtig oder falsch?", "statement": "Im 1. Fall heißt der Artikel in der Mehrzahl immer „der“.", "answer": false, "erklaerung": "Er heißt immer <b>die</b> — egal ob das Nomen in der Einzahl der, die oder das hat."},
       { id: "de-04-35", type: "tap", rules: ["de.gr.nomen.plural"],
         prompt: "Tippe das Nomen in der Mehrzahl an.",
         tokens: ["Die", "Blumen", "stehen", "im", "Wasser"], correctIndex: 1 }
@@ -1900,12 +1872,7 @@ const LEKTIONEN_DE = {
         opts: [{ t: "Beim Laufen höre ich Musik." },
                { t: "Beim laufen höre ich Musik.", miss: "nominalisierung-nicht-erkannt" }] },
 
-      { id: "de-05-03", type: "sort", rules: ["de.rs.gross-klein.nomen"],
-        prompt: "Groß oder klein? Sortiere die Wörter.",
-        buckets: ["groß", "klein"],
-        words: [{ w: "Fahrrad", b: "groß" }, { w: "fahren", b: "klein" },
-                { w: "Freude", b: "groß" }, { w: "fröhlich", b: "klein" },
-                { w: "Angst", b: "groß" }, { w: "ängstlich", b: "klein" }] },
+      {"id": "de-05-03", "type": "sort", "rules": ["de.rs.gross-klein.nomen"], "prompt": "Alle Wörter stehen klein. Welche MÜSSEN großgeschrieben werden?", "buckets": ["groß", "klein"], "words": [{"w": "fahrrad", "b": "groß"}, {"w": "fahren", "b": "klein"}, {"w": "freude", "b": "groß"}, {"w": "fröhlich", "b": "klein"}, {"w": "angst", "b": "groß"}, {"w": "ängstlich", "b": "klein"}]},
 
       { id: "de-05-04", type: "fehler", rules: ["de.rs.gross-klein.nomen", "de.rs.gross-klein.satzanfang"],
         prompt: "Fehlerdiktat: Tippe die falsch geschriebenen Wörter an.",
@@ -1966,12 +1933,7 @@ const LEKTIONEN_DE = {
         words: [{ w: "beim Essen", b: "groß" }, { w: "wir essen", b: "klein" },
                 { w: "das Spielen", b: "groß" }, { w: "sie spielen", b: "klein" },
                 { w: "vom Singen", b: "groß" }, { w: "ich singe", b: "klein" }] },
-      { id: "de-05-15", type: "mc", rules: ["de.rs.gross-klein.nominalisierung"],
-        prompt: "Woran erkennst du, dass ein Verb großgeschrieben wird?",
-        correct: "Ein Artikel oder eine Präposition steht davor.",
-        opts: [{ t: "Ein Artikel oder eine Präposition steht davor." },
-               { t: "Es steht am Satzende.", miss: "position-statt-signal" },
-               { t: "Es ist ein langes Wort.", miss: "laenge-statt-signal" }] },
+      {"id": "de-05-15", "type": "mc", "rules": ["de.rs.gross-klein.nominalisierung"], "prompt": "Woran erkennst du, dass ein Verb großgeschrieben wird?", "correct": "Ein Artikel oder eine Präposition steht davor.", "opts": [{"t": "Ein Artikel oder eine Präposition steht davor."}, {"t": "Es steht am Ende eines längeren Satzes.", "miss": "position-statt-signal"}, {"t": "Es hat mehr als sechs Buchstaben im Wort.", "miss": "laenge-statt-signal"}]},
       { id: "de-05-16", type: "fehler", rules: ["de.rs.gross-klein.nominalisierung"],
         prompt: "Tippe die falsch geschriebenen Wörter an.",
         tokens: ["Nach", "dem", "essen", "gehen", "wir", "zum", "spielen", "."],
@@ -2190,12 +2152,7 @@ const LEKTIONEN_DE = {
         prompt: "Welche Schreibweise ist richtig?",
         correct: "die Sonne",
         opts: [{ t: "die Sonne" }, { t: "die Sone", miss: "doppelkonsonant-fehlt" }] },
-      { id: "de-06-24", type: "mc", rules: ["de.rs.doppelkonsonant"],
-        prompt: "Wann schreibt man einen doppelten Mitlaut?",
-        correct: "Wenn der Selbstlaut davor kurz gesprochen wird.",
-        opts: [{ t: "Wenn der Selbstlaut davor kurz gesprochen wird." },
-               { t: "Wenn das Wort lang ist.", miss: "laenge-statt-klang" },
-               { t: "Wenn es ein Nomen ist.", miss: "wortart-statt-klang" }] },
+      {"id": "de-06-24", "type": "mc", "rules": ["de.rs.doppelkonsonant"], "prompt": "Wann schreibt man einen doppelten Mitlaut?", "correct": "Wenn der Selbstlaut davor kurz gesprochen wird.", "opts": [{"t": "Wenn der Selbstlaut davor kurz gesprochen wird."}, {"t": "Wenn das Wort mehr als zwei Silben hat.", "miss": "laenge-statt-klang"}, {"t": "Wenn es ein Nomen mit Artikel davor ist.", "miss": "wortart-statt-klang"}]},
       { id: "de-06-25", type: "sort", rules: ["de.rs.doppelkonsonant"],
         prompt: "Wird der Selbstlaut kurz oder lang gesprochen?",
         buckets: ["kurz", "lang"],
@@ -2237,10 +2194,7 @@ const LEKTIONEN_DE = {
         words: [{ w: "Fahrrad", b: "fahren" }, { w: "Schrift", b: "schreiben" },
                 { w: "Abfahrt", b: "fahren" }, { w: "Schreibtisch", b: "schreiben" },
                 { w: "Fahrer", b: "fahren" }, { w: "Schreiber", b: "schreiben" }] },
-      { id: "de-06-34", type: "mc", rules: ["de.rs.merkwoerter"],
-        prompt: "Welche Schreibweise ist richtig?",
-        correct: "der Vogel",
-        opts: [{ t: "der Vogel" }, { t: "der Fogel", miss: "v-als-f" }] },
+      {"id": "de-06-34", "type": "mc", "rules": ["de.rs.merkwoerter"], "prompt": "Welches Wort schreibt man mit v?", "correct": "der Vorhang", "opts": [{"t": "der Vorhang"}, {"t": "der Forhang", "miss": "v-als-f"}, {"t": "der Fohrang", "miss": "v-als-f"}]},
       { id: "de-06-35", type: "match", rules: ["de.rs.merkwoerter"],
         prompt: "Alle beginnen mit v. Welches Wort steckt dahinter?",
         pairs: [["_ater", "Vater"], ["_ogel", "Vogel"],
@@ -2274,7 +2228,7 @@ const LEKTIONEN_DE = {
       {"id":"de-07-07","type":"lesen","rules":["de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Am Freitag war Schulfest. Um zwei Uhr bauten die vierten Klassen die Stände auf. Es gab Waffeln, ein Glücksrad und eine Hüpfburg. Gegen vier Uhr begann es zu regnen. Die Hüpfburg musste abgebaut werden, aber die Waffeln gingen trotzdem aus.","frage":"Was bedeutet „die Waffeln gingen aus“?","correct":"Sie waren alle aufgegessen.","beleg":"aber die Waffeln gingen trotzdem aus","opts":[{"t":"Sie waren alle aufgegessen."},{"t":"Sie wurden kalt.","miss":"de.txt.wendung-woertlich"},{"t":"Sie fielen zu Boden.","miss":"de.txt.wendung-woertlich"}]},
       {"id":"de-07-08","type":"mc","rules":["de.txt.lesestrategie"],"prompt":"Was machst du zuerst, wenn du einen Text mit Fragen bekommst?","correct":"Die Fragen lesen, dann den Text.","opts":[{"t":"Die Fragen lesen, dann den Text."},{"t":"Den Text auswendig lernen.","miss":"de.txt.strategie-aufwand"},{"t":"Gleich die erste Antwort ankreuzen.","miss":"de.txt.strategie-raten"}]},
       {"id":"de-07-09","type":"tf","rules":["de.txt.leseverstehen"],"prompt":"Richtig oder falsch?","statement":"Eine Antwort ist auch dann richtig, wenn sie zwar gut klingt, aber nicht im Text steht.","answer":false,"erklaerung":"Was nicht im Text steht, ist geraten — auch wenn es stimmen könnte."},
-      {"id":"de-07-10","type":"mc","rules":["de.txt.lesestrategie"],"prompt":"Du verstehst ein Wort im Text nicht. Was hilft zuerst?","correct":"Weiterlesen — oft erklärt der Satz danach das Wort.","opts":[{"t":"Weiterlesen — oft erklärt der Satz danach das Wort."},{"t":"Aufhören und raten.","miss":"de.txt.strategie-raten"},{"t":"Den ganzen Text nochmal von vorne lesen.","miss":"de.txt.strategie-aufwand"}]},
+      {"id": "de-07-10", "type": "mc", "rules": ["de.txt.lesestrategie"], "prompt": "Du verstehst ein Wort im Text nicht. Was hilft zuerst?", "correct": "Weiterlesen — oft erklärt der Satz danach das Wort.", "opts": [{"t": "Weiterlesen — oft erklärt der Satz danach das Wort."}, {"t": "Aufhören und die Antwort einfach raten.", "miss": "de.txt.strategie-raten"}, {"t": "Den ganzen Text nochmal von vorne lesen.", "miss": "de.txt.strategie-aufwand"}]},
       {"id":"de-07-11","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Der Hund ist klein.","Der Hund bellt laut."],"pflicht":["Hund","klein","bellt"],"muster":"Der kleine Hund bellt laut.","tipp":"Das Adjektiv kann vor das Nomen wandern."},
       {"id":"de-07-12","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Die Sonne scheint.","Wir gehen ins Freibad."],"pflicht":["Sonne","scheint","Freibad"],"muster":"Weil die Sonne scheint, gehen wir ins Freibad.","tipp":"Ein Bindewort wie weil oder deshalb zeigt den Zusammenhang."},
       {"id":"de-07-13","type":"verbinden","rules":["de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Anna hat ein Fahrrad.","Das Fahrrad ist rot."],"pflicht":["Anna","rot","Fahrrad"],"muster":"Anna hat ein rotes Fahrrad.","tipp":"Was zweimal vorkommt, brauchst du nur einmal."},
@@ -2289,12 +2243,12 @@ const LEKTIONEN_DE = {
       {"id":"de-07-22","type":"sort","rules":["de.txt.satzbau"],"prompt":"Was sagt das Bindewort?","buckets":["Grund","Gegensatz"],"words":[{"w":"weil","b":"Grund"},{"w":"obwohl","b":"Gegensatz"},{"w":"denn","b":"Grund"},{"w":"aber","b":"Gegensatz"},{"w":"deshalb","b":"Grund"},{"w":"trotzdem","b":"Gegensatz"}]},
       {"id":"de-07-23","type":"order","rules":["de.txt.erzaehlung"],"prompt":"Bring die Teile einer Erzählung in die richtige Reihenfolge.","words":["Höhepunkt","Einleitung","Schluss","Hauptteil"],"solution":["Einleitung","Hauptteil","Höhepunkt","Schluss"]},
       {"id":"de-07-24","type":"mc","rules":["de.txt.erzaehlung"],"prompt":"Was gehört in die Einleitung einer Erzählung?","correct":"Wer, wo und wann.","opts":[{"t":"Wer, wo und wann."},{"t":"Der spannendste Moment.","miss":"de.txt.hoehepunkt-vorweg"},{"t":"Wie es ausgeht.","miss":"de.txt.schluss-vorweg"}]},
-      {"id":"de-07-25","type":"mc","rules":["de.txt.erzaehlung"],"prompt":"In welcher Zeitform erzählt man normalerweise?","correct":"Präteritum (Mitvergangenheit)","opts":[{"t":"Präteritum (Mitvergangenheit)"},{"t":"Futur (Zukunft)","miss":"de.txt.zeitform-falsch"},{"t":"Immer im Präsens","miss":"de.txt.zeitform-falsch"}]},
-      {"id":"de-07-26","type":"mc","rules":["de.txt.erzaehlung"],"prompt":"Welcher Satz macht eine Erzählung spannender?","correct":"Mit zitternden Fingern öffnete sie die Tür.","opts":[{"t":"Mit zitternden Fingern öffnete sie die Tür."},{"t":"Sie öffnete die Tür.","miss":"de.txt.zu-knapp"},{"t":"Die Tür wurde geöffnet.","miss":"de.txt.passiv-blass"}]},
+      {"id": "de-07-25", "type": "mc", "rules": ["de.txt.erzaehlung"], "prompt": "In welcher Zeitform erzählt man normalerweise?", "correct": "im Präteritum, der Mitvergangenheit", "opts": [{"t": "im Präteritum, der Mitvergangenheit"}, {"t": "im Futur, also in der Zukunftsform", "miss": "de.txt.zeitform-falsch"}, {"t": "immer im Präsens, der Gegenwart", "miss": "de.txt.zeitform-falsch"}]},
+      {"id": "de-07-26", "type": "mc", "rules": ["de.txt.erzaehlung"], "prompt": "Welcher Satz macht eine Erzählung spannender?", "correct": "Mit zitternden Fingern öffnete sie die Tür.", "opts": [{"t": "Mit zitternden Fingern öffnete sie die Tür."}, {"t": "Sie öffnete die Tür und ging hinein.", "miss": "de.txt.zu-knapp"}, {"t": "Die Tür wurde von ihr aufgemacht.", "miss": "de.txt.passiv-blass"}]},
       {"id":"de-07-27","type":"sort","rules":["de.txt.erzaehlung","de.txt.beschreibung"],"prompt":"Erzählung oder Beschreibung?","buckets":["Erzählung","Beschreibung"],"words":[{"w":"Plötzlich krachte es.","b":"Erzählung"},{"w":"Der Käfer ist drei Zentimeter lang.","b":"Beschreibung"},{"w":"Dann rannte sie los.","b":"Erzählung"},{"w":"Sein Panzer glänzt grünlich.","b":"Beschreibung"},{"w":"Am Ende lachten alle.","b":"Erzählung"},{"w":"Er hat sechs Beine.","b":"Beschreibung"}]},
       {"id":"de-07-28","type":"mc","rules":["de.txt.beschreibung"],"prompt":"In welcher Reihenfolge beschreibt man einen Gegenstand?","correct":"Vom Großen zum Kleinen.","opts":[{"t":"Vom Großen zum Kleinen."},{"t":"Wie es einem gerade einfällt.","miss":"de.txt.ohne-ordnung"},{"t":"Von hinten nach vorne.","miss":"de.txt.ohne-ordnung"}]},
       {"id":"de-07-29","type":"mc","rules":["de.txt.beschreibung"],"prompt":"Welcher Satz gehört NICHT in eine sachliche Beschreibung?","correct":"Ich finde diesen Käfer richtig eklig.","opts":[{"t":"Ich finde diesen Käfer richtig eklig."},{"t":"Der Käfer ist etwa drei Zentimeter lang.","miss":"de.txt.sachlich-erkannt"},{"t":"Seine Flügel sind unter dem Panzer verborgen.","miss":"de.txt.sachlich-erkannt"}]},
-      {"id":"de-07-30","type":"tf","rules":["de.txt.beschreibung"],"prompt":"Richtig oder falsch?","statement":"Eine Beschreibung steht meistens im Präsens.","answer":true,"erklaerung":"Was beschrieben wird, gilt ja gerade jetzt — deshalb Gegenwart."},
+      {"id": "de-07-30", "type": "tf", "rules": ["de.txt.beschreibung"], "prompt": "Richtig oder falsch?", "statement": "Eine Beschreibung steht meistens im Präteritum.", "answer": false, "erklaerung": "Sie steht im <b>Präsens</b>. Was beschrieben wird, gilt ja gerade jetzt."},
       {"id":"de-07-31","type":"type","rules":["de.txt.erzaehlung"],"prompt":"Ersetze das blasse Verb durch ein genaueres: „Sie ging schnell weg.“ → Sie ____ weg.","answer":"rannte","alt":["lief","eilte","stürmte","hastete"],"caseSensitive":false},
       {"id":"de-07-32","type":"type","rules":["de.txt.erzaehlung"],"prompt":"Ersetze das blasse Verb: „Er sagte laut: …“ → Er ____ .","answer":"rief","alt":["schrie","brüllte"],"caseSensitive":false},
       {"id":"de-07-33","type":"verbinden","rules":["de.txt.satzbau","de.txt.erzaehlung"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Der Sturm wurde stärker.","Wir suchten einen Unterstand."],"pflicht":["Sturm","stärker","Unterstand"],"muster":"Als der Sturm stärker wurde, suchten wir einen Unterstand.","tipp":"Mit als kannst du zwei Dinge zeitlich verbinden."},
@@ -2329,7 +2283,7 @@ const LEKTIONEN_DE = {
       {"id":"de-08-20","type":"mc","rules":["de.zs.satzschluss"],"prompt":"Welches Zeichen gehört ans Ende? „Wie schön das ist“","correct":"!","opts":[{"t":"!"},{"t":"?","miss":"de.zs.ausruf-als-frage"},{"t":".","miss":"de.zs.ausruf-nicht-erkannt"}]},
       {"id":"de-08-21","type":"sort","rules":["de.zs.satzschluss"],"prompt":"Welches Satzzeichen passt?","buckets":["Punkt","Rufzeichen"],"words":[{"w":"Der Zug fährt ab","b":"Punkt"},{"w":"Pass doch auf","b":"Rufzeichen"},{"w":"Es ist Montag","b":"Punkt"},{"w":"Wie toll","b":"Rufzeichen"},{"w":"Wir essen um zwölf","b":"Punkt"},{"w":"Komm sofort her","b":"Rufzeichen"}]},
       {"id":"de-08-22","type":"lesen","rules":["de.zs.woertliche-rede","de.txt.leseverstehen"],"prompt":"Lies den Text und beantworte die Frage.","text":"Der Bauer stand am Zaun und schaute auf die Wiese. „Wo ist die braune Kuh?“, fragte er. Sein Sohn zeigte zum Wald und antwortete: „Dort hinten, beim Bach.“ Beide machten sich auf den Weg.","frage":"Wer sagt „Dort hinten, beim Bach“?","correct":"der Sohn","beleg":"Sein Sohn zeigte zum Wald und antwortete","opts":[{"t":"der Sohn"},{"t":"der Bauer","miss":"de.zs.sprecher-verwechselt"},{"t":"das steht nicht da","miss":"de.txt.hineingelesen"}]},
-      {"id":"de-08-23","type":"lesen","rules":["de.zs.woertliche-rede"],"prompt":"Lies den Text und beantworte die Frage.","text":"Der Bauer stand am Zaun und schaute auf die Wiese. „Wo ist die braune Kuh?“, fragte er. Sein Sohn zeigte zum Wald und antwortete: „Dort hinten, beim Bach.“ Beide machten sich auf den Weg.","frage":"Warum steht einmal ein Doppelpunkt und einmal nicht?","correct":"Weil der Begleitsatz einmal vorne und einmal hinten steht.","beleg":"„Wo ist die braune Kuh?“, fragte er.","opts":[{"t":"Weil der Begleitsatz einmal vorne und einmal hinten steht."},{"t":"Weil einmal gefragt und einmal geantwortet wird.","miss":"de.zs.satzart-statt-stellung"},{"t":"Das ist Zufall.","miss":"de.zs.regel-unklar"}]},
+      {"id": "de-08-23", "type": "lesen", "rules": ["de.zs.woertliche-rede"], "prompt": "Lies den Text und beantworte die Frage.", "text": "Der Bauer stand am Zaun und schaute auf die Wiese. „Wo ist die braune Kuh?“, fragte er. Sein Sohn zeigte zum Wald und antwortete: „Dort hinten, beim Bach.“ Beide machten sich auf den Weg.", "frage": "Warum steht einmal ein Doppelpunkt und einmal nicht?", "correct": "Weil der Begleitsatz einmal vorne und einmal hinten steht.", "beleg": "„Wo ist die braune Kuh?“, fragte er.", "opts": [{"t": "Weil der Begleitsatz einmal vorne und einmal hinten steht."}, {"t": "Weil einmal gefragt und einmal geantwortet wird.", "miss": "de.zs.satzart-statt-stellung"}, {"t": "Weil der zweite Satz von einer anderen Person kommt.", "miss": "de.zs.regel-unklar"}]},
       {"id":"de-08-24","type":"verbinden","rules":["de.zs.komma-satzverbindung","de.txt.satzbau"],"prompt":"Mach aus den zwei Sätzen einen einzigen.","saetze":["Es hat geschneit.","Die Schule fällt aus."],"pflicht":["geschneit","Schule"],"muster":"Weil es geschneit hat, fällt die Schule aus.","tipp":"Vergiss das Komma vor dem Bindewort nicht."},
       {"id": "de-08-25", "type": "verbinden", "rules": ["de.zs.komma-satzverbindung", "de.txt.satzbau"], "prompt": "Mach aus den zwei Sätzen einen einzigen.", "saetze": ["Ich habe gehört.", "Du kommst später."], "pflicht": ["gehört", "später", "kommst"], "muster": "Ich habe gehört, dass du später kommst.", "tipp": "Mit dass hängst du an, was du gehört hast."},
       {"id":"de-08-26","type":"mc","rules":["de.zs.woertliche-rede"],"prompt":"Wie beginnt die wörtliche Rede — groß oder klein?","correct":"immer groß","opts":[{"t":"immer groß"},{"t":"immer klein","miss":"de.zs.gross-vergessen"},{"t":"je nach Wort","miss":"de.zs.regel-unklar"}]},
@@ -2340,7 +2294,7 @@ const LEKTIONEN_DE = {
       {"id":"de-08-31","type":"type","rules":["de.zs.woertliche-rede"],"prompt":"Schreibe richtig: anna ruft ich bin hier — beginne mit „Anna ruft:“","answer":"Anna ruft: „Ich bin hier.“","alt":["Anna ruft: \"Ich bin hier.\""],"caseSensitive":false},
       {"id":"de-08-32","type":"mc","rules":["de.zs.komma-satzverbindung"],"prompt":"In welchem Satz fehlt ein Komma?","correct":"Sie lacht wenn sie das hört.","opts":[{"t":"Sie lacht wenn sie das hört."},{"t":"Sie lacht und singt.","miss":"de.zs.komma-vor-und"},{"t":"Sie lacht, weil sie sich freut.","miss":"de.zs.komma-erkannt"}]},
       {"id":"de-08-33","type":"sort","rules":["de.zs.satzschluss","de.zs.woertliche-rede"],"prompt":"Steht der Begleitsatz vorne oder hinten?","buckets":["vorne","hinten"],"words":[{"w":"Er sagt: „Los geht’s.“","b":"vorne"},{"w":"„Los geht’s“, sagt er.","b":"hinten"},{"w":"Sie fragt: „Warum?“","b":"vorne"},{"w":"„Warum?“, fragt sie.","b":"hinten"}]},
-      {"id":"de-08-34","type":"tf","rules":["de.zs.komma-aufzaehlung"],"prompt":"Richtig oder falsch?","statement":"In einer Aufzählung stehen zwischen allen Gliedern Kommas — außer vor dem letzten „und“.","answer":true,"erklaerung":"Brot, Käse, Obst und Wasser — drei Glieder, zwei Kommas."},
+      {"id": "de-08-34", "type": "tf", "rules": ["de.zs.komma-aufzaehlung"], "prompt": "Richtig oder falsch?", "statement": "In einer Aufzählung steht auch vor dem letzten „und“ ein Komma.", "answer": false, "erklaerung": "Genau dort steht keines: Brot, Käse, Obst <b>und</b> Wasser — drei Glieder, zwei Kommas."},
       {"id":"de-08-35","type":"mc","rules":["de.zs.woertliche-rede"],"prompt":"Welches Verb passt NICHT als Begleitsatz?","correct":"läuft","opts":[{"t":"läuft"},{"t":"flüstert","miss":"de.zs.begleitverb-erkannt"},{"t":"antwortet","miss":"de.zs.begleitverb-erkannt"}]}
     ]
   }
@@ -2559,7 +2513,7 @@ const LEKTIONEN_EN = {
         hint: "Das h am Anfang bleibt stumm." },
       {"id": "en-01-40", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "weil", "teile": ["be", "cause"], "stoerer": ["cauze", "bi"], "hint": "cause heißt Ursache — be + cause."},
       {"id": "en-01-41", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "schön", "teile": ["beauti", "ful"], "stoerer": ["full", "beaty"], "hint": "Wie wonder + ful. Am Ende nur ein l."},
-      {"id": "en-01-42", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "freundlich", "teile": ["friend", "ly"], "stoerer": ["frend", "ley"], "hint": "In friendly steckt friend."},
+      {"id": "en-01-42", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "freundlich", "teile": ["friend", "ly"], "stoerer": ["frend", "ley"], "hint": "Das Wort für Freund, dann die Endung -ly."},
       {"id": "en-01-43", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Mittwoch", "teile": ["Wed", "nes", "day"], "stoerer": ["Wen", "dey"], "hint": "Sag beim Bauen übertrieben Wed-nes-day."},
       {"id": "en-01-44", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Lieblings-", "teile": ["fav", "our", "ite"], "stoerer": ["or", "favor"], "hint": "Britisch mit u — mittendrin steckt our."}
     ]
@@ -2889,11 +2843,7 @@ const LEKTIONEN_EN = {
         opts: [{ t: "I always go to school by bus." },
                { t: "I go always to school by bus.", miss: "en.gr.adverb-nach-verb" },
                { t: "I go to school always by bus.", miss: "en.gr.adverb-am-ende" }] },
-      { id: "en-03-29", type: "tf", rules: ["en.gr.word-order"],
-        prompt: "Richtig oder falsch?",
-        statement: "Im Englischen steht das Verb fast immer direkt nach dem Subjekt.",
-        answer: true,
-        erklaerung: "Subjekt – Verb – Objekt. Anders als im Deutschen wird das kaum je vertauscht." },
+      {"id": "en-03-29", "type": "tf", "rules": ["en.gr.word-order"], "prompt": "Richtig oder falsch?", "statement": "Im Englischen darf man das Verb wie im Deutschen an den Satzanfang stellen.", "answer": false, "erklaerung": "Nein — im Englischen gilt fast immer Subjekt, dann Verb, dann Objekt."},
       { id: "en-03-30", type: "sort", rules: ["en.gr.word-order"],
         prompt: "Richtig oder falsch gebaut?",
         buckets: ["richtig", "falsch"],
@@ -3040,10 +2990,7 @@ const LEKTIONEN_EN = {
         prompt: "Tippe das falsche Wort an.",
         tokens: ["We", "has", "got", "two", "cats"],
         wrong: { "1": "have" } },
-      { id: "en-04-24", type: "tf", rules: ["en.gr.have-got"],
-        prompt: "Richtig oder falsch?",
-        statement: "Nach he, she und it heißt es immer „has got“.", answer: true,
-        erklaerung: "Das ist die eine Regel, die du dir merken musst — alle anderen bekommen have got." },
+      {"id": "en-04-24", "type": "tf", "rules": ["en.gr.have-got"], "prompt": "Richtig oder falsch?", "statement": "Nach „they“ heißt es „has got“.", "answer": false, "erklaerung": "„they“ sind mehrere — also <b>have got</b>. Nur he, she und it bekommen has got."},
       { id: "en-04-25", type: "tf", rules: ["en.gr.have-got"],
         prompt: "Richtig oder falsch?",
         statement: "„My parents has got a car.“ ist richtig.", answer: false,
@@ -3241,10 +3188,7 @@ const LEKTIONEN_EN = {
         prompt: "Richtig oder falsch?",
         statement: "„parents“ heißt Verwandte.", answer: false,
         erklaerung: "„parents“ sind die Eltern. Verwandte heißen „relatives“." },
-      { id: "en-05-33", type: "tf", rules: ["en.voc.schule"],
-        prompt: "Richtig oder falsch?",
-        statement: "„break“ bedeutet Pause.", answer: true,
-        erklaerung: "Dasselbe Wort heißt auch „brechen“ — im Schulzusammenhang ist es die Pause." },
+      {"id": "en-05-33", "type": "tf", "rules": ["en.voc.schule"], "prompt": "Richtig oder falsch?", "statement": "„subject“ bedeutet Schultasche.", "answer": false, "erklaerung": "„subject“ ist das <b>Unterrichtsfach</b>. Die Schultasche heißt „schoolbag“."},
       { id: "en-05-34", type: "match", rules: ["en.voc.schule"],
         prompt: "Ordne zu: Englisch – Deutsch",
         pairs: [["classroom", "Klassenzimmer"], ["playground", "Schulhof"],
@@ -3428,7 +3372,7 @@ const LEKTIONEN_EN = {
         statement: "Vor „hour“ heißt es „a hour“.", answer: false,
         erklaerung: "Man hört kein h — es klingt wie „our“. Deshalb: an hour." },
       {"id": "en-06-40", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "vorsichtig", "teile": ["care", "ful"], "stoerer": ["full", "kare"], "hint": "Dieselbe Endung wie bei beautiful."},
-      {"id": "en-06-41", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "nutzlos", "teile": ["use", "less"], "stoerer": ["lees", "yuse"], "hint": "-less heißt ohne: useless = ohne Nutzen."},
+      {"id": "en-06-41", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "nutzlos", "teile": ["use", "less"], "stoerer": ["lees", "yuse"], "hint": "Die Endung -less heißt ohne. Also: ohne Nutzen."},
       {"id": "en-06-42", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "schnell (Art und Weise)", "teile": ["quick", "ly"], "stoerer": ["kwick", "ley"], "hint": "-ly macht aus einem Eigenschaftswort ein Umstandswort."}
     ]
   }
@@ -3714,6 +3658,9 @@ const MIN_SEEN = 4;         // erst ab so vielen Begegnungen wird gewertet
 
 /* Eine Lektion ist ein Thema, kein Tag. Sie wird so lange wiederholt,
    bis sie sitzt — mindestens zweimal an zwei verschiedenen Tagen. */
+/* Runden, die keinen Lektionsdurchgang verbuchen. */
+const SONDERRUNDEN = ["dauer", "diktat", "nachbessern", "uebungsrunde"];
+
 const MIN_DURCHGAENGE = 2;
 const MIN_TAGE        = 2;    // erzwingt Abstand: nie zwei Durchgänge am selben Tag
 const MAX_DURCHGAENGE = 5;    // Obergrenze, damit sich niemand festbeißt
@@ -3984,9 +3931,22 @@ function anzeigeFortschritt(lekId, fach) {
 }
 
 /** Die Lektion, an der gerade gearbeitet wird — die erste unfertige. */
+/**
+ * Wo steht sie im Lernpfad?
+ *
+ * Entscheidend ist die gespeicherte Markierung `graduiert`, nicht die neu
+ * berechnete Beherrschung. Der Grund: Wissen verblasst mit der Zeit (2 % pro
+ * Tag). Nach zwei Wochen Pause rutscht eine gemeisterte Lektion rechnerisch
+ * unter die Schwelle — und die App würde sie zurück auf Lektion 1 schicken.
+ * Für ein Kind sähe das aus, als wäre der Fortschritt weg.
+ *
+ * Verblasstes Wissen kommt trotzdem zurück: über den Schwächenpool, der
+ * genau dafür da ist. Der Weg nach vorne bleibt davon unberührt.
+ */
 function aktiveLektion(fach) {
   for (const id of lektionsIds(fach)) {
     if (!(LEK(fach)[id].items || []).length) continue;
+    if (S.lektionen[id]?.graduiert) continue;
     if (!lektionsStatus(id, fach).fertig) return id;
   }
   return null;   // alles gemeistert
@@ -4017,15 +3977,33 @@ function naechsteOffene(fach) {
 }
 
 /** Was heute ansteht. */
+/**
+ * Wurde heute in diesem Fach überhaupt an einer Lektion gearbeitet?
+ *
+ * Nicht: „ist die gerade aktive Lektion heute schon gelaufen?" Denn sobald
+ * eine Lektion gemeistert ist, rückt die nächste nach — und die war heute
+ * naturgemäß noch nicht dran. Genau das ist passiert: Bianca hat am Morgen
+ * Lektion 2 abgeschlossen und gemeistert, danach stand im Plan Lektion 3 auf
+ * „Start" und darunter „noch 3 von 3 offen". Sie hatte ihr Deutsch für heute
+ * gemacht, und die App tat, als wäre nichts gewesen.
+ */
+function heuteGeuebt(fach) {
+  const h = heute();
+  return lektionsIds(fach).some(id => (S.lektionen[id]?.tage || []).includes(h));
+}
+
 function tagesplan() {
   const de = aktiveLektion("de"), en = aktiveLektion("en");
+  const deFertig = heuteGeuebt("de");
+  const enFertig = heuteGeuebt("en");
   return {
-    de, en,
-    deOffen: de && !lektionsStatus(de, "de").heuteSchon,
-    enOffen: en && !lektionsStatus(en, "en").heuteSchon,
+    de, en, deFertig, enFertig,
+    /* „Offen" heißt: heute noch nichts in diesem Fach — und es gibt noch
+       eine Lektion, die heute laufen darf. */
+    deOffen: !!de && !deFertig,
+    enOffen: !!en && !enFertig,
     diktatOffen: S.diktat.letzterTag !== heute(),
-    fertig: (!de || lektionsStatus(de, "de").heuteSchon) &&
-            (!en || lektionsStatus(en, "en").heuteSchon) &&
+    fertig: (!de || deFertig) && (!en || enFertig) &&
             S.diktat.letzterTag === heute()
   };
 }
@@ -4115,8 +4093,23 @@ function alleItems(fach) {
   for (const k in q) (q[k].items || []).forEach(it => out.push(it));
   return out;
 }
-function itemById(id) {
-  return [...alleItems("de"), ...alleItems("en")].find(i => i.id === id);
+/**
+ * Aufgabe zu einer ID finden.
+ *
+ * Mit `fach` wird nur in diesem Fach gesucht. Das ist beim Ziehen aus der
+ * Wiederholungsschlange zwingend: Ohne Filter landete eine englische
+ * Wiederholung mitten in einer Deutschstunde — mit englischer Frage, ohne
+ * jeden Zusammenhang. Wer das ohne Fach aufruft, muss es begründen können.
+ */
+function itemById(id, fach) {
+  const quelle = fach ? alleItems(fach) : [...alleItems("de"), ...alleItems("en")];
+  return quelle.find(i => i.id === id);
+}
+
+/** Gehört die Aufgabe zum Fach? Über das Kürzel der Regeln entschieden. */
+function istFach(it, fach) {
+  const rs = it && it.rules ? it.rules : [];
+  return rs.length ? rs.every(r => r.startsWith(fach + ".")) : false;
 }
 
 /**
@@ -4200,14 +4193,26 @@ function baueSession(lekId, fach) {
     if (quelle.length) nimm(quelle[Math.floor(Math.random() * quelle.length)]);
   }
 
-  /* 3. Fällige Wiederholungen. */
+  /* 3. Fällige Wiederholungen — nur aus DIESEM Fach.
+        Ohne den Fachfilter tauchte in einer Deutschstunde eine englische
+        Rechtschreibfrage auf. Für ein Kind ist das schlicht ein Fehler in
+        der App, und es zerreißt den Zusammenhang der Lektion. */
   const h = heute();
   S.srs.filter(e => e.due <= h).forEach(e => {
-    if (gewaehlt.length < LAENGE) nimm(itemById(e.item));
+    if (gewaehlt.length < LAENGE) nimm(itemById(e.item, fach));
   });
 
   /* 4. Rest mit Aufgaben der Lektion auffüllen. */
   eigene.forEach(it => { if (gewaehlt.length < LAENGE) nimm(it, true); });
+
+  /* Leitplanke: nichts Fachfremdes verlässt diese Funktion.
+     Der Fachfilter oben ist die Ursache-Behebung, das hier der Fangnetz —
+     falls je eine weitere Quelle dazukommt, die ihn vergisst. */
+  const fremd = gewaehlt.filter(it => !istFach(it, fach));
+  if (fremd.length) {
+    console.warn("Fachfremde Aufgaben entfernt:", fremd.map(i => i.id));
+    for (const f of fremd) gewaehlt.splice(gewaehlt.indexOf(f), 1);
+  }
 
   /* Leitplanke: nie mit einer Schwäche-Aufgabe starten. */
   const schwIds = new Set(schw.map(s => s.id));
@@ -4534,10 +4539,14 @@ function viewHome() {
       <div class="wk"><b style="${istOffen ? "" : "opacity:.45"}">${istOffen ? "○" : "✓"} ${text}</b>
       ${istOffen ? `<button class="chip" style="${farbe}" onclick="${cb}">Start</button>`
                  : `<span class="muted">erledigt</span>`}</div>`;
-    if (p.de) h += zeile(p.deOffen, "Deutsch: " + esc(LEKTIONEN_DE[p.de].titel),
-                         `starte('de','${p.de}')`, "background:var(--de);color:#0a1024");
-    if (p.en) h += zeile(p.enOffen, "Englisch: " + esc(LEKTIONEN_EN[p.en].titel),
-                         `starte('en','${p.en}')`, "background:var(--en);color:#0a1024");
+    /* Erledigt wird das Fach genannt, nicht die nächste Lektion — sonst stünde
+       dort ein Titel, an dem sie heute gar nicht gearbeitet hat. */
+    if (p.de) h += zeile(p.deOffen,
+      p.deFertig ? "Deutsch" : "Deutsch: " + esc(LEKTIONEN_DE[p.de].titel),
+      `starte('de','${p.de}')`, "background:var(--de);color:#0a1024");
+    if (p.en) h += zeile(p.enOffen,
+      p.enFertig ? "Englisch" : "Englisch: " + esc(LEKTIONEN_EN[p.en].titel),
+      `starte('en','${p.en}')`, "background:var(--en);color:#0a1024");
     h += zeile(p.diktatOffen, "Diktat des Tages", "diktatStarten()",
                "background:var(--ok);color:#06301b");
     h += `<p class="sub" style="margin-top:11px">Noch ${offen} von 3 offen.</p>`;
@@ -4549,20 +4558,7 @@ function viewHome() {
      Beherrschung; nur ein zweiter Durchgang derselben Lektion zählt erst morgen. */
   if (p.fertig) {
     const naechsteDe = naechsteOffene("de"), naechsteEn = naechsteOffene("en");
-    const wege = [];
-    if (Object.keys(S.rules).length)
-      wege.push(`<button class="btn ghost sm" onclick="uebungsrundeStarten('de')">
-        🔁 Übungsrunde Deutsch — deine Schwachstellen</button>`);
-    if (Object.keys(S.rules).some(r => r.startsWith("en.")))
-      wege.push(`<button class="btn ghost sm" onclick="uebungsrundeStarten('en')">
-        🔁 Übungsrunde Englisch</button>`);
-    if (naechsteDe) wege.push(`<button class="btn ghost sm"
-      onclick="starte('de','${naechsteDe}')">▶︎ Nächste Deutsch-Lektion beginnen</button>`);
-    if (naechsteEn) wege.push(`<button class="btn ghost sm"
-      onclick="starte('en','${naechsteEn}')">▶︎ Nächste Englisch-Lektion beginnen</button>`);
-    if ((S.diktat.erledigt || []).length < DIKTATE.length)
-      wege.push(`<button class="btn ghost sm" onclick="diktatStarten()">
-        🎧 Noch ein Diktat</button>`);
+    const wege = weiterWege();
 
     if (wege.length) {
       h += `<div class="card">
@@ -5001,7 +4997,9 @@ function erklaerungZeigen(regelId) {
 function baueNachbesserung(fehler, fach) {
   const pool = alleItems(fach);
   const out = [];
-  const nimm = it => { if (it && !out.some(o => o.id === it.id)) out.push(it); };
+  const nimm = it => {
+    if (it && istFach(it, fach) && !out.some(o => o.id === it.id)) out.push(it);
+  };
 
   /* Zwei Aufrufformen: mit Regeln (aus einer Runde) oder nur mit IDs.
      Fehlen die Regeln, werden sie aus der Aufgabe im Pool geholt — sonst
@@ -5055,14 +5053,17 @@ function baueDauerSession(fach) {
   const pool = alleItems(fach);
   const schw = schwaechen().filter(s => s.def.fach === fach);
   const out = [];
-  const nimm = it => { if (it && !out.some(o => o.id === it.id)) out.push(it); };
+  const nimm = it => {
+    /* Auch hier: nichts Fachfremdes. */
+    if (it && istFach(it, fach) && !out.some(o => o.id === it.id)) out.push(it);
+  };
 
   schw.slice(0, 8).forEach(s => {
     const k = pool.filter(it => (it.rules || []).includes(s.id));
     if (k.length) nimm(k[Math.floor(Math.random() * k.length)]);
   });
   const h = heute();
-  S.srs.filter(e => e.due <= h).slice(0, 6).forEach(e => nimm(itemById(e.item)));
+  S.srs.filter(e => e.due <= h).slice(0, 6).forEach(e => nimm(itemById(e.item, fach)));
   const gem = new Set(gemeistert());
   const frisch = pool.filter(it => (it.rules || []).some(r => gem.has(r)));
   shuffle(frisch); frisch.slice(0, 3).forEach(nimm);
@@ -5908,8 +5909,7 @@ function beenden() {
     if (!S.diktat.erledigt.includes(L.diktatId)) S.diktat.erledigt.push(L.diktatId);
   }
 
-  const SONDER = ["dauer", "diktat", "nachbessern", "uebungsrunde"];
-  if (!SONDER.includes(L.lekId) && !L.zaehltNicht) {
+  if (!SONDERRUNDEN.includes(L.lekId) && !L.zaehltNicht) {
     const p = S.lektionen[L.lekId] || (S.lektionen[L.lekId] = { passes: 0, tage: [], gesehen: [] });
     const h = heute();
     if (!p.tage.includes(h)) {
@@ -5982,6 +5982,56 @@ function diktatStarten() {
   render();
 }
 
+/**
+ * Wege, die nach einer Runde offenstehen.
+ *
+ * Früher gab es die nur auf der Startseite. Wer eine Lektion mit 10 von 10
+ * abschloss, las „der nächste Durchgang zählt ab morgen" und hatte genau einen
+ * Knopf: zurück zur Übersicht. Nach einer perfekten Runde ist das die falsche
+ * Botschaft — die Abstandsregel gilt für DIESES Material, nicht für den Tag.
+ *
+ * `ausser` schließt die gerade beendete Lektion aus, damit nicht angeboten wird,
+ * was ohnehin erst morgen zählt.
+ */
+function weiterWege(ausser) {
+  const wege = [];
+  const p = tagesplan();
+
+  /* Zuerst das, was heute noch offen ist — das ist der nächste sinnvolle
+     Schritt, nicht irgendein Zusatzangebot. */
+  if (p.de && p.deOffen && p.de !== ausser)
+    wege.push(`<button class="btn ghost sm" onclick="starte('de','${p.de}')">
+      📘 Deutsch: ${esc(LEKTIONEN_DE[p.de].titel)}</button>`);
+  if (p.en && p.enOffen && p.en !== ausser)
+    wege.push(`<button class="btn ghost sm" onclick="starte('en','${p.en}')">
+      📗 Englisch: ${esc(LEKTIONEN_EN[p.en].titel)}</button>`);
+  if (p.diktatOffen)
+    wege.push(`<button class="btn ghost sm" onclick="diktatStarten()">
+      🎧 Diktat des Tages</button>`);
+
+  /* Danach die freiwilligen Wege. */
+  if (Object.keys(S.rules).some(r => r.startsWith("de.")))
+    wege.push(`<button class="btn ghost sm" onclick="uebungsrundeStarten('de')">
+      🔁 Übungsrunde Deutsch — deine Schwachstellen</button>`);
+  if (Object.keys(S.rules).some(r => r.startsWith("en.")))
+    wege.push(`<button class="btn ghost sm" onclick="uebungsrundeStarten('en')">
+      🔁 Übungsrunde Englisch</button>`);
+
+  const nd = naechsteOffene("de"), ne = naechsteOffene("en");
+  if (nd && nd !== ausser && nd !== p.de)
+    wege.push(`<button class="btn ghost sm" onclick="starte('de','${nd}')">
+      ▶︎ Nächste Deutsch-Lektion beginnen</button>`);
+  if (ne && ne !== ausser && ne !== p.en)
+    wege.push(`<button class="btn ghost sm" onclick="starte('en','${ne}')">
+      ▶︎ Nächste Englisch-Lektion beginnen</button>`);
+
+  if (!p.diktatOffen && (S.diktat.erledigt || []).length < DIKTATE.length)
+    wege.push(`<button class="btn ghost sm" onclick="diktatStarten()">
+      🎧 Noch ein Diktat</button>`);
+
+  return wege;
+}
+
 function renderErgebnis() {
   /* Beim Diktat zählen Wörter, nicht Aufgaben — sonst stünde nach einem
      einzigen Fehler „0 von 1 richtig" unter vier fehlerfrei getroffenen Sätzen. */
@@ -6036,14 +6086,16 @@ function renderErgebnis() {
     if (L.status.passes < MIN_DURCHGAENGE)
       fehlt.push(`noch ${MIN_DURCHGAENGE - L.status.passes} Durchgang`);
     if (L.status.mastery < GRAD_MASTERY)
-      fehlt.push(`Sicherheit bei ${Math.round(L.status.mastery * 100)} von 85 %`);
+      fehlt.push(`Sicherheit bei ${Math.round(L.status.mastery * 100)} von ${
+        Math.round(GRAD_MASTERY * 100)} %`);
     h += `<div class="card"><h2>Diese Lektion</h2>
       <div class="wk"><b>Durchgang ${L.status.passes} geschafft</b>
         <div class="mini"><i style="width:${Math.round(L.status.mastery * 100)}%;
           background:${L.status.mastery >= 0.7 ? "var(--ok)" : "var(--gold)"}"></i></div></div>
       <p class="sub" style="margin-top:9px">${fehlt.length
-        ? "Bis zum Meistern: " + fehlt.join(" · ") + ". Der nächste Durchgang zählt ab morgen."
-        : "Fast geschafft — der nächste Durchgang zählt ab morgen."}</p></div>`;
+        ? "Bis zum Meistern: " + fehlt.join(" · ") + "."
+        : "Fast geschafft!"} Ein weiterer Durchgang <b>dieser</b> Lektion zählt
+        ab morgen — üben kannst du aber sofort weiter.</p></div>`;
   }
 
   const schwach = Object.entries(L.regelFehler).sort((a, b) => b[1] - a[1]).slice(0, 3);
@@ -6071,7 +6123,22 @@ function renderErgebnis() {
       <button class="btn sm" onclick="zeige('export')">Fortschritt sichern</button></div>`;
   }
 
-  h += `<button class="btn" onclick="zeige('home')">Weiter zur Übersicht</button>`;
+  /* Kein Sackgassen-Bildschirm: Wer weitermachen will, findet den Weg hier —
+     nicht erst nach einem Umweg über die Übersicht. */
+  const wege = weiterWege(SONDERRUNDEN.includes(L.lekId) ? null : L.lekId);
+  if (wege.length) {
+    const p = tagesplan();
+    h += `<div class="card">
+      <h2>${p.fertig ? "Lust auf mehr?" : "Weiter geht's"}</h2>
+      <p class="sub">${p.fertig
+        ? "Alles davon zählt — jede Antwort verbessert, wie sicher du die Regeln beherrschst."
+        : "Das steht heute noch an."}</p>
+      <div style="height:11px"></div>
+      ${wege.slice(0, 4).join(`<div style="height:8px"></div>`)}
+    </div>`;
+  }
+
+  h += `<button class="btn ghost" onclick="zeige('home')">Weiter zur Übersicht</button>`;
   app.innerHTML = h;
 }
 
