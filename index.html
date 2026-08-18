@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gymnasium Fitness</title>
-<!-- Erzeugt von tools/bauen.js am 2026-08-13. Nicht direkt bearbeiten —
+<!-- Erzeugt von tools/bauen.js am 2026-08-18. Nicht direkt bearbeiten —
      Änderungen gehören in index.html und data/*.js. -->
 
 <!-- Als App auf den Home-Bildschirm: iPad und iPhone starten dann ohne
@@ -3841,6 +3841,20 @@ function sichern() {
 
 const pad = n => String(n).padStart(2, "0");
 
+/**
+ * Zahl mit Ein- oder Mehrzahl.
+ *
+ *   anzahl(1, "Wort", "Wörter")  →  "1 Wort"
+ *   anzahl(3, "Wort", "Wörter")  →  "3 Wörter"
+ *
+ * Bianca hat „1 Wörter sind falsch geschrieben" gefunden. Für ein Kind, das
+ * gerade Rechtschreibung übt, ist ein Grammatikfehler in der Aufgabenstellung
+ * kein Schönheitsfehler — es untergräbt, worum es geht.
+ */
+function anzahl(n, einzahl, mehrzahl) {
+  return `${n} ${n === 1 ? einzahl : mehrzahl}`;
+}
+
 /* ---------- Lektionen ---------- */
 
 const LEK = fach => fach === "de" ? LEKTIONEN_DE : LEKTIONEN_EN;
@@ -4014,15 +4028,29 @@ function programmTag() {
 }
 
 /** Zerfall anwenden: Wissen verblasst leicht, damit es wieder auftaucht. */
+/**
+ * Zerfall anwenden: Wissen verblasst leicht, damit es wieder auftaucht.
+ *
+ * Wichtig: `lastSeen` bleibt unberührt. Es bedeutet „zuletzt tatsächlich
+ * geübt" — und `masteryUpdate` trägt einen Übungstag nur ein, wenn dort nicht
+ * schon das heutige Datum steht. Vorher setzte der Zerfall `lastSeen` auf
+ * heute, also wurde der Übungstag danach verschluckt. Folge: Nach neun Tagen
+ * Üben stand bei jeder Regel „an 2 Tagen geübt", und weil eine Regel erst ab
+ * drei Tagen als gemeistert gilt, war keine einzige gemeistert.
+ *
+ * Wie weit der Zerfall schon gerechnet wurde, steht deshalb in einem eigenen
+ * Feld.
+ */
 function zerfallAnwenden() {
   const h = heute();
   for (const id in S.rules) {
     const r = S.rules[id];
     if (!r.lastSeen) continue;
-    const d = tageZwischen(r.lastSeen, h);
+    const stand = r.zerfallStand || r.lastSeen;
+    const d = tageZwischen(stand, h);
     if (d > 0) {
       r.mastery = Math.max(0, r.mastery - DECAY * d);
-      r.lastSeen = h;
+      r.zerfallStand = h;
     }
   }
 }
@@ -4045,10 +4073,14 @@ function masteryUpdate(regelId, ergebnis) {
   if (q >= 0.999) r.correct++;
   r.mastery = r.mastery + ALPHA * (q - r.mastery);
   r.mastery = Math.min(1, Math.max(0, r.mastery));
+  /* Übungstag festhalten — allein anhand der Liste, nicht anhand von
+     lastSeen. So kann kein anderer Vorgang den Eintrag verschlucken. */
   const h = heute();
-  if (r.lastSeen !== h) { r.tage = r.tage || []; if (!r.tage.includes(h)) r.tage.push(h); }
+  r.tage = r.tage || [];
+  if (!r.tage.includes(h)) r.tage.push(h);
   r.lastSeen = h;
-  r.days = (r.tage || []).length;
+  r.zerfallStand = h;
+  r.days = r.tage.length;
 }
 
 /**
@@ -4626,7 +4658,7 @@ function pfad(fach, titel) {
 
   let h = `<div class="card" style="padding-bottom:6px">
     <h2>${titel} — dein Lernweg</h2>
-    <p class="sub">${ids.length} Lektionen · jede dauert 2 bis 5 Tage.
+    <p class="sub">${anzahl(ids.length, "Lektion", "Lektionen")} · jede dauert 2 bis 5 Tage.
     ${fertig ? `${fertig} davon schon gemeistert.` :
       "Das ist der Weg bis zum Schulstart, nicht das Tagespensum."}</p>
     <div class="bar" style="margin:10px 0 2px"><i
@@ -4665,7 +4697,7 @@ function pfad(fach, titel) {
   if (alleIds.length > sichtbar.length || offen) {
     h += `<button class="btn ghost sm" onclick="pfadUmschalten('${fach}')">
       ${offen ? "Weniger anzeigen"
-              : `Alle ${alleIds.length} Lektionen zeigen`}</button>
+              : `Alle ${anzahl(alleIds.length, "Lektion", "Lektionen")} zeigen`}</button>
       <div style="height:14px"></div>`;
   }
   return h;
@@ -4747,7 +4779,8 @@ function viewProfil() {
     ${kristall(profilZustand, 96)}
     <div class="big" style="font-size:38px;margin:12px 0 4px">⚡ ${S.xp}</div>
     <div><b>Rang ${S.level}</b> · ${LEVEL_NAMEN[S.level - 1] || "Profi"}</div>
-    <div class="muted">🔥 ${S.streak.count} Tage in Folge · ${S.streak.jokersLeft} Joker übrig</div>
+    <div class="muted">🔥 ${anzahl(S.streak.count, "Tag", "Tage")} in Folge ·
+      ${anzahl(S.streak.jokersLeft, "Joker", "Joker")} übrig</div>
   </div>`;
 
   const g = gemeistert();
@@ -5480,7 +5513,7 @@ function matchR(ri) {
 function rFehler(it) {
   A = { markiert: new Set() };
   return `<p class="muted" style="margin:0 0 10px">
-      ${Object.keys(it.wrong).length} Wörter sind falsch geschrieben.</p>
+      ${anzahl(Object.keys(it.wrong).length, "Wort ist", "Wörter sind")} falsch geschrieben.</p>
     <div class="chips">${it.tokens.map((t, i) =>
       `<button class="chip2" id="f${i}" onclick="fehlerTipp(${i})">${esc(t)}</button>`).join("")}</div>`;
 }
@@ -6065,7 +6098,7 @@ function renderErgebnis() {
     const n = L.fehler.length;
     h += `<div class="card">
       <h2>Nochmal anschauen?</h2>
-      <p class="sub">${n} Aufgabe${n === 1 ? "" : "n"} ${n === 1 ? "hat" : "haben"}
+      <p class="sub">${anzahl(n, "Aufgabe hat", "Aufgaben haben")}
       noch nicht geklappt. ${nachbesserbar.length} passende Übungen warten —
       das verbessert deine Regeln. Dein Ergebnis von eben bleibt, wie es ist.</p>
       <div style="height:11px"></div>
@@ -6084,7 +6117,8 @@ function renderErgebnis() {
   } else if (L.status) {
     const fehlt = [];
     if (L.status.passes < MIN_DURCHGAENGE)
-      fehlt.push(`noch ${MIN_DURCHGAENGE - L.status.passes} Durchgang`);
+      fehlt.push("noch " + anzahl(MIN_DURCHGAENGE - L.status.passes,
+                                  "Durchgang", "Durchgänge"));
     if (L.status.mastery < GRAD_MASTERY)
       fehlt.push(`Sicherheit bei ${Math.round(L.status.mastery * 100)} von ${
         Math.round(GRAD_MASTERY * 100)} %`);
@@ -6250,9 +6284,9 @@ function importDialog() {
           const datum = (p.erstellt || "").slice(0, 10) || "unbekannt";
           if (alt.xp > 0 && !confirm(
                 `Diese Datei ist vom ${datum}:\n` +
-                `  ${neu.xp} XP · ${neu.lek} Einheiten\n\n` +
+                `  ${neu.xp} XP · ${anzahl(neu.lek, "Einheit", "Einheiten")}\n\n` +
                 `Dein jetziger Stand:\n` +
-                `  ${alt.xp} XP · ${alt.lek} Einheiten\n\n` +
+                `  ${alt.xp} XP · ${anzahl(alt.lek, "Einheit", "Einheiten")}\n\n` +
                 `Der jetzige Stand wird ersetzt. Fortfahren?`)) return;
 
           /* Und vorher sichern, damit ein Fehlgriff umkehrbar bleibt. */
