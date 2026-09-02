@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gymnasium Fitness</title>
-<!-- Erzeugt von tools/bauen.js am 2026-08-18. Nicht direkt bearbeiten —
+<!-- Erzeugt von tools/bauen.js am 2026-09-02. Nicht direkt bearbeiten —
      Änderungen gehören in index.html und data/*.js. -->
 
 <!-- Als App auf den Home-Bildschirm: iPad und iPhone starten dann ohne
@@ -350,7 +350,7 @@ const REGELN = [
     strategie: "Bestimmt: der, die, das. Unbestimmt: ein, eine." },
   { id: "de.gr.wortart.verb", fach: "de", bereich: "Wortarten", introDay: 1,
     name: "Verben erkennen",
-    strategie: "Ein Verb sagt, was jemand tut. Man kann es beugen: ich laufe, du läufst." },
+    strategie: "Personalprobe: ich, du, er davorsetzen. Verändert sich das Wort, ist es ein Verb — auch ich bin, du bist, er ist." },
   { id: "de.gr.wortart.adjektiv", fach: "de", bereich: "Wortarten", introDay: 2,
     name: "Adjektive erkennen",
     strategie: "Ein Adjektiv sagt, WIE etwas ist. Frage: Wie ist es?" },
@@ -615,16 +615,45 @@ const LERNKARTEN = {
     hinweis: "Vor ein Nomen passt immer <b>der</b>, <b>die</b> oder <b>das</b>. Das ist die Artikelprobe.",
     zeilen: [["der", "Hund"], ["die", "Blume"], ["das", "Haus"], ["die", "Freude"]] },
 
-  { typ: "regel", rules: ["de.rs.gross-klein.nomen"],
+  /* Auch mit `de.gr.wortart.nomen` verschlagwortet: Wer beim Erkennen eines
+     Nomens danebenliegt, bekommt über „Nochmal erklären" sonst irgendeine
+     Karte, aber nicht den Handgriff, der die Frage beantwortet. */
+  { typ: "regel", rules: ["de.rs.gross-klein.nomen", "de.gr.wortart.nomen"],
     titel: "Die Artikelprobe",
     text: "Du bist unsicher, ob ein Wort ein Nomen ist? Setz <b>der</b>, <b>die</b> oder <b>das</b> davor. Passt es, ist es ein Nomen — und wird <b>großgeschrieben</b>.",
     merke: "der Baum ✓ · der schnell ✗" },
 
   { typ: "beispiele", rules: ["de.gr.wortart.verb"],
-    titel: "Verben — was jemand tut",
-    hinweis: "Die Grundform endet fast immer auf <b>-en</b>. Verben kann man beugen.",
+    titel: "Die meisten Verben sind Tätigkeiten",
+    hinweis: "Sie sagen, was jemand tut. Es gibt aber auch andere — die kommen gleich.",
     zeilen: [["laufen", "ich laufe, du läufst"], ["singen", "ich singe, du singst"],
              ["denken", "ich denke, du denkst"]] },
+
+  /* Diese Karte ist das Gegenstück zur Artikelprobe bei den Nomen: ein
+     Handgriff, der IMMER funktioniert. Vorher gab es für Verben nur zwei
+     Faustregeln, und beide versagen ausgerechnet bei „sein" — es ist keine
+     Tätigkeit, und es endet auch nicht auf -en. Genau daran ist Bianca
+     wiederholt gescheitert, und zwar zu Recht. */
+  { typ: "regel", rules: ["de.gr.wortart.verb"],
+    titel: "Die Personalprobe",
+    text: "Du bist unsicher, ob ein Wort ein Verb ist? Setz <b>ich</b>, <b>du</b>, <b>er</b> davor und schau, ob sich das Wort <b>verändert</b>. Verändert es sich, ist es ein Verb — sonst nicht.",
+    merke: "ich bin, du b<b>i</b>st, er <b>ist</b> ✓ — ich schön, du schön, er schön ✗" },
+
+  /* Diese Karte gibt es, weil die Karte darüber allein einen Denkfehler
+     erzeugt hat: Wer „Verb = was jemand tut" lernt, hält „ist" für kein Verb.
+     Genau das war Biancas häufigster Fehler — viermal, drei Wochen lang, an
+     immer derselben Aufgabe. Die Erklärung war schuld, nicht sie. */
+  { typ: "regel", rules: ["de.gr.wortart.verb"],
+    titel: "Nicht jedes Verb ist eine Tätigkeit",
+    text: "<b>sein</b>, <b>haben</b>, <b>werden</b>, <b>heißen</b>, <b>bleiben</b> — bei diesen Verben tut niemand etwas. Sie sagen, wie etwas <b>ist</b>. Und <b>sein</b> endet nicht einmal auf -en. Trotzdem sind es Verben, denn die Personalprobe geht auf: Das Wort verändert sich.",
+    merke: "ich <b>bin</b>, du <b>bist</b>, er <b>ist</b> — drei verschiedene Wörter, ein Verb: <b>sein</b>" },
+
+  { typ: "beispiele", rules: ["de.gr.wortart.verb"],
+    titel: "So beugst du sein und haben",
+    hinweis: "Diese beiden brauchst du ständig — auch als Hilfsverb in „ist gelaufen“.",
+    zeilen: [["sein", "ich bin, du bist, er ist"],
+             ["haben", "ich habe, du hast, er hat"],
+             ["werden", "ich werde, du wirst, er wird"]] },
 
   { typ: "regel", rules: ["de.rs.gross-klein.satzanfang"],
     titel: "Groß geht es auch am Satzanfang los",
@@ -838,6 +867,17 @@ const LERNKARTEN = {
     titel: "13 oder 30? Der Klassiker",
     text: "Zahlen von 13 bis 19 enden auf <b>-teen</b>. Die Zehnerzahlen 20 bis 90 enden auf <b>-ty</b>. Verwechseln ist der häufigste Fehler überhaupt.",
     merke: "thir<b>teen</b> = 13 · thir<b>ty</b> = 30" },
+
+  /* Die halbe Miete ist die Endung — die andere Hälfte sind die vier Stämme,
+     die sich ändern. Ohne diese Karte bleibt „thirty" ein Wort zum Auswendig-
+     lernen statt ein Wort zum Zusammensetzen. */
+  { typ: "beispiele", rules: ["en.voc.zahlen"],
+    titel: "Vier Zahlen ändern ihren Stamm",
+    hinweis: "Bei den anderen bleibt der Anfang gleich: six → sixteen, sixty.",
+    zeilen: [["three → thir", "thirteen · thirty"],
+             ["five → fif", "fifteen · fifty"],
+             ["eight → eigh", "eighteen · eighty"],
+             ["four → for (nur bei 40!)", "fourteen · forty"]] },
 
   { typ: "woerter", rules: ["en.voc.zahlen"],
     titel: "Die wichtigsten Zahlen",
@@ -1109,6 +1149,80 @@ const LERNKARTEN = {
     frage: "Setze die Zeichen: <b>Mama ruft Das Essen ist fertig</b>",
     antwort: "Mama ruft: „Das Essen ist fertig!“",
     erklaerung: "Begleitsatz vorne → Doppelpunkt. Ein Ruf bekommt ein Rufzeichen." }
+],
+
+"en-l7": [
+  { typ: "regel", rules: ["en.gr.present-simple"],
+    titel: "Present Simple — was immer gilt",
+    text: "Diese Zeitform nimmt man für <b>Gewohnheiten</b> und <b>Tatsachen</b>: was regelmäßig passiert, was jemand jeden Tag tut, wie die Welt nun einmal ist. Nicht für das, was gerade in diesem Moment abläuft.",
+    merke: "I <b>play</b> football every Sunday." },
+
+  { typ: "beispiele", rules: ["en.gr.present-simple"],
+    titel: "Woran du es erkennst",
+    hinweis: "Diese Wörter stehen fast immer beim Present Simple.",
+    zeilen: [["always, usually, often", "immer, normalerweise, oft"],
+             ["sometimes, never", "manchmal, nie"],
+             ["every day, on Mondays", "jeden Tag, montags"]] },
+
+  { typ: "regel", rules: ["en.gr.present-simple.3rd-s"],
+    titel: "Das eine -s, das alles entscheidet",
+    text: "Bei <b>he</b>, <b>she</b> und <b>it</b> bekommt das Verb ein <b>-s</b>. Sonst nie. Im Deutschen gibt es dafür keine Entsprechung — deshalb ist es der häufigste Fehler in der ersten Klasse.",
+    merke: "I play · you play · <b>he plays</b> · we play · they play" },
+
+  { typ: "beispiele", rules: ["en.gr.present-simple.3rd-s"],
+    titel: "Wann -es statt -s dazukommt",
+    hinweis: "Nach Zischlauten und nach -o. Sonst könnte man es nicht aussprechen.",
+    zeilen: [["watch → watches", "auch: wash, fix, miss"],
+             ["go → goes", "auch: do → does"],
+             ["study → studies", "Mitlaut + y wird zu ie"],
+             ["have → has", "das eine, das aus der Reihe fällt"]] },
+
+  { typ: "regel", rules: ["en.lesen"],
+    titel: "Beim Lesen zählt der Beleg",
+    text: "Bei einer Frage zum Text zählt nur, was <b>dasteht</b> — nicht, was wahrscheinlich klingt. Such die Stelle, die die Antwort belegt, und lies sie zu Ende. Besonders bei <b>not</b>: „She does not like history“ heißt das Gegenteil von dem, was ohne das not dastünde.",
+    merke: "Erst die Stelle finden, dann antworten." },
+
+  { typ: "probe", rules: ["en.gr.present-simple.3rd-s"],
+    frage: "Setz ein: „My sister ____ (go) to school by bike.“",
+    antwort: "goes",
+    erklaerung: "<b>my sister</b> = she → das Verb bekommt ein -s. Und weil <b>go</b> auf -o endet, wird daraus <b>-es</b>." }
+],
+
+"en-l8": [
+  { typ: "regel", rules: ["en.gr.do-does"],
+    titel: "Englisch braucht ein Helferlein",
+    text: "Im Deutschen dreht man den Satz einfach um: „Du spielst“ wird zu „Spielst du?“. Im Englischen geht das nicht — dort kommt <b>do</b> oder <b>does</b> davor.",
+    merke: "You play. → <b>Do</b> you play?" },
+
+  { typ: "beispiele", rules: ["en.gr.do-does"],
+    titel: "do oder does?",
+    hinweis: "Dieselbe Regel wie beim -s: he, she, it bekommen die andere Form.",
+    zeilen: [["I, you, we, they", "<b>do</b>"],
+             ["he, she, it", "<b>does</b>"],
+             ["Does he play?", "danach die Grundform — kein zweites -s"]] },
+
+  { typ: "regel", rules: ["en.gr.do-does"],
+    titel: "Verneinen geht genauso",
+    text: "<b>do not</b> beziehungsweise <b>does not</b> vor die Grundform. In der gesprochenen Sprache fast immer als <b>don't</b> und <b>doesn't</b>. Das -s steckt schon im Helferlein — das Verb bleibt in der Grundform.",
+    merke: "He <b>doesn't play</b>. — nicht „doesn't plays“." },
+
+  { typ: "beispiele", rules: ["en.gr.question-words"],
+    titel: "Die Fragewörter",
+    hinweis: "Sie stehen ganz vorne, das Helferlein kommt danach.",
+    zeilen: [["Who / What", "wer / was"],
+             ["Where / When", "wo / wann"],
+             ["Why / How", "warum / wie"],
+             ["Whose / Which", "wessen / welcher"]] },
+
+  { typ: "regel", rules: ["en.gr.do-does", "en.gr.to-be"],
+    titel: "Bei to be braucht es kein do",
+    text: "<b>am</b>, <b>is</b> und <b>are</b> stellen sich selbst um — genau wie im Deutschen. Ein <b>do</b> davor wäre falsch.",
+    merke: "<b>Are</b> you ready? — nicht „Do you are ready?“" },
+
+  { typ: "probe", rules: ["en.gr.do-does"],
+    frage: "Wie fragst du: „Wohnt dein Bruder in Wien?“",
+    antwort: "Does your brother live in Vienna?",
+    erklaerung: "<b>your brother</b> = he → <b>does</b>. Danach die Grundform <b>live</b>, ohne -s." }
 ]
 
 };
@@ -1169,7 +1283,7 @@ const LEKTIONEN_DE = {
       { id: "de-01-05", type: "type", rules: ["de.gr.wortart.verb"],
         prompt: "Wie heißt die Grundform (Nennform) von „sie liefen“?",
         answer: "laufen", caseSensitive: false,
-        hint: "Grundformen enden meistens auf -en." },
+        hint: "Grundformen enden meistens auf -en — aber nicht alle." },
 
       { id: "de-01-06", type: "tf", rules: ["de.gr.wortart.nomen"],
         prompt: "Richtig oder falsch?",
@@ -1216,7 +1330,7 @@ const LEKTIONEN_DE = {
         correct: "die",
         opts: [{ t: "die" }, { t: "der", miss: "genus-raten" }, { t: "das", miss: "genus-raten" }] },
 
-      {"id": "de-01-14", "type": "tf", "rules": ["de.gr.wortart.verb"], "prompt": "Richtig oder falsch?", "statement": "Die Grundform eines Verbs endet fast immer auf -st.", "answer": false, "erklaerung": "Sie endet auf <b>-en</b>: lachen, gehen, schreiben. Das -st gehört zur du-Form."},
+      {"id": "de-01-14", "type": "tf", "rules": ["de.gr.wortart.verb"], "prompt": "Richtig oder falsch?", "statement": "Die Grundform eines Verbs endet fast immer auf -st.", "answer": false, "erklaerung": "Meistens auf <b>-en</b>: lachen, gehen, schreiben. Ausnahmen gibt es auch — <b>sein</b> und <b>tun</b> enden nur auf -n. Das -st gehört zur du-Form."},
 
       { id: "de-01-15", type: "tf", rules: ["de.rs.gross-klein.nomen"],
         prompt: "Richtig oder falsch?",
@@ -1326,7 +1440,49 @@ const LEKTIONEN_DE = {
       { id: "de-01-36", type: "fehler", rules: ["de.rs.gross-klein.nomen"],
         prompt: "Ein Wort ist falsch geschrieben. Tippe es an.",
         tokens: ["Die", "Katze", "Schläft", "auf", "dem", "Sofa"],
-        wrong: { 2: "schläft" } }
+        wrong: { 2: "schläft" } },
+      { id: "de-01-37", type: "tap", rules: ["de.gr.wortart.verb"],
+        prompt: "Tippe das Verb an.",
+        tokens: ["Der", "Hund", "ist", "müde"], correctIndex: 2 },
+      { id: "de-01-38", type: "tap", rules: ["de.gr.wortart.verb"],
+        prompt: "Tippe das Verb an.",
+        tokens: ["Wir", "haben", "großen", "Hunger"], correctIndex: 1 },
+      { id: "de-01-39", type: "mc", rules: ["de.gr.wortart.verb"],
+        prompt: "Welches Wort ist in diesem Satz das Verb? „Die Blumen sind schön.“",
+        correct: "sind",
+        opts: [{ t: "sind" },
+               { t: "schön", miss: "adjektiv-als-verb" },
+               { t: "Blumen", miss: "nomen-als-verb" }] },
+      { id: "de-01-40", type: "tf", rules: ["de.gr.wortart.verb"],
+        prompt: "Richtig oder falsch?",
+        statement: "„ist“ ist ein Verb, obwohl niemand dabei etwas tut.",
+        answer: true,
+        erklaerung: "Richtig. Mach die Personalprobe: ich <b>bin</b>, du <b>bist</b>, er <b>ist</b> — das Wort verändert sich, also ist es ein Verb. Die Grundform heißt <b>sein</b> und endet ausnahmsweise nicht auf -en." },
+      { id: "de-01-41", type: "sort", rules: ["de.gr.wortart.verb"],
+        prompt: "Verb oder kein Verb?",
+        buckets: ["Verb", "kein Verb"],
+        words: [{ w: "ist", b: "Verb" }, { w: "schön", b: "kein Verb" },
+                { w: "hat", b: "Verb" }, { w: "Fenster", b: "kein Verb" },
+                { w: "wird", b: "Verb" }, { w: "schnell", b: "kein Verb" }] },
+      { id: "de-01-42", type: "type", rules: ["de.gr.wortart.verb"],
+        prompt: "Wie heißt die Grundform von „er ist“?",
+        answer: "sein", caseSensitive: false },
+      { id: "de-01-43", type: "type", rules: ["de.gr.wortart.verb"],
+        prompt: "Wie heißt die Grundform von „sie hatte“?",
+        answer: "haben", caseSensitive: false },
+      { id: "de-01-44", type: "match", rules: ["de.gr.wortart.verb"],
+        prompt: "Ordne der gebeugten Form die Grundform zu.",
+        pairs: [["ich bin", "sein"], ["du hast", "haben"],
+                ["es wurde", "werden"], ["sie heißt", "heißen"]] },
+      { id: "de-01-45", type: "mc", rules: ["de.gr.wortart.verb"],
+        prompt: "In welchem Satz steckt KEIN Verb?",
+        correct: "Ein langer Weg im Wald.",
+        opts: [{ t: "Ein langer Weg im Wald." },
+               { t: "Der Weg ist lang.", miss: "sein-nicht-als-verb" },
+               { t: "Tom hat einen Hund.", miss: "sein-nicht-als-verb" }] },
+      { id: "de-01-46", type: "tap", rules: ["de.gr.wortart.verb"],
+        prompt: "In diesem Satz stehen zwei Verben. Tippe das gebeugte an.",
+        tokens: ["Sie", "ist", "gestern", "gelaufen"], correctIndex: 1 }
     ]
   },
 
@@ -2515,7 +2671,63 @@ const LEKTIONEN_EN = {
       {"id": "en-01-41", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "schön", "teile": ["beauti", "ful"], "stoerer": ["full", "beaty"], "hint": "Wie wonder + ful. Am Ende nur ein l."},
       {"id": "en-01-42", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "freundlich", "teile": ["friend", "ly"], "stoerer": ["frend", "ley"], "hint": "Das Wort für Freund, dann die Endung -ly."},
       {"id": "en-01-43", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Mittwoch", "teile": ["Wed", "nes", "day"], "stoerer": ["Wen", "dey"], "hint": "Sag beim Bauen übertrieben Wed-nes-day."},
-      {"id": "en-01-44", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Lieblings-", "teile": ["fav", "our", "ite"], "stoerer": ["or", "favor"], "hint": "Britisch mit u — mittendrin steckt our."}
+      {"id": "en-01-44", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "Lieblings-", "teile": ["fav", "our", "ite"], "stoerer": ["or", "favor"], "hint": "Britisch mit u — mittendrin steckt our."},
+      { id: "en-01-45", type: "bauteile", rules: ["en.voc.zahlen"],
+        prompt: "Setz das Wort aus seinen Bausteinen zusammen.",
+        bedeutung: "13", teile: ["thir", "teen"], stoerer: ["ty", "three"],
+        hint: "13 bis 19 enden alle gleich. Der Stamm heißt thir-, nicht three-." },
+      { id: "en-01-46", type: "bauteile", rules: ["en.voc.zahlen"],
+        prompt: "Setz das Wort aus seinen Bausteinen zusammen.",
+        bedeutung: "30", teile: ["thir", "ty"], stoerer: ["teen", "three"],
+        hint: "Gleicher Stamm wie bei 13 — nur die Endung entscheidet." },
+      { id: "en-01-47", type: "bauteile", rules: ["en.voc.zahlen"],
+        prompt: "Setz das Wort aus seinen Bausteinen zusammen.",
+        bedeutung: "90", teile: ["nine", "ty"], stoerer: ["teen", "nin"],
+        hint: "Hier bleibt der Stamm wie die Zahl 9. Das e fällt nicht weg." },
+      { id: "en-01-48", type: "bauteile", rules: ["en.voc.zahlen"],
+        prompt: "Setz das Wort aus seinen Bausteinen zusammen.",
+        bedeutung: "40", teile: ["for", "ty"], stoerer: ["four", "teen"],
+        hint: "Achtung, die Falle: 4 hat ein u, die Zehnerzahl nicht." },
+      { id: "en-01-49", type: "bauteile", rules: ["en.voc.zahlen"],
+        prompt: "Setz das Wort aus seinen Bausteinen zusammen.",
+        bedeutung: "18", teile: ["eigh", "teen"], stoerer: ["eight", "ty"],
+        hint: "Aus 8 wird eigh- — das t am Ende wandert nicht mit." },
+      { id: "en-01-50", type: "mc", rules: ["en.voc.zahlen"],
+        prompt: "30 heißt thirty. Wie heißt dann 13?",
+        correct: "thirteen",
+        opts: [{ t: "thirteen" },
+               { t: "threeteen", miss: "en.voc.stamm-nicht-geaendert" },
+               { t: "thirtyteen", miss: "en.voc.endung-verdoppelt" }] },
+      { id: "en-01-51", type: "mc", rules: ["en.voc.zahlen"],
+        prompt: "„I am ____ years old.“ Das Kind ist 14. Was steht in der Lücke?",
+        correct: "fourteen",
+        opts: [{ t: "fourteen" },
+               { t: "forteen", miss: "en.voc.stamm-verwechselt" },
+               { t: "forty", miss: "en.voc.teen-statt-ty" }] },
+      { id: "en-01-52", type: "sort", rules: ["en.voc.zahlen"],
+        prompt: "Welcher Stamm ändert sich, welcher bleibt?",
+        buckets: ["Stamm bleibt", "Stamm ändert sich"],
+        words: [{ w: "sixteen", b: "Stamm bleibt" },
+                { w: "thirteen", b: "Stamm ändert sich" },
+                { w: "seventy", b: "Stamm bleibt" },
+                { w: "fifty", b: "Stamm ändert sich" },
+                { w: "ninety", b: "Stamm bleibt" },
+                { w: "forty", b: "Stamm ändert sich" }] },
+      { id: "en-01-53", type: "match", rules: ["en.voc.zahlen"],
+        prompt: "Ordne Zahl und Wort zu.",
+        pairs: [["18", "eighteen"], ["80", "eighty"],
+                ["19", "nineteen"], ["90", "ninety"]] },
+      { id: "en-01-54", type: "tf", rules: ["en.voc.zahlen"],
+        prompt: "Richtig oder falsch?",
+        statement: "„fifty“ und „fifteen“ fangen beide mit fif- an.",
+        answer: true,
+        erklaerung: "Stimmt. Aus <b>five</b> wird bei beiden <b>fif</b>. Nur die Endung sagt, ob 15 oder 50 gemeint ist." },
+      { id: "en-01-55", type: "type", rules: ["en.voc.zahlen"],
+        prompt: "Schreibe die Zahl als Wort: 70",
+        answer: "seventy", caseSensitive: false },
+      { id: "en-01-56", type: "type", rules: ["en.voc.zahlen"],
+        prompt: "Schreibe die Zahl als Wort: 17",
+        answer: "seventeen", caseSensitive: false }
     ]
   },
 
@@ -3375,7 +3587,442 @@ const LEKTIONEN_EN = {
       {"id": "en-06-41", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "nutzlos", "teile": ["use", "less"], "stoerer": ["lees", "yuse"], "hint": "Die Endung -less heißt ohne. Also: ohne Nutzen."},
       {"id": "en-06-42", "type": "bauteile", "rules": ["en.sp.spelling"], "prompt": "Setz das Wort aus seinen Bausteinen zusammen.", "bedeutung": "schnell (Art und Weise)", "teile": ["quick", "ly"], "stoerer": ["kwick", "ley"], "hint": "-ly macht aus einem Eigenschaftswort ein Umstandswort."}
     ]
-  }
+  },
+
+"en-l7": {
+  nr: 7,
+  titel: "Present Simple — was immer gilt",
+  intro: "Die Zeitform für Gewohnheiten und Tatsachen. Eine Regel, ein Buchstabe — und der hat es in sich.",
+  items: [
+    { id: "en-07-01", type: "tf", rules: ["en.gr.present-simple"],
+      prompt: "Richtig oder falsch?",
+      statement: "Das Present Simple benutzt man für Dinge, die regelmäßig passieren.",
+      answer: true,
+      erklaerung: "Ja — für Gewohnheiten und Tatsachen: <b>I go to school every day.</b> Nicht für das, was gerade jetzt passiert." },
+
+    { id: "en-07-02", type: "mc", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "„She ____ tennis every Monday.“",
+      correct: "plays",
+      opts: [{ t: "plays" },
+             { t: "play", miss: "en.gr.3rd-s-vergessen" },
+             { t: "playes", miss: "en.gr.endung-falsch" }] },
+
+    { id: "en-07-03", type: "mc", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "„My brother ____ in Vienna.“",
+      correct: "lives",
+      opts: [{ t: "lives" },
+             { t: "live", miss: "en.gr.3rd-s-vergessen" },
+             { t: "livs", miss: "en.gr.endung-falsch" }] },
+
+    { id: "en-07-04", type: "mc", rules: ["en.gr.present-simple"],
+      prompt: "„We ____ football after school.“",
+      correct: "play",
+      opts: [{ t: "play" },
+             { t: "plays", miss: "en.gr.3rd-s-zuviel" },
+             { t: "playing", miss: "en.gr.form-verwechselt" }] },
+
+    { id: "en-07-05", type: "sort", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Mit -s oder ohne?",
+      buckets: ["mit -s", "ohne -s"],
+      words: [{ w: "he", b: "mit -s" }, { w: "I", b: "ohne -s" },
+              { w: "she", b: "mit -s" }, { w: "we", b: "ohne -s" },
+              { w: "it", b: "mit -s" }, { w: "they", b: "ohne -s" }] },
+
+    { id: "en-07-06", type: "type", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Setz ein: „He ____ (work) in a hospital.“",
+      answer: "works", caseSensitive: false },
+
+    { id: "en-07-07", type: "type", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Setz ein: „The cat ____ (sleep) on my bed.“",
+      answer: "sleeps", caseSensitive: false },
+
+    { id: "en-07-08", type: "type", rules: ["en.gr.present-simple"],
+      prompt: "Setz ein: „My friends ____ (walk) to school.“",
+      answer: "walk", caseSensitive: false },
+
+    { id: "en-07-09", type: "tf", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Richtig oder falsch?",
+      statement: "„They lives in Graz.“ ist richtig.",
+      answer: false,
+      erklaerung: "Nein. <b>they</b> ist Mehrzahl — da kommt kein -s dazu: <b>They live in Graz.</b>" },
+
+    { id: "en-07-10", type: "fehler", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Ein Wort ist falsch. Tippe es an.",
+      tokens: ["My", "sister", "like", "chocolate"], wrong: { "2": "likes" } },
+
+    { id: "en-07-11", type: "fehler", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Ein Wort ist falsch. Tippe es an.",
+      tokens: ["We", "goes", "to", "the", "park"], wrong: { "1": "go" } },
+
+    { id: "en-07-12", type: "mc", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Welche Form ist richtig? „He ____ his homework.“",
+      correct: "does",
+      opts: [{ t: "does" },
+             { t: "dos", miss: "en.gr.es-regel-vergessen" },
+             { t: "do", miss: "en.gr.3rd-s-vergessen" }] },
+
+    { id: "en-07-13", type: "mc", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Welche Form ist richtig? „She ____ to school by bus.“",
+      correct: "goes",
+      opts: [{ t: "goes" },
+             { t: "gos", miss: "en.gr.es-regel-vergessen" },
+             { t: "go", miss: "en.gr.3rd-s-vergessen" }] },
+
+    { id: "en-07-14", type: "sort", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Wird an das Verb -s oder -es gehängt?",
+      buckets: ["-s", "-es"],
+      words: [{ w: "read", b: "-s" }, { w: "watch", b: "-es" },
+              { w: "swim", b: "-s" }, { w: "wash", b: "-es" },
+              { w: "help", b: "-s" }, { w: "go", b: "-es" }] },
+
+    { id: "en-07-15", type: "type", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Setz ein: „Tom ____ (watch) TV in the evening.“",
+      answer: "watches", caseSensitive: false },
+
+    { id: "en-07-16", type: "type", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Setz ein: „She ____ (study) English at school.“",
+      answer: "studies", caseSensitive: false },
+
+    { id: "en-07-17", type: "tf", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Richtig oder falsch?",
+      statement: "Bei Verben auf Mitlaut + y wird das y zu ie: study wird studies.",
+      answer: true,
+      erklaerung: "Genau. <b>study → studies</b>, <b>fly → flies</b>. Aber bei Selbstlaut + y bleibt es: <b>play → plays</b>." },
+
+    { id: "en-07-18", type: "mc", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "„My mother ____ two cats.“",
+      correct: "has",
+      opts: [{ t: "has" },
+             { t: "have", miss: "en.gr.3rd-s-vergessen" },
+             { t: "haves", miss: "en.gr.unregelmaessig-uebersehen" }] },
+
+    { id: "en-07-19", type: "match", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Ordne die he/she/it-Form zu.",
+      pairs: [["I go", "he goes"], ["I have", "he has"],
+              ["I fly", "he flies"], ["I miss", "he misses"]] },
+
+    { id: "en-07-20", type: "order", rules: ["en.gr.word-order", "en.gr.present-simple"],
+      prompt: "Bring den Satz in die richtige Reihenfolge.",
+      words: ["always", "I", "breakfast", "eat"],
+      solution: ["I", "always", "eat", "breakfast"] },
+
+    { id: "en-07-21", type: "order", rules: ["en.gr.word-order", "en.gr.present-simple"],
+      prompt: "Bring den Satz in die richtige Reihenfolge.",
+      words: ["school", "She", "walks", "to"],
+      solution: ["She", "walks", "to", "school"] },
+
+    { id: "en-07-22", type: "tap", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Tippe das Verb an, das ein -s bekommen müsste.",
+      tokens: ["Every", "day", "my", "dog", "run", "in", "the", "garden"],
+      correctIndex: 4 },
+
+    { id: "en-07-23", type: "tap", rules: ["en.gr.present-simple"],
+      prompt: "Tippe das Signalwort an, das Present Simple verlangt.",
+      tokens: ["We", "usually", "have", "lunch", "at", "one"],
+      correctIndex: 1 },
+
+    { id: "en-07-24", type: "sort", rules: ["en.gr.present-simple"],
+      prompt: "Welche Wörter passen zum Present Simple?",
+      buckets: ["passt", "passt nicht"],
+      words: [{ w: "every day", b: "passt" }, { w: "right now", b: "passt nicht" },
+              { w: "always", b: "passt" }, { w: "at the moment", b: "passt nicht" },
+              { w: "on Mondays", b: "passt" }, { w: "look!", b: "passt nicht" }] },
+
+    { id: "en-07-25", type: "mc", rules: ["en.gr.present-simple"],
+      prompt: "Welcher Satz ist richtig?",
+      correct: "Anna never eats fish.",
+      opts: [{ t: "Anna never eats fish." },
+             { t: "Anna eats never fish.", miss: "en.gr.wortstellung-deutsch" },
+             { t: "Anna never eat fish.", miss: "en.gr.3rd-s-vergessen" }] },
+
+    { id: "en-07-26", type: "type", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Setz ein: „It ____ (rain) a lot in autumn.“",
+      answer: "rains", caseSensitive: false },
+
+    { id: "en-07-27", type: "type", rules: ["en.gr.present-simple"],
+      prompt: "Setz ein: „You ____ (speak) very good English.“",
+      answer: "speak", caseSensitive: false },
+
+    { id: "en-07-28", type: "fehler", rules: ["en.gr.present-simple.3rd-s"],
+      prompt: "Ein Wort ist falsch. Tippe es an.",
+      tokens: ["The", "bus", "leave", "at", "eight"], wrong: { "2": "leaves" } },
+
+    { id: "en-07-29", type: "tf", rules: ["en.gr.present-simple"],
+      prompt: "Richtig oder falsch?",
+      statement: "„I am playing football every Sunday.“ ist die beste Wahl für eine Gewohnheit.",
+      answer: false,
+      erklaerung: "Für Gewohnheiten nimmt man das Present Simple: <b>I play football every Sunday.</b> Die Form mit -ing beschreibt, was gerade jetzt läuft." },
+
+    { id: "en-07-30", type: "mc", rules: ["en.gr.to-be"],
+      prompt: "„Peter and Lisa ____ in the same class.“",
+      correct: "are",
+      opts: [{ t: "are" },
+             { t: "is", miss: "en.gr.numerus-ignoriert" },
+             { t: "am", miss: "en.gr.person-verwechselt" }] },
+
+    { id: "en-07-31", type: "match", rules: ["en.gr.present-simple"],
+      prompt: "Ordne Signalwort und Bedeutung zu.",
+      pairs: [["always", "immer"], ["never", "nie"],
+              ["sometimes", "manchmal"], ["usually", "normalerweise"]] },
+
+    { id: "en-07-32", type: "spell", rules: ["en.sp.spelling", "en.gr.present-simple.3rd-s"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "finishes", bedeutung: "er/sie beendet",
+      hint: "Nach -sh kommt -es dazu, sonst könnte man es nicht aussprechen.",
+      speak: "finishes" },
+
+    { id: "en-07-33", type: "spell", rules: ["en.sp.spelling", "en.gr.present-simple.3rd-s"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "carries", bedeutung: "er/sie trägt",
+      hint: "Mitlaut vor dem y — also wird das y zu ie.",
+      speak: "carries" },
+
+    { id: "en-07-34", type: "lesen", rules: ["en.lesen", "en.gr.present-simple"],
+      prompt: "Lies den Text und beantworte die Frage.",
+      text: "Emma is eleven. She lives in Salzburg with her parents and her little brother. Every morning she takes the bus to school. She likes maths, but she does not like history. After school she plays the guitar. On Saturdays the family visits her grandmother.",
+      frage: "Wann besucht die Familie die Großmutter?",
+      correct: "Am Samstag.",
+      beleg: "On Saturdays the family visits her grandmother.",
+      opts: [{ t: "Am Samstag." },
+             { t: "Jeden Morgen.", miss: "en.lesen.zeile-verwechselt" },
+             { t: "Nach der Schule.", miss: "en.lesen.zeile-verwechselt" }] },
+
+    { id: "en-07-35", type: "lesen", rules: ["en.lesen", "en.gr.present-simple.3rd-s"],
+      prompt: "Lies den Text noch einmal und beantworte die Frage.",
+      text: "Emma is eleven. She lives in Salzburg with her parents and her little brother. Every morning she takes the bus to school. She likes maths, but she does not like history. After school she plays the guitar. On Saturdays the family visits her grandmother.",
+      frage: "Welches Fach mag Emma nicht?",
+      correct: "Geschichte.",
+      beleg: "she does not like history",
+      opts: [{ t: "Geschichte." },
+             { t: "Mathematik.", miss: "en.lesen.verneinung-ueberlesen" },
+             { t: "Musik.", miss: "en.lesen.hineingelesen" }] },
+
+    { id: "en-07-36", type: "order", rules: ["en.gr.word-order", "en.gr.present-simple"],
+      prompt: "Bring den Satz in die richtige Reihenfolge.",
+      words: ["homework", "does", "her", "She", "evening", "every"],
+      solution: ["She", "does", "her", "homework", "every", "evening"] }
+  ]
+},
+
+"en-l8": {
+  nr: 8,
+  titel: "Fragen und Verneinung — do und does",
+  intro: "Im Deutschen dreht man einfach den Satz um. Im Englischen braucht es ein Helferlein.",
+  items: [
+    { id: "en-08-01", type: "tf", rules: ["en.gr.do-does"],
+      prompt: "Richtig oder falsch?",
+      statement: "Im Englischen braucht man für Fragen fast immer ein Hilfsverb.",
+      answer: true,
+      erklaerung: "Ja — <b>do</b> oder <b>does</b>. Im Deutschen reicht es, den Satz umzudrehen („Spielst du?“), im Englischen nicht." },
+
+    { id: "en-08-02", type: "mc", rules: ["en.gr.do-does"],
+      prompt: "Wie fragt man: „Spielst du Fußball?“",
+      correct: "Do you play football?",
+      opts: [{ t: "Do you play football?" },
+             { t: "Play you football?", miss: "en.gr.wortstellung-deutsch" },
+             { t: "Does you play football?", miss: "en.gr.do-does-verwechselt" }] },
+
+    { id: "en-08-03", type: "mc", rules: ["en.gr.do-does"],
+      prompt: "Wie fragt man: „Wohnt sie in Wien?“",
+      correct: "Does she live in Vienna?",
+      opts: [{ t: "Does she live in Vienna?" },
+             { t: "Do she live in Vienna?", miss: "en.gr.do-does-verwechselt" },
+             { t: "Does she lives in Vienna?", miss: "en.gr.s-doppelt" }] },
+
+    { id: "en-08-04", type: "sort", rules: ["en.gr.do-does"],
+      prompt: "do oder does?",
+      buckets: ["do", "does"],
+      words: [{ w: "I", b: "do" }, { w: "he", b: "does" },
+              { w: "you", b: "do" }, { w: "she", b: "does" },
+              { w: "they", b: "do" }, { w: "it", b: "does" }] },
+
+    { id: "en-08-05", type: "type", rules: ["en.gr.do-does"],
+      prompt: "Setz ein: „____ you like pizza?“",
+      answer: "Do", caseSensitive: false },
+
+    { id: "en-08-06", type: "type", rules: ["en.gr.do-does"],
+      prompt: "Setz ein: „____ your brother play tennis?“",
+      answer: "Does", caseSensitive: false },
+
+    { id: "en-08-07", type: "tf", rules: ["en.gr.do-does"],
+      prompt: "Richtig oder falsch?",
+      statement: "Nach „does“ bekommt das Verb noch einmal ein -s.",
+      answer: false,
+      erklaerung: "Nein — das -s steckt schon in <b>does</b>. Danach kommt die Grundform: <b>Does he play?</b>, nicht „Does he plays?“" },
+
+    { id: "en-08-08", type: "fehler", rules: ["en.gr.do-does"],
+      prompt: "Ein Wort ist falsch. Tippe es an.",
+      tokens: ["Does", "he", "likes", "football", "?"], wrong: { "2": "like" } },
+
+    { id: "en-08-09", type: "fehler", rules: ["en.gr.do-does"],
+      prompt: "Ein Wort ist falsch. Tippe es an.",
+      tokens: ["Do", "your", "sister", "speak", "German", "?"], wrong: { "0": "Does" } },
+
+    { id: "en-08-10", type: "mc", rules: ["en.gr.do-does"],
+      prompt: "Wie verneint man: „I like fish.“",
+      correct: "I do not like fish.",
+      opts: [{ t: "I do not like fish." },
+             { t: "I not like fish.", miss: "en.gr.hilfsverb-fehlt" },
+             { t: "I does not like fish.", miss: "en.gr.do-does-verwechselt" }] },
+
+    { id: "en-08-11", type: "mc", rules: ["en.gr.do-does"],
+      prompt: "Wie verneint man: „He plays the piano.“",
+      correct: "He does not play the piano.",
+      opts: [{ t: "He does not play the piano." },
+             { t: "He does not plays the piano.", miss: "en.gr.s-doppelt" },
+             { t: "He do not play the piano.", miss: "en.gr.do-does-verwechselt" }] },
+
+    { id: "en-08-12", type: "match", rules: ["en.gr.do-does"],
+      prompt: "Ordne die Kurzform zu.",
+      pairs: [["do not", "don't"], ["does not", "doesn't"],
+              ["is not", "isn't"], ["are not", "aren't"]] },
+
+    { id: "en-08-13", type: "order", rules: ["en.gr.do-does", "en.gr.word-order"],
+      prompt: "Bring die Frage in die richtige Reihenfolge.",
+      words: ["you", "Do", "milk", "like", "?"],
+      solution: ["Do", "you", "like", "milk", "?"] },
+
+    { id: "en-08-14", type: "order", rules: ["en.gr.do-does", "en.gr.word-order"],
+      prompt: "Bring die Frage in die richtige Reihenfolge.",
+      words: ["live", "Where", "you", "do", "?"],
+      solution: ["Where", "do", "you", "live", "?"] },
+
+    { id: "en-08-15", type: "mc", rules: ["en.gr.question-words"],
+      prompt: "Welches Fragewort passt? „____ do you go to school?“ — „By bus.“",
+      correct: "How",
+      opts: [{ t: "How" },
+             { t: "Where", miss: "en.gr.fragewort-verwechselt" },
+             { t: "When", miss: "en.gr.fragewort-verwechselt" }] },
+
+    { id: "en-08-16", type: "mc", rules: ["en.gr.question-words"],
+      prompt: "Welches Fragewort passt? „____ is your birthday?“ — „In May.“",
+      correct: "When",
+      opts: [{ t: "When" },
+             { t: "Who", miss: "en.gr.fragewort-verwechselt" },
+             { t: "Why", miss: "en.gr.fragewort-verwechselt" }] },
+
+    { id: "en-08-17", type: "match", rules: ["en.gr.question-words"],
+      prompt: "Ordne Fragewort und Bedeutung zu.",
+      pairs: [["Who", "wer"], ["Where", "wo"],
+              ["Why", "warum"], ["What", "was"]] },
+
+    { id: "en-08-18", type: "match", rules: ["en.gr.question-words"],
+      prompt: "Ordne Fragewort und Antwort zu.",
+      pairs: [["How old", "I am eleven."], ["How many", "Three."],
+              ["Whose", "It is mine."], ["Which", "The red one."]] },
+
+    { id: "en-08-19", type: "type", rules: ["en.gr.do-does"],
+      prompt: "Verneine: „She works on Sundays.“ → „She ____ work on Sundays.“",
+      answer: "does not", alt: ["does not", "doesn't", "doesnt"],
+      caseSensitive: false },
+
+    { id: "en-08-20", type: "type", rules: ["en.gr.do-does"],
+      prompt: "Verneine: „They live here.“ → „They ____ live here.“",
+      answer: "do not", alt: ["do not", "don't", "dont"],
+      caseSensitive: false },
+
+    { id: "en-08-21", type: "tap", rules: ["en.gr.do-does"],
+      prompt: "Tippe das Wort an, das hier nicht hingehört.",
+      tokens: ["Does", "she", "goes", "to", "school", "?"],
+      correctIndex: 2 },
+
+    { id: "en-08-22", type: "tap", rules: ["en.gr.question-words"],
+      prompt: "Tippe das Fragewort an.",
+      tokens: ["What", "do", "you", "do", "at", "the", "weekend"],
+      correctIndex: 0 },
+
+    { id: "en-08-23", type: "sort", rules: ["en.gr.do-does"],
+      prompt: "Frage oder Verneinung?",
+      buckets: ["Frage", "Verneinung"],
+      words: [{ w: "Do you swim?", b: "Frage" },
+              { w: "I don't swim.", b: "Verneinung" },
+              { w: "Does it work?", b: "Frage" },
+              { w: "It doesn't work.", b: "Verneinung" },
+              { w: "Where do they live?", b: "Frage" },
+              { w: "They don't live here.", b: "Verneinung" }] },
+
+    { id: "en-08-24", type: "tf", rules: ["en.gr.do-does"],
+      prompt: "Richtig oder falsch?",
+      statement: "Bei „to be“ braucht man do und does nicht.",
+      answer: true,
+      erklaerung: "Stimmt. <b>am, is, are</b> stellen sich selbst um: <b>Are you ready?</b> — nicht „Do you be ready?“" },
+
+    { id: "en-08-25", type: "mc", rules: ["en.gr.do-does", "en.gr.to-be"],
+      prompt: "Welche Frage ist richtig?",
+      correct: "Are you tired?",
+      opts: [{ t: "Are you tired?" },
+             { t: "Do you are tired?", miss: "en.gr.do-bei-to-be" },
+             { t: "Do you tired?", miss: "en.gr.hilfsverb-doppelt" }] },
+
+    { id: "en-08-26", type: "mc", rules: ["en.gr.do-does"],
+      prompt: "Wie antwortet man kurz auf „Do you like tea?“, wenn ja?",
+      correct: "Yes, I do.",
+      opts: [{ t: "Yes, I do." },
+             { t: "Yes, I like.", miss: "en.gr.kurzantwort-falsch" },
+             { t: "Yes, I am.", miss: "en.gr.do-bei-to-be" }] },
+
+    { id: "en-08-27", type: "mc", rules: ["en.gr.do-does"],
+      prompt: "Wie antwortet man kurz auf „Does he play chess?“, wenn nein?",
+      correct: "No, he doesn't.",
+      opts: [{ t: "No, he doesn't." },
+             { t: "No, he don't.", miss: "en.gr.do-does-verwechselt" },
+             { t: "No, he isn't.", miss: "en.gr.do-bei-to-be" }] },
+
+    { id: "en-08-28", type: "order", rules: ["en.gr.question-words", "en.gr.word-order"],
+      prompt: "Bring die Frage in die richtige Reihenfolge.",
+      words: ["your", "is", "What", "name", "?"],
+      solution: ["What", "is", "your", "name", "?"] },
+
+    { id: "en-08-29", type: "order", rules: ["en.gr.do-does", "en.gr.word-order"],
+      prompt: "Bring die Frage in die richtige Reihenfolge.",
+      words: ["brother", "does", "Where", "work", "your", "?"],
+      solution: ["Where", "does", "your", "brother", "work", "?"] },
+
+    { id: "en-08-30", type: "type", rules: ["en.gr.question-words"],
+      prompt: "Welches Fragewort fragt nach einem Grund? (englisch)",
+      answer: "why", caseSensitive: false },
+
+    { id: "en-08-31", type: "type", rules: ["en.gr.question-words"],
+      prompt: "Welches Fragewort fragt nach einer Person? (englisch)",
+      answer: "who", caseSensitive: false },
+
+    { id: "en-08-32", type: "fehler", rules: ["en.gr.do-does"],
+      prompt: "Ein Wort ist falsch. Tippe es an.",
+      tokens: ["My", "dad", "don't", "drink", "coffee"], wrong: { "2": "doesn't" } },
+
+    { id: "en-08-33", type: "fehler", rules: ["en.gr.question-words"],
+      prompt: "Zwei Wörter stehen in der falschen Reihenfolge. Tippe sie an.",
+      tokens: ["Where", "you", "do", "live", "?"],
+      wrong: { "1": "do", "2": "you" } },
+
+    { id: "en-08-34", type: "spell", rules: ["en.sp.spelling", "en.gr.do-does"],
+      prompt: "Präg dir die Schreibweise ein.",
+      word: "doesn't", bedeutung: "die Kurzform für „tut nicht“",
+      hint: "Der Apostroph steht dort, wo das o von not weggefallen ist.",
+      speak: "doesn't" },
+
+    { id: "en-08-35", type: "lesen", rules: ["en.lesen", "en.gr.do-does"],
+      prompt: "Lies den Text und beantworte die Frage.",
+      text: "Ben and his sister Kate go to the same school. Ben plays basketball, but he does not like swimming. Kate does not play basketball. She swims every Tuesday and Thursday. Their father takes them to the sports centre by car.",
+      frage: "Wer schwimmt?",
+      correct: "Kate.",
+      beleg: "She swims every Tuesday and Thursday.",
+      opts: [{ t: "Kate." },
+             { t: "Ben.", miss: "en.lesen.verneinung-ueberlesen" },
+             { t: "Beide.", miss: "en.lesen.hineingelesen" }] },
+
+    { id: "en-08-36", type: "lesen", rules: ["en.lesen", "en.gr.do-does"],
+      prompt: "Lies den Text noch einmal und beantworte die Frage.",
+      text: "Ben and his sister Kate go to the same school. Ben plays basketball, but he does not like swimming. Kate does not play basketball. She swims every Tuesday and Thursday. Their father takes them to the sports centre by car.",
+      frage: "Wie kommen die beiden zum Sportzentrum?",
+      correct: "Mit dem Auto.",
+      beleg: "Their father takes them to the sports centre by car.",
+      opts: [{ t: "Mit dem Auto." },
+             { t: "Mit dem Bus.", miss: "en.lesen.hineingelesen" },
+             { t: "Zu Fuß.", miss: "en.lesen.hineingelesen" }] }
+  ]
+}
+
 };
 
 </script>
@@ -3645,6 +4292,11 @@ const LEVEL_NAMEN = [
 const KEY = "gymfit_v2";
 const ALPHA = 0.3;          // Lerngewicht: wie stark die neueste Antwort zählt
 const DECAY = 0.02;         // Zerfall pro Tag ohne Übung
+/* Tiefer als hierhin verblasst Wissen nicht.
+   Ohne Boden fiel nach einer Woche Pause alles unter die Schwäche-Schwelle —
+   auch Regeln, bei denen sie nie einen Fehler gemacht hat. Wer etwas einmal
+   konnte, fällt durch bloßes Nichtstun nicht unter Raten zurück. */
+const ZERFALL_BODEN = 0.5;
 /* Längste Zeit, die für eine Aufgabe angerechnet wird.
    Die App misst Wanduhrzeit. Wird sie mitten in einer Aufgabe weggelegt und
    Stunden später weitergemacht, stünde diese Pause als Bearbeitungszeit im
@@ -3656,6 +4308,27 @@ const MAX_AUFGABENZEIT = 180000;
 const SCHWELLE = 0.7;       // darunter gilt eine Regel als Schwäche
 const MIN_SEEN = 4;         // erst ab so vielen Begegnungen wird gewertet
 
+/* Wann eine Regel als gemeistert gilt.
+   Früher stand hier nur „Beherrschung über 90 %". Die Beherrschung zerfällt
+   aber um 2 % pro Tag — nach zwei Wochen Pause ist sie unerreichbar, egal wie
+   gut jemand war. Nach 23 Tagen und 297 Antworten zeigte die App genau EINE
+   gemeisterte Regel, während „Nomen erkennen" bei 16 von 16 richtig stand.
+   Das ist keine strenge Messung, das ist eine kaputte.
+
+   Jetzt entscheidet die Bilanz, und die vergisst nicht. Zwei Wege führen hin:
+   eine hohe Trefferquote über viele Begegnungen, oder eine hohe aktuelle
+   Beherrschung. Der erste Weg fängt die auf, die lange nicht geübt haben; der
+   zweite die, die anfangs schwach waren und es jetzt können.
+
+   Die Zahlen richten sich nach dem, was die App ohnehin für eine Lektion
+   verlangt: an mindestens zwei Tagen geübt. Alles andere wäre unerreichbar —
+   eine Regel, die sitzt, kommt über die Wiederholungsschlange nicht zurück und
+   käme so nie auf einen dritten Tag. Dafür ist die Quote höher als bei einer
+   Lektion: 85 % statt 70 %, weil eine einzelne Regel schmäler ist. */
+const MEISTER_QUOTE = 0.85;
+const MEISTER_SEEN  = 8;    // ungefähr drei Durchgänge
+const MEISTER_TAGE  = 2;
+
 /* Eine Lektion ist ein Thema, kein Tag. Sie wird so lange wiederholt,
    bis sie sitzt — mindestens zweimal an zwei verschiedenen Tagen. */
 /* Runden, die keinen Lektionsdurchgang verbuchen. */
@@ -3664,6 +4337,14 @@ const SONDERRUNDEN = ["dauer", "diktat", "nachbessern", "uebungsrunde"];
 const MIN_DURCHGAENGE = 2;
 const MIN_TAGE        = 2;    // erzwingt Abstand: nie zwei Durchgänge am selben Tag
 const MAX_DURCHGAENGE = 5;    // Obergrenze, damit sich niemand festbeißt
+/* Mindestens so viel muss auch tatsächlich richtig beantwortet worden sein.
+   Die Beherrschung ist ein gleitender Wert und misst den Moment; ein paar
+   Treffer am Ende einer Runde können sie über die Schwelle heben, obwohl die
+   Bilanz dagegen spricht. Bianca hat Lektion 4 mit zweimal 6 von 10
+   „gemeistert" — und die Nachbesserrunde direkt danach zeigte wieder 6 von 10.
+   Die Trefferquote ist das Gedächtnis, das die Beherrschung nicht hat. */
+const GRAD_QUOTE      = 0.70;
+
 const GRAD_MASTERY    = 0.75; /* ab hier gilt eine Lektion als gemeistert.
                                  Bewusst nicht höher: die Beherrschung pendelt sich
                                  auf die Trefferquote ein, und 75 % richtig ist bei
@@ -3811,6 +4492,12 @@ function umwandeln(s, roh) {
   }
   if (!s.diktat) s.diktat = { erledigt: [], letzterTag: null };
   if (!s.lektionen) s.lektionen = {};
+  /* Wer schon vor der Umstellung geübt hat, soll nicht bei null anfangen:
+     Die Meistermarke wird aus dem vorhandenen Stand nachgetragen. */
+  for (const id in (s.rules || {})) {
+    const r = s.rules[id];
+    if (!r.meister && meisterreif(r)) r.meister = true;
+  }
   return s;
 }
 
@@ -3918,16 +4605,36 @@ function lektionsStatus(lekId, fach) {
   // … und höchstens eine darf noch richtig wackeln.
   const wacklig = regeln.filter(r => (S.rules[r]?.mastery ?? 0) < 0.6).length;
 
+  const quote = lektionsQuote(lekId, fach);
   const geschafft = p.passes >= MIN_DURCHGAENGE &&
                     (p.tage || []).length >= MIN_TAGE &&
                     mastery >= GRAD_MASTERY &&
+                    quote >= GRAD_QUOTE &&
                     alleGeuebt && wacklig <= 1;
   const ausgereizt = p.passes >= MAX_DURCHGAENGE;
   return {
     passes: p.passes, tage: p.tage || [], gesehen: p.gesehen || [],
-    mastery, fertig: geschafft || ausgereizt, ausgereizt,
+    mastery, quote, fertig: geschafft || ausgereizt, ausgereizt,
     heuteSchon: (p.tage || []).includes(heute())
   };
+}
+
+/**
+ * Tatsächliche Trefferquote über die Regeln einer Lektion.
+ *
+ * Anders als die Beherrschung verblasst sie nicht und lässt sich durch eine
+ * gute Schlussrunde nicht kurzfristig heben. Regeln ohne Begegnung bleiben
+ * außen vor.
+ */
+function lektionsQuote(lekId, fach) {
+  let richtig = 0, gesamt = 0;
+  for (const r of lektionsRegeln(lekId, fach)) {
+    const v = S.rules[r];
+    if (!v || !v.seen) continue;
+    richtig += v.correct || 0;
+    gesamt += v.seen;
+  }
+  return gesamt ? richtig / gesamt : 0;
 }
 
 /**
@@ -4049,7 +4756,10 @@ function zerfallAnwenden() {
     const stand = r.zerfallStand || r.lastSeen;
     const d = tageZwischen(stand, h);
     if (d > 0) {
-      r.mastery = Math.max(0, r.mastery - DECAY * d);
+      /* Nur bis zum Boden. Wer schon darunter liegt, hat das durch Fehler
+         gezeigt — daran ändert eine Pause nichts. */
+      if (r.mastery > ZERFALL_BODEN)
+        r.mastery = Math.max(ZERFALL_BODEN, r.mastery - DECAY * d);
       r.zerfallStand = h;
     }
   }
@@ -4081,6 +4791,8 @@ function masteryUpdate(regelId, ergebnis) {
   r.lastSeen = h;
   r.zerfallStand = h;
   r.days = r.tage.length;
+  /* Einmal gesetzt, nie zurückgenommen — siehe gemeistert(). */
+  if (!r.meister && meisterreif(r)) r.meister = true;
 }
 
 /**
@@ -4099,22 +4811,57 @@ function regelEingefuehrt(regelId) {
 }
 
 /** Regeln, die als echte Schwäche gelten — mit allen drei Bedingungen. */
+/**
+ * Regeln, an denen gearbeitet werden muss.
+ *
+ * Eine Schwäche setzt einen **tatsächlichen Fehler** voraus. Vorher genügte
+ * eine gesunkene Beherrschung — und weil die auch ohne Üben sinkt, standen
+ * nach einer Woche Pause Regeln als Schwäche da, bei denen sie 7 von 7 und
+ * 9 von 9 richtig hatte. Das ist nicht nur falsch, es lenkt die Übungszeit
+ * von dem weg, was wirklich hakt.
+ *
+ * Verblasstes Wissen kommt trotzdem zurück — dafür ist die
+ * Wiederholungsschlange da, nicht diese Liste.
+ */
 function schwaechen() {
   return Object.entries(S.rules)
     .filter(([id, r]) => {
       if (!REGEL_MAP[id]) return false;
       if (!regelEingefuehrt(id)) return false;     // noch nicht gelernt ≠ Schwäche
       if (r.seen < MIN_SEEN) return false;         // zu wenig Daten
-      return r.mastery < SCHWELLE;
+      if ((r.correct || 0) >= r.seen) return false; // nie ein Fehler ≠ Schwäche
+      /* Beides muss zutreffen: Die Beherrschung ist gesunken UND die
+         Trefferquote gibt es her. Sonst genügt eine lange Pause. */
+      const quote = r.correct / r.seen;
+      return r.mastery < SCHWELLE && quote < 0.8;
     })
-    .sort((a, b) => a[1].mastery - b[1].mastery)
+    .sort((a, b) => (a[1].correct / a[1].seen) - (b[1].correct / b[1].seen))
     .map(([id, r]) => ({ id, ...r, def: REGEL_MAP[id] }));
 }
 
-/** Regeln, die als gemeistert gelten. */
+/**
+ * Erfüllt eine Regel gerade die Meisterbedingungen?
+ *
+ * Verlangt in jedem Fall genug Belege und Übung an mehreren Tagen — ein guter
+ * Nachmittag ist kein Können. Darüber hinaus genügt einer der beiden Wege.
+ */
+function meisterreif(r) {
+  if (!r || r.seen < MEISTER_SEEN || (r.days || 0) < MEISTER_TAGE) return false;
+  const quote = (r.correct || 0) / r.seen;
+  return quote >= MEISTER_QUOTE || r.mastery >= 0.9;
+}
+
+/**
+ * Regeln, die als gemeistert gelten.
+ *
+ * Einmal erreicht, bleibt es stehen. Eine Auszeichnung, die eine Woche Urlaub
+ * wieder abnimmt, ist keine — und es wäre auch fachlich falsch: Wer etwas
+ * konnte, hat es gekonnt. Dass Wissen verblasst, steht in der Beherrschung und
+ * führt über die Wiederholungsschlange zurück, nicht über einen Entzug.
+ */
 function gemeistert() {
   return Object.entries(S.rules)
-    .filter(([id, r]) => r.mastery >= 0.9 && r.seen >= 10 && (r.days || 0) >= 3)
+    .filter(([, r]) => r.meister)
     .map(([id]) => id);
 }
 
@@ -5747,15 +6494,22 @@ function pruefen() {
       extra = it.erklaerung || "";
       break;
     case "sort": {
-      ok = true;
+      /* Fünf von sechs Wörtern richtig ist nicht dasselbe wie nichts gewusst.
+         Für den Bildschirm bleibt es „nicht ganz" — es liegt ja etwas im
+         falschen Korb — aber die Beherrschung bekommt den Anteil. Derselbe
+         Gedanke wie beim Diktat, wo ein Fehler in 24 Wörtern einmal 0 % ergab. */
+      let richtig = 0;
       A.words.forEach((w, i) => {
-        const soll = it.buckets.indexOf(w.b);
-        if (A.zuord[i] !== soll) ok = false;
+        if (A.zuord[i] === it.buckets.indexOf(w.b)) richtig++;
       });
+      ok = richtig === A.words.length;
+      quote = richtig / A.words.length;
       A.geprueft = true;
       sortZeichnen();
       const hinweis = document.getElementById("sorthinweis");
       if (hinweis) hinweis.style.display = "none";
+      if (!ok) extra = `<p class="muted">${richtig} von ${
+        anzahl(A.words.length, "Wort", "Wörtern")} richtig einsortiert.</p>`;
       loesung = "";   // die richtige Zuordnung steht schon farbig in den Körben
       break;
     }
@@ -5773,15 +6527,20 @@ function pruefen() {
       loesung = it.solution.join(" ");
       break;
     case "match": {
-      ok = true;
+      let treffer = 0;
       A.links.forEach((l, i) => {
         const soll = it.pairs.find(p => p[0] === l)[1];
-        if (A.rechts[A.zuord[i]] !== soll) ok = false;
+        if (A.rechts[A.zuord[i]] === soll) treffer++;
       });
+      ok = treffer === A.links.length;
+      quote = treffer / A.links.length;   // anteilig, siehe „sort"
       A.geprueft = true;
       matchZeichnen();
       const mh = document.getElementById("matchhinweis");
       if (mh) mh.style.display = "none";
+      if (!ok) extra = `<p class="muted">${treffer} von ${
+        anzahl(A.links.length, "Paar", "Paaren")} ${
+        treffer === 1 ? "stimmt" : "stimmen"}.</p>`;
       loesung = ok ? "" : it.pairs.map(p => `${p[0]} → ${p[1]}`).join(" · ");
       break;
     }
@@ -5789,6 +6548,13 @@ function pruefen() {
       const sollIdx = new Set(Object.keys(it.wrong).map(Number));
       ok = sollIdx.size === A.markiert.size &&
            [...sollIdx].every(i => A.markiert.has(i));
+      /* Auch hier zählt der Anteil, sobald mehr als eine Stelle gesucht ist:
+         gefundene Fehler minus falsch markierte, nie unter null. */
+      if (!ok && sollIdx.size > 1) {
+        const gefunden = [...sollIdx].filter(i => A.markiert.has(i)).length;
+        const daneben  = [...A.markiert].filter(i => !sollIdx.has(i)).length;
+        quote = Math.max(0, (gefunden - daneben) / sollIdx.size);
+      }
       it.tokens.forEach((_, i) => {
         const e = document.getElementById("f" + i);
         if (sollIdx.has(i)) e.classList.add("good");
@@ -6122,6 +6888,9 @@ function renderErgebnis() {
     if (L.status.mastery < GRAD_MASTERY)
       fehlt.push(`Sicherheit bei ${Math.round(L.status.mastery * 100)} von ${
         Math.round(GRAD_MASTERY * 100)} %`);
+    if (L.status.quote !== undefined && L.status.quote < GRAD_QUOTE)
+      fehlt.push(`insgesamt ${Math.round(L.status.quote * 100)} von ${
+        Math.round(GRAD_QUOTE * 100)} % richtig`);
     h += `<div class="card"><h2>Diese Lektion</h2>
       <div class="wk"><b>Durchgang ${L.status.passes} geschafft</b>
         <div class="mini"><i style="width:${Math.round(L.status.mastery * 100)}%;
