@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gymnasium Fitness</title>
-<!-- Erzeugt von tools/bauen.js am 2026-09-02. Nicht direkt bearbeiten —
+<!-- Erzeugt von tools/bauen.js am 2026-09-15. Nicht direkt bearbeiten —
      Änderungen gehören in index.html und data/*.js. -->
 
 <!-- Als App auf den Home-Bildschirm: iPad und iPhone starten dann ohne
@@ -842,6 +842,28 @@ const LERNKARTEN = {
     text: "Manche Wörter klingen nach <b>f</b>, werden aber mit <b>v</b> geschrieben. Da hilft keine Strategie — das sind Merkwörter.",
     merke: "<b>V</b>ater · <b>v</b>iel · <b>v</b>ier · <b>V</b>ogel · <b>v</b>on · <b>v</b>or" },
 
+  /* Nachgetragen am 15. September. Diese Regel wurde von einem Diktat
+     abgefragt, aber von keiner Lernkarte erklärt. Folge: regelEingefuehrt()
+     gab immer false zurück — die Regel konnte nie als Schwäche erscheinen,
+     und weil das Nachbessern über die Regel läuft und nicht über die Aufgabe,
+     gab es für sie keinen Weg zurück. Bianca hat Diktat 15 fünfmal falsch
+     geschrieben, ohne dass die App darauf zurückkommen konnte.
+     Bewacht von tools/abdeckung-test.js. */
+  { typ: "regel", rules: ["de.rs.s-ss-ss"],
+    titel: "Strategie 3: s, ss oder ß?",
+    text: "Sprich das Wort langsam und hör auf den Selbstlaut <b>vor</b> dem s-Laut. " +
+          "Klingt er <b>kurz</b>, schreibst du <b>ss</b>. Klingt er <b>lang</b> — oder ist es " +
+          "ein Doppellaut wie au, ei, eu —, schreibst du <b>ß</b>.",
+    merke: "Fl<b>u</b>ss — kurz → ss · F<b>u</b>ß — lang → ß" },
+
+  { typ: "beispiele", rules: ["de.rs.s-ss-ss"],
+    titel: "Kurz oder lang vor dem s-Laut?",
+    hinweis: "Das einfache <b>s</b> summt, wenn du es sprichst. Halt dir die Ohren zu und hör hin.",
+    zeilen: [["K<b>u</b>ss · Fl<b>u</b>ss · m<b>ü</b>ssen", "kurz → ss"],
+             ["F<b>u</b>ß · gr<b>ü</b>ßen · Str<b>a</b>ße", "lang → ß"],
+             ["h<b>ei</b>ßen · dr<b>au</b>ßen", "Doppellaut → ß"],
+             ["Ro<b>s</b>e · le<b>s</b>en · Wie<b>s</b>e", "summt → einfaches s"]] },
+
   { typ: "probe", rules: ["de.rs.auslaut"],
     frage: "Wie schreibst du „das Kin_“?",
     antwort: "Kind",
@@ -1106,6 +1128,28 @@ const LERNKARTEN = {
           "Sie steht im Präsens und geht vom Großen zum Kleinen.",
     merke: "„Der Käfer ist drei Zentimeter lang.“ ✓  „Der Käfer ist eklig.“ ✗" },
 
+  /* Nachgetragen am 15. September. Diese Regel wurde von einem Diktat
+     abgefragt, aber von keiner Lernkarte erklärt. Folge: regelEingefuehrt()
+     gab immer false zurück — die Regel konnte nie als Schwäche erscheinen,
+     und weil das Nachbessern über die Regel läuft und nicht über die Aufgabe,
+     gab es für sie keinen Weg zurück. Bianca hat Diktat 15 fünfmal falsch
+     geschrieben, ohne dass die App darauf zurückkommen konnte.
+     Bewacht von tools/abdeckung-test.js. */
+  { typ: "regel", rules: ["de.gr.zeit.praeteritum", "de.gr.zeit.perfekt"],
+    titel: "Erzählt wird in der Vergangenheit",
+    text: "Eine Geschichte steht im <b>Präteritum</b>: <i>er ging, sie rief, es regnete</i>. " +
+          "Beim Sprechen nimmst du dafür meist das <b>Perfekt</b>: <i>er ist gegangen</i>. " +
+          "Geschrieben klingt das Präteritum besser — und in einem Text bleibst du bei einer Zeit.",
+    merke: "geschrieben: sie <b>lief</b> · gesprochen: sie <b>ist gelaufen</b>" },
+
+  { typ: "beispiele",
+    rules: ["de.gr.zeit.praeteritum", "de.gr.zeit.perfekt", "de.gr.zeit.plusquamperfekt"],
+    titel: "Drei Arten, von früher zu erzählen",
+    hinweis: "Das <b>Plusquamperfekt</b> brauchst du nur, wenn etwas noch <b>davor</b> passiert ist.",
+    zeilen: [["Präteritum", "Er <b>schloss</b> die Tür."],
+             ["Perfekt", "Er <b>hat</b> die Tür <b>geschlossen</b>."],
+             ["Plusquamperfekt", "Er <b>hatte</b> die Tür <b>geschlossen</b>, bevor er ging."]] },
+
   { typ: "probe", rules: ["de.txt.satzbau"],
     frage: "Verbinde: <b>Es war dunkel. Wir fanden den Weg.</b>",
     antwort: "Obwohl es dunkel war, fanden wir den Weg.",
@@ -1144,6 +1188,27 @@ const LERNKARTEN = {
     text: "Vor <b>weil, dass, wenn, obwohl, damit, als, bevor, bis</b> steht ein Komma. " +
           "Vor <b>und</b> und <b>oder</b> steht keines.",
     merke: "Ich bleibe daheim<b>,</b> weil ich krank bin." },
+
+  /* Nachgetragen am 15. September. Diese Regel wurde von einem Diktat
+     abgefragt, aber von keiner Lernkarte erklärt. Folge: regelEingefuehrt()
+     gab immer false zurück — die Regel konnte nie als Schwäche erscheinen,
+     und weil das Nachbessern über die Regel läuft und nicht über die Aufgabe,
+     gab es für sie keinen Weg zurück. Bianca hat Diktat 15 fünfmal falsch
+     geschrieben, ohne dass die App darauf zurückkommen konnte.
+     Bewacht von tools/abdeckung-test.js. */
+  { typ: "regel", rules: ["de.rs.das-dass"],
+    titel: "das oder dass? Die Ersatzprobe",
+    text: "Versuch <b>dieses</b>, <b>jenes</b> oder <b>welches</b> einzusetzen. Passt eines davon, " +
+          "schreibst du <b>das</b>. Passt keines, schreibst du <b>dass</b>.",
+    merke: "Das Buch, <b>das</b> ich meine → <i>welches</i> ✓ · Ich hoffe, <b>dass</b> du kommst → <i>welches</i> ✗" },
+
+  { typ: "beispiele", rules: ["de.rs.das-dass", "de.zs.komma-satzverbindung"],
+    titel: "Die Ersatzprobe in Aktion",
+    hinweis: "Vor <b>dass</b> steht immer ein Komma — es verbindet zwei Sätze.",
+    zeilen: [["Ich nehme <b>das</b> Rad.", "dieses Rad ✓ → das"],
+             ["Das Rad, <b>das</b> kaputt ist …", "welches kaputt ist ✓ → das"],
+             ["Ich glaube, <b>dass</b> es regnet.", "Ersatz passt nicht → dass"],
+             ["Es ist so kalt, <b>dass</b> ich friere.", "Ersatz passt nicht → dass"]] },
 
   { typ: "probe", rules: ["de.zs.woertliche-rede"],
     frage: "Setze die Zeichen: <b>Mama ruft Das Essen ist fertig</b>",
@@ -4256,11 +4321,11 @@ const BADGES = [
     check: s => (s.diktat?.erledigt || []).length >= 10 },
 
   { id: "durchhalterin", name: "Durchhalterin", icon: "🔥",
-    text: "7 Tage in Folge geübt.",
+    text: "An 7 Übungstagen drangeblieben, ohne eine Woche zu pausieren.",
     check: s => s.streak.count >= 7 },
 
   { id: "marathon", name: "Marathon", icon: "🏅",
-    text: "21 Tage in Folge geübt. Wahnsinn.",
+    text: "An 21 Übungstagen drangeblieben. Wahnsinn.",
     check: s => s.streak.count >= 21 },
 
   { id: "datenbotin", name: "Datenbotin", icon: "📮",
@@ -4345,11 +4410,15 @@ const MAX_DURCHGAENGE = 5;    // Obergrenze, damit sich niemand festbeißt
    Die Trefferquote ist das Gedächtnis, das die Beherrschung nicht hat. */
 const GRAD_QUOTE      = 0.70;
 
-const GRAD_MASTERY    = 0.75; /* ab hier gilt eine Lektion als gemeistert.
-                                 Bewusst nicht höher: die Beherrschung pendelt sich
-                                 auf die Trefferquote ein, und 75 % richtig ist bei
-                                 neuem Stoff für ein zehnjähriges Kind gut. */
+const GRAD_MASTERY    = 0.75; /* Nur noch fürs Anzeigen: ab hier färbt sich der
+                                 Balken grün. Über das Graduieren entscheidet
+                                 GRAD_QUOTE — siehe lektionsStatus(). */
+const WACKLIG_QUOTE   = 0.60; /* Darunter gilt eine Regel innerhalb ihrer Lektion
+                                 als noch nicht sitzend. Höchstens eine davon
+                                 darf eine Lektion mitnehmen. */
 const AUFGABEN_PRO_DURCHGANG = 10;
+const PAUSE_GRENZE = 7;     /* So viele Tage darf eine Pause dauern, ohne die
+                               Serie zu beenden — eine Schulwoche. */
 
 /* Testnaht: erlaubt der Verlaufssimulation, Tage vorzuspulen.
    Im Browser immer null — dort gilt das echte Datum. */
@@ -4369,6 +4438,12 @@ function leerState() {
     stats: { perfekteDiktate: 0, sessions: 0 },
     settings: { satzzeichenSprechen: true, tempo: 0.85, umlautLeiste: false, klang: true },
     lastExport: null, schwaechenBeiExport: 0, startDatum: heute()
+    /* Kein `punkteNachgetragen` hier! `laden()` baut den Stand als
+       Object.assign(leerState(), gespeichert) — ein Feld, das nur im
+       leerState steht, überlebt diese Zusammenführung und hätte jeden alten
+       Stand als „schon nachgetragen" markiert. Die Nachtragung wäre nie
+       gelaufen. Bei einem frischen Stand ist sie ohnehin ein Leerlauf: Es gibt
+       noch keine Regel, der man etwas gutschreiben könnte. */
   };
 }
 
@@ -4492,6 +4567,40 @@ function umwandeln(s, roh) {
   }
   if (!s.diktat) s.diktat = { erledigt: [], letzterTag: null };
   if (!s.lektionen) s.lektionen = {};
+
+  /* Punkte nachtragen — siehe trefferquote().
+   *
+   * Bis hierher gab es nur `correct`, und das sprang allein bei einer
+   * makellosen Antwort an. Wer fünf Diktate mit je einem Fehler geschrieben
+   * hatte, stand danach bei 0 von 5. Als Ausgangswert dient `correct`; das
+   * unterschätzt, überschätzt aber nie.
+   *
+   * Beim Diktat lässt sich mehr retten: Der Verlauf hält `fehler` und
+   * `woerter` fest, also den tatsächlichen Anteil. Was damals nicht gutgeschrieben
+   * wurde, kommt hier nachträglich drauf. Der Verlauf reicht 300 Einträge weit —
+   * ältere Diktate bleiben untergewichtet, und das ist in Ordnung: Die Quote
+   * wächst beim Weiterüben von selbst wieder an.
+   *
+   * Einmalig, sonst würde jeder Start erneut gutschreiben. */
+  if (!s.punkteNachgetragen) {
+    for (const id in (s.rules || {})) {
+      const r = s.rules[id];
+      if (r.punkte == null) r.punkte = r.correct || 0;
+    }
+    for (const e of (s.log || [])) {
+      if (!e || !e.woerter) continue;                 // nur Diktate
+      const anteil = Math.max(0, (e.woerter - (e.fehler || 0)) / e.woerter);
+      const schonGezaehlt = (e.fehler || 0) === 0 ? 1 : 0;
+      const nachschlag = anteil - schonGezaehlt;
+      if (nachschlag <= 0) continue;
+      for (const rid of (e.rules || [])) {
+        const r = s.rules[rid];
+        if (r) r.punkte = Math.min(r.seen, (r.punkte || 0) + nachschlag);
+      }
+    }
+    s.punkteNachgetragen = true;
+  }
+
   /* Wer schon vor der Umstellung geübt hat, soll nicht bei null anfangen:
      Die Meistermarke wird aus dem vorhandenen Stand nachgetragen. */
   for (const id in (s.rules || {})) {
@@ -4594,6 +4703,17 @@ function lektionsMastery(lekId, fach) {
  * Tagen geübt wurde UND die Regeln sitzen. Wer sich festbeißt, wird nach
  * sechs Durchgängen trotzdem weitergelassen — dann übernimmt der
  * Schwächenpool, der die Regeln ohnehin weiter einstreut.
+ *
+ * Geurteilt wird ausschließlich über die Trefferquote, nie über die
+ * Beherrschung. Die Beherrschung zerfällt um 2 % pro Tag — sie steuert, was
+ * wiederholt wird, und das ist ihre Aufgabe. Hing die Anerkennung daran, dann
+ * konnte eine Lektion nach den Ferien nicht mehr graduieren, egal wie gut sie
+ * vorher saß: Genau so blieb en-l2 nach vier Durchgängen hängen. Für Regeln
+ * war das Ende August schon korrigiert, für Lektionen erst jetzt.
+ *
+ * Dass eine gute Schlussrunde allein nicht reicht — der Grund, aus dem hier
+ * einmal beides verlangt wurde — sichert die Trefferquote ohnehin: Sie ist
+ * die Bilanz über alles und lässt sich am Rundenende nicht heben.
  */
 function lektionsStatus(lekId, fach) {
   const p = S.lektionen[lekId] || { passes: 0, tage: [], gesehen: [] };
@@ -4602,19 +4722,31 @@ function lektionsStatus(lekId, fach) {
 
   // Jede Regel der Lektion muss mindestens zweimal drangekommen sein …
   const alleGeuebt = regeln.every(r => (S.rules[r]?.seen || 0) >= 2);
-  // … und höchstens eine darf noch richtig wackeln.
-  const wacklig = regeln.filter(r => (S.rules[r]?.mastery ?? 0) < 0.6).length;
+  /* … und höchstens eine darf noch wackeln. Gemessen an der Trefferquote,
+     nicht an der Beherrschung: Die sinkt in den Ferien von allein, und dann
+     wackelt plötzlich alles, was vorher saß. */
+  const wacklig = regeln.filter(r => {
+    const v = S.rules[r];
+    return v && v.seen && trefferquote(v) < WACKLIG_QUOTE;
+  }).length;
 
   const quote = lektionsQuote(lekId, fach);
   const geschafft = p.passes >= MIN_DURCHGAENGE &&
                     (p.tage || []).length >= MIN_TAGE &&
-                    mastery >= GRAD_MASTERY &&
                     quote >= GRAD_QUOTE &&
                     alleGeuebt && wacklig <= 1;
   const ausgereizt = p.passes >= MAX_DURCHGAENGE;
+  /* Einmal gemeistert, immer gemeistert — dieselbe Regel wie bei `meister`
+     für einzelne Regeln. `aktiveLektion()` hat die gespeicherte Markierung
+     schon immer geachtet, `fertig` nicht; damit stand eine längst
+     abgeschlossene Lektion in der Übersicht wieder als offen da, sobald die
+     Zahlen später nachgaben. Eine Auszeichnung, die eine Woche Urlaub
+     kassiert, ist keine. */
+  const ausgezeichnet = !!p.graduiert;
   return {
     passes: p.passes, tage: p.tage || [], gesehen: p.gesehen || [],
-    mastery, quote, fertig: geschafft || ausgereizt, ausgereizt,
+    mastery, quote, wacklig, graduiert: ausgezeichnet,
+    fertig: ausgezeichnet || geschafft || ausgereizt, ausgereizt,
     heuteSchon: (p.tage || []).includes(heute())
   };
 }
@@ -4631,7 +4763,7 @@ function lektionsQuote(lekId, fach) {
   for (const r of lektionsRegeln(lekId, fach)) {
     const v = S.rules[r];
     if (!v || !v.seen) continue;
-    richtig += v.correct || 0;
+    richtig += v.punkte != null ? v.punkte : (v.correct || 0);
     gesamt += v.seen;
   }
   return gesamt ? richtig / gesamt : 0;
@@ -4648,7 +4780,10 @@ function lektionsQuote(lekId, fach) {
 function anzeigeFortschritt(lekId, fach) {
   const p = S.lektionen[lekId];
   if (!p || !p.passes) return 0;
-  return lektionsMastery(lekId, fach);
+  /* Dasselbe Maß, das über das Graduieren entscheidet. Vorher stand hier die
+     zerfallende Beherrschung — dann schrumpfte der Balken einer längst
+     gemeisterten Lektion über die Ferien, ohne dass ein Kind verstand, warum. */
+  return lektionsQuote(lekId, fach);
 }
 
 /** Die Lektion, an der gerade gearbeitet wird — die erste unfertige. */
@@ -4729,6 +4864,28 @@ function tagesplan() {
   };
 }
 
+/**
+ * In welcher Reihenfolge die Fächer im Tagesplan stehen.
+ *
+ * Das Fach, das weiter zurückliegt, steht oben. Solange beide gleich weit
+ * sind, bleibt Deutsch vorn.
+ *
+ * Der Anlass: Im September stand Deutsch bei sieben von acht gemeisterten
+ * Lektionen, Englisch bei einer von acht — und der Tagesplan bot trotzdem
+ * jeden Tag zuerst Deutsch an. Wer wenig Zeit hat, macht den ersten Punkt und
+ * hört auf. Genau das ist passiert: An den kurzen Schultagen lief nur noch
+ * Deutsch. Englisch kommt im Gymnasium neu dazu und ist damit das Fach, das
+ * die Übung nötiger hat.
+ */
+function fachReihenfolge() {
+  const anteil = fach => {
+    const ids = lektionsIds(fach).filter(id => (LEK(fach)[id].items || []).length);
+    if (!ids.length) return 1;
+    return ids.filter(id => S.lektionen[id]?.graduiert).length / ids.length;
+  };
+  return anteil("en") < anteil("de") ? ["en", "de"] : ["de", "en"];
+}
+
 /** Programmtag — nur noch für die Anzeige, nicht mehr für die Steuerung. */
 function programmTag() {
   return S.startDatum ? tageZwischen(S.startDatum, heute()) + 1 : 1;
@@ -4765,6 +4922,32 @@ function zerfallAnwenden() {
   }
 }
 
+/**
+ * Trefferquote einer Regel — das Maß, das urteilt.
+ *
+ * Seit dem 1. September werden Diktat, Sortieren, Zuordnen und Fehlersuche
+ * anteilig bewertet: Wer 22 von 24 Wörtern richtig schreibt, hat nicht
+ * versagt. Der Zähler `correct` hat diese Umstellung zunächst NICHT
+ * mitgemacht — er springt nur bei einer makellosen Antwort. Weil zugleich
+ * `correct/seen` über Anerkennung und Schwäche entscheidet, stand eine Regel
+ * mit fünf fast fehlerfreien Diktaten bei 0 von 5, und ihre Lektion konnte
+ * nicht graduieren. Deshalb summiert `punkte` den tatsächlich erreichten
+ * Anteil, und jedes Urteil rechnet von hier aus.
+ *
+ * `correct` bleibt daneben stehen: „wie oft ganz richtig" ist die Zahl, die
+ * einem Kind etwas sagt — 16 von 16, nicht 15,3 von 16.
+ */
+function trefferquote(r) {
+  if (!r || !r.seen) return 0;
+  const p = r.punkte != null ? r.punkte : (r.correct || 0);
+  return Math.min(1, Math.max(0, p / r.seen));
+}
+
+/** Hat sie bei dieser Regel je etwas liegenlassen? */
+function ohneFehler(r) {
+  return !!r && !!r.seen && trefferquote(r) >= 1 - 1e-9;
+}
+
 /** Mastery einer Regel nach einer Antwort fortschreiben. */
 /**
  * Beherrschung fortschreiben.
@@ -4776,11 +4959,14 @@ function zerfallAnwenden() {
  */
 function masteryUpdate(regelId, ergebnis) {
   const r = S.rules[regelId] || (S.rules[regelId] = {
-    seen: 0, correct: 0, mastery: 0.5, lastSeen: null, days: 0, tage: []
+    seen: 0, correct: 0, punkte: 0, mastery: 0.5, lastSeen: null, days: 0, tage: []
   });
   const q = Math.min(1, Math.max(0, typeof ergebnis === "number" ? ergebnis : (ergebnis ? 1 : 0)));
   r.seen++;
   if (q >= 0.999) r.correct++;
+  /* `correct` zählt weiter die ganz richtigen Antworten — so steht es auch auf
+     dem Bildschirm. Geurteilt wird über `punkte`, siehe trefferquote(). */
+  r.punkte = (r.punkte || 0) + q;
   r.mastery = r.mastery + ALPHA * (q - r.mastery);
   r.mastery = Math.min(1, Math.max(0, r.mastery));
   /* Übungstag festhalten — allein anhand der Liste, nicht anhand von
@@ -4829,13 +5015,13 @@ function schwaechen() {
       if (!REGEL_MAP[id]) return false;
       if (!regelEingefuehrt(id)) return false;     // noch nicht gelernt ≠ Schwäche
       if (r.seen < MIN_SEEN) return false;         // zu wenig Daten
-      if ((r.correct || 0) >= r.seen) return false; // nie ein Fehler ≠ Schwäche
+      if (ohneFehler(r)) return false;             // nie ein Fehler ≠ Schwäche
       /* Beides muss zutreffen: Die Beherrschung ist gesunken UND die
          Trefferquote gibt es her. Sonst genügt eine lange Pause. */
-      const quote = r.correct / r.seen;
+      const quote = trefferquote(r);
       return r.mastery < SCHWELLE && quote < 0.8;
     })
-    .sort((a, b) => (a[1].correct / a[1].seen) - (b[1].correct / b[1].seen))
+    .sort((a, b) => trefferquote(a[1]) - trefferquote(b[1]))
     .map(([id, r]) => ({ id, ...r, def: REGEL_MAP[id] }));
 }
 
@@ -4847,7 +5033,7 @@ function schwaechen() {
  */
 function meisterreif(r) {
   if (!r || r.seen < MEISTER_SEEN || (r.days || 0) < MEISTER_TAGE) return false;
-  const quote = (r.correct || 0) / r.seen;
+  const quote = trefferquote(r);
   return quote >= MEISTER_QUOTE || r.mastery >= 0.9;
 }
 
@@ -5213,20 +5399,26 @@ function xpGeben(n) {
   S.level = neu;
   return auf;
 }
+/**
+ * Die Serie fortschreiben.
+ *
+ * Gezählt werden ÜBUNGSTAGE, nicht Kalendertage in Folge. Der Unterschied
+ * entscheidet, seit die Schule läuft: Bianca hat am 1., 2., 6. und 14.
+ * September geübt — für ein Schulkind ein vernünftiger Rhythmus. Die alte
+ * Regel sah darin dreimal einen Abbruch und setzte die Serie jedes Mal auf 1
+ * zurück. Eine Zahl, die bei ordentlichem Üben sinkt, ist keine Auszeichnung,
+ * sondern ein Vorwurf — derselbe Denkfehler wie bei der zerfallenden
+ * Beherrschung.
+ *
+ * Erst eine ganze Woche ohne Übung beendet die Serie. Damit braucht es auch
+ * keinen Joker mehr; das Feld bleibt nur stehen, damit alte Stände laden.
+ */
 function streakPruefen() {
   const h = heute(), l = S.streak.lastDay;
   if (l === h) return;
-  if (!l) { S.streak.count = 1; }
-  else {
-    const d = tageZwischen(l, h);
-    if (d === 1) S.streak.count++;
-    else if (d === 2 && S.streak.jokersLeft > 0) { S.streak.jokersLeft--; S.streak.count++; }
-    else S.streak.count = 1;
-  }
+  if (!l) S.streak.count = 1;
+  else S.streak.count = tageZwischen(l, h) <= PAUSE_GRENZE ? S.streak.count + 1 : 1;
   S.streak.lastDay = h;
-  if (tageZwischen(S.streak.wochenStart, h) >= 7) {
-    S.streak.wochenStart = h; S.streak.jokersLeft = 1;
-  }
 }
 function badgesPruefen() {
   const neu = [];
@@ -5320,12 +5512,16 @@ function viewHome() {
                  : `<span class="muted">erledigt</span>`}</div>`;
     /* Erledigt wird das Fach genannt, nicht die nächste Lektion — sonst stünde
        dort ein Titel, an dem sie heute gar nicht gearbeitet hat. */
-    if (p.de) h += zeile(p.deOffen,
-      p.deFertig ? "Deutsch" : "Deutsch: " + esc(LEKTIONEN_DE[p.de].titel),
-      `starte('de','${p.de}')`, "background:var(--de);color:#0a1024");
-    if (p.en) h += zeile(p.enOffen,
-      p.enFertig ? "Englisch" : "Englisch: " + esc(LEKTIONEN_EN[p.en].titel),
-      `starte('en','${p.en}')`, "background:var(--en);color:#0a1024");
+    const fachZeile = {
+      de: () => p.de && zeile(p.deOffen,
+        p.deFertig ? "Deutsch" : "Deutsch: " + esc(LEKTIONEN_DE[p.de].titel),
+        `starte('de','${p.de}')`, "background:var(--de);color:#0a1024"),
+      en: () => p.en && zeile(p.enOffen,
+        p.enFertig ? "Englisch" : "Englisch: " + esc(LEKTIONEN_EN[p.en].titel),
+        `starte('en','${p.en}')`, "background:var(--en);color:#0a1024")
+    };
+    /* Das Fach, das weiter zurückliegt, zuerst — siehe fachReihenfolge(). */
+    for (const fach of fachReihenfolge()) h += fachZeile[fach]() || "";
     h += zeile(p.diktatOffen, "Diktat des Tages", "diktatStarten()",
                "background:var(--ok);color:#06301b");
     h += `<p class="sub" style="margin-top:11px">Noch ${offen} von 3 offen.</p>`;
@@ -5434,7 +5630,7 @@ function pfad(fach, titel) {
           const w = Math.round(anzeigeFortschritt(id, fach) * 100);
           return `<div class="mini" style="width:100%;margin-top:6px"><i
             style="width:${w}%;background:${
-              w >= GRAD_MASTERY * 100 ? "var(--ok)" :
+              w >= GRAD_QUOTE * 100 ? "var(--ok)" :
               w >= 50 ? "var(--gold)" : "var(--de)"}"></i></div>`;
         })() : ""}
       </div>
@@ -5477,7 +5673,7 @@ function viewLektion(id) {
       <div class="wk"><b>Wie gut sitzt es?</b>
         ${st.passes
           ? `<div class="mini"><i style="width:${Math.round(anzeigeFortschritt(id, fach) * 100)}%;
-              background:${st.mastery >= GRAD_MASTERY ? "var(--ok)" : "var(--gold)"}"></i></div>`
+              background:${st.quote >= GRAD_QUOTE ? "var(--ok)" : "var(--gold)"}"></i></div>`
           : `<span class="muted">noch nicht geübt</span>`}</div>
       <div class="wk"><b>Geübt an</b><span class="muted">${st.tage.length} Tag${
         st.tage.length === 1 ? "" : "en"}</span></div>
@@ -5526,8 +5722,7 @@ function viewProfil() {
     ${kristall(profilZustand, 96)}
     <div class="big" style="font-size:38px;margin:12px 0 4px">⚡ ${S.xp}</div>
     <div><b>Rang ${S.level}</b> · ${LEVEL_NAMEN[S.level - 1] || "Profi"}</div>
-    <div class="muted">🔥 ${anzahl(S.streak.count, "Tag", "Tage")} in Folge ·
-      ${anzahl(S.streak.jokersLeft, "Joker", "Joker")} übrig</div>
+    <div class="muted">🔥 ${anzahl(S.streak.count, "Übungstag", "Übungstage")} in Serie</div>
   </div>`;
 
   const g = gemeistert();
@@ -6583,6 +6778,11 @@ function pruefen() {
   S.log.push({ item: it.id, ok, rules: it.rules || [], miss: miss || null,
                ms: aufgabenZeit(), tag: programmTag(),
                lektion: L.lekId,
+               /* Der erreichte Anteil, wo es einen gibt. Ohne ihn lässt sich
+                  aus einem Export nicht mehr nachvollziehen, was bei
+                  Sortieren, Zuordnen und Fehlersuche tatsächlich passiert ist —
+                  `ok` allein sagt nur „nicht makellos". */
+               ...(quote !== null ? { quote: +quote.toFixed(3) } : {}),
                /* Beim Diktat sagt „falsch" allein nichts: ein Fehler oder zehn
                   sind zwei verschiedene Befunde. Deshalb kommt die Zahl mit. */
                ...(diktatInfo ? { fehler: diktatInfo.fehler, woerter: diktatInfo.woerter } : {}) });
@@ -6753,17 +6953,40 @@ function waehleDiktat() {
     d.rules.forEach(r => {
       if (schwIds.has(r)) p += 3;              // gezielt an Schwächen arbeiten
       if (aktuelleRegeln.has(r)) p += 2;       // zum laufenden Thema passen
-      if (regelEingefuehrt(r)) p += 1;         // nichts abfragen, was noch fehlt
+      /* Nichts abfragen, was noch nicht erklärt wurde. Ein Bonus reichte
+         dafür nicht: Diktat 15 prüft s-ss-ß, und weil dazu gar keine
+         Lernkarte existierte, war der Bonus für ALLE Diktate der Stufe
+         gleich null — es wurde trotzdem gezogen. Eine unerklärte Regel muss
+         wehtun, nicht bloß nichts einbringen. */
+      p += regelEingefuehrt(r) ? 1 : -4;
     });
     return p - Math.abs(d.stufe - diktatStufe()) * 2;
   };
   return [...pool].sort((a, b) => punkte(b) - punkte(a))[0];
 }
 
-/** Mit wachsender Erfahrung dürfen die Diktate länger werden. */
+/**
+ * Mit wachsender Erfahrung dürfen die Diktate länger werden.
+ *
+ * Aber nicht schneller, als der Stoff nachkommt. Vorher zählte allein, wie
+ * viele Diktate schon geschrieben waren — nach zehn Stück galt Stufe 3, und
+ * die prüft Kommasetzung, wörtliche Rede und das-dass. Bianca war zu dem
+ * Zeitpunkt bei Lektion 7 von 8; Lektion 8 hatte sie nie gesehen. So kam ein
+ * Diktat über s-ss-ß zustande, das sie fünfmal falsch schrieb, obwohl die
+ * Regel nie erklärt worden war.
+ *
+ * Die Diktate folgen deshalb dem langsameren der beiden Takte: Erfahrung und
+ * tatsächlich gelaufene Lektionen.
+ */
 function diktatStufe() {
   const n = (S.diktat.erledigt || []).length;
-  return n < 4 ? 1 : n < 10 ? 2 : 3;
+  const ausErfahrung = n < 4 ? 1 : n < 10 ? 2 : 3;
+
+  const gelaufen = lektionsIds("de")
+    .filter(id => (S.lektionen[id]?.passes || 0) >= 1).length;
+  const ausLektionen = gelaufen >= 8 ? 3 : gelaufen >= 6 ? 2 : 1;
+
+  return Math.min(ausErfahrung, ausLektionen);
 }
 
 function diktatStarten() {
@@ -6885,16 +7108,15 @@ function renderErgebnis() {
     if (L.status.passes < MIN_DURCHGAENGE)
       fehlt.push("noch " + anzahl(MIN_DURCHGAENGE - L.status.passes,
                                   "Durchgang", "Durchgänge"));
-    if (L.status.mastery < GRAD_MASTERY)
-      fehlt.push(`Sicherheit bei ${Math.round(L.status.mastery * 100)} von ${
-        Math.round(GRAD_MASTERY * 100)} %`);
     if (L.status.quote !== undefined && L.status.quote < GRAD_QUOTE)
       fehlt.push(`insgesamt ${Math.round(L.status.quote * 100)} von ${
         Math.round(GRAD_QUOTE * 100)} % richtig`);
+    if (L.status.wacklig > 1)
+      fehlt.push(anzahl(L.status.wacklig, "Regel sitzt", "Regeln sitzen") + " noch nicht");
     h += `<div class="card"><h2>Diese Lektion</h2>
       <div class="wk"><b>Durchgang ${L.status.passes} geschafft</b>
-        <div class="mini"><i style="width:${Math.round(L.status.mastery * 100)}%;
-          background:${L.status.mastery >= 0.7 ? "var(--ok)" : "var(--gold)"}"></i></div></div>
+        <div class="mini"><i style="width:${Math.round(L.status.quote * 100)}%;
+          background:${L.status.quote >= GRAD_QUOTE ? "var(--ok)" : "var(--gold)"}"></i></div></div>
       <p class="sub" style="margin-top:9px">${fehlt.length
         ? "Bis zum Meistern: " + fehlt.join(" · ") + "."
         : "Fast geschafft!"} Ein weiterer Durchgang <b>dieser</b> Lektion zählt
@@ -6966,7 +7188,8 @@ function exportPaket() {
     streakStand: S.streak,
     rules: S.rules,
     schwaechen: schwaechen().map(s => ({ id: s.id, name: s.def.name,
-      mastery: +s.mastery.toFixed(2), seen: s.seen, correct: s.correct })),
+      mastery: +s.mastery.toFixed(2), seen: s.seen, correct: s.correct,
+      quote: +trefferquote(s).toFixed(3) })),
     gemeistert: gemeistert(),
     log: S.log.slice(-300),
     badges: S.badges
