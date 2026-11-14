@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Revision 1C</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇧</text></svg>">
+<style>
+:root{--papier:#f6f2e9;--karte:#fffdf8;--tinte:#26323a;--leise:#6b7780;--teal:#3949ab;--teal2:#e8eaf6;--orange:#e8822a;--orange2:#fdeedd;--rot:#c8453b;--rot2:#fbe7e5;--gruen:#2e8b57;--gruen2:#e3f4ea;--linie:#e3dccd;--r:16px}
+*{box-sizing:border-box}
+html{font-size:17px}
+body{margin:0;background:var(--papier);color:var(--tinte);font-family:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}
+#main{max-width:1000px;margin:0 auto;padding:22px 18px 60px}
+h1{margin:0;font-size:1.9rem;letter-spacing:-.01em}
+h2{font-size:1.15rem;margin:30px 0 12px;color:var(--teal)}
+h3{margin:22px 0 8px}
+small{color:var(--leise);font-weight:400}
+button{font:inherit;cursor:pointer;border:1.5px solid var(--linie);background:var(--karte);color:var(--tinte);border-radius:12px;padding:9px 16px;transition:transform .08s,background .15s,border-color .15s}
+button:hover:not(:disabled){border-color:var(--teal)}
+button:active:not(:disabled){transform:scale(.97)}
+button:disabled{cursor:default}
+button.pri{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
+button.pri:hover:not(:disabled){background:#2c3a8f}
+button.link{border:0;background:none;padding:2px 4px;color:var(--leise);text-decoration:underline}
+.hero{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(120deg,#3949ab,#5c6bc0);color:#fff;border-radius:22px;padding:24px 26px}
+.hero .datum{margin:4px 0 0;opacity:.9}
+.count{background:rgba(255,255,255,.16);border-radius:14px;padding:12px 18px;font-size:1.15rem;text-align:right}
+.count .heute{font-size:.85rem;opacity:.9;margin-top:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+.karte-box,.karte-btn{background:var(--karte);border:1.5px solid var(--linie);border-radius:var(--r);padding:16px 18px}
+.karte-box.test{background:var(--orange2);border-color:#f3c9a0}
+.karte-btn{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px}
+.karte-btn .ico{font-size:1.5rem}
+.kopf{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.kopf .ico{font-size:1.8rem}
+.kt{font-weight:700;font-size:1.05rem}
+.ks{color:var(--leise);font-size:.88rem}
+.fbar{height:8px;width:100%;background:#ece6d8;border-radius:5px;overflow:hidden;margin-top:10px}
+.fbar div{height:100%;background:var(--gruen);border-radius:5px;transition:width .4s}
+.fzahl{font-size:.8rem;color:var(--leise);margin-top:4px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btns.gross button{flex:1;padding:16px;font-size:1.05rem}
+footer{margin-top:40px;text-align:center;font-size:.9rem;color:var(--leise)}
+.leiste{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.leiste h2{margin:0;flex:1;color:var(--tinte);font-size:1.25rem}
+.zurueck{padding:7px 12px;font-size:.92rem}
+.stand{color:var(--leise);font-variant-numeric:tabular-nums}
+.pbar{height:7px;background:#ece6d8;border-radius:5px;overflow:hidden;margin-bottom:18px}
+.pbar div{height:100%;background:var(--orange);width:0;transition:width .35s}
+.hinweis{color:var(--leise);font-size:.93rem}
+.hinweis.inl{margin-left:6px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.chip{border-radius:999px;padding:8px 14px;display:inline-flex;gap:6px;align-items:center;border:1.5px solid var(--linie);background:var(--karte);cursor:pointer;font-size:.95rem}
+.chip.an{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+.chips.klein .chip{padding:5px 12px;font-size:.88rem}
+.aufgabe{background:var(--karte);border:1.5px solid var(--linie);border-radius:20px;padding:22px}
+.nochmal{display:inline-block;background:var(--orange2);color:#a3561a;border-radius:8px;padding:2px 10px;font-size:.85rem;margin-bottom:8px}
+.frage{font-size:1.3rem;font-weight:600;margin-bottom:14px}
+.frage.klein{font-size:1rem;font-weight:500;color:var(--leise);margin-bottom:6px}
+.def{font-size:1.35rem;font-weight:600;margin-bottom:16px}
+.sortwort{font-size:1.6rem;font-weight:700;margin:6px 0 18px;color:var(--teal)}
+.eing{display:flex;gap:10px;margin-top:16px}
+.eing input{flex:1;font:inherit;font-size:1.25rem;padding:11px 14px;border:2px solid var(--linie);border-radius:12px;background:#fff;outline:none}
+.eing input:focus,textarea:focus{border-color:var(--teal)}
+.eing.zahl input{max-width:200px}
+.eing select{font:inherit;font-size:1.1rem;border:2px solid var(--linie);border-radius:12px;padding:0 10px;background:#fff}
+.wackel{animation:wackel .35s}
+@keyframes wackel{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+textarea{width:100%;font:inherit;font-size:1.1rem;padding:12px 14px;border:2px solid var(--linie);border-radius:12px;resize:vertical;outline:none;background:#fff}
+.wahl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wahl.drei{grid-template-columns:repeat(3,1fr)}
+.wahl.ordnen{grid-template-columns:repeat(4,1fr)}
+@media(max-width:640px){.wahl,.wahl.drei,.wahl.ordnen{grid-template-columns:1fr}}
+.wahl button{text-align:left;padding:13px 15px;font-size:1.05rem;display:flex;gap:10px;align-items:center}
+.wahl.ordnen button{justify-content:center}
+.wahl .nr{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:#efe9dc;color:var(--leise);font-size:.8rem}
+.wahl button.ok,.rosengitter button.ok{background:var(--gruen2);border-color:var(--gruen)}
+.wahl button.bad,.rosengitter button.bad{background:var(--rot2);border-color:var(--rot)}
+.wahl.ordnen button:disabled{opacity:.35}
+ol.reihe{min-height:10px;margin:0 0 14px;padding-left:26px;font-size:1.1rem}
+ol.reihe li.ok{color:var(--gruen)} ol.reihe li.bad{color:var(--rot)}
+.feedback{margin-top:16px;border-radius:16px;padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center;animation:rein .2s}
+@keyframes rein{from{opacity:0;transform:translateY(6px)}}
+.feedback .fk{font-weight:700;font-size:1.15rem}
+.feedback .ft{grid-column:1}
+
+.feedback.ok{background:var(--gruen2);border:1.5px solid #a9d8bb}.feedback.ok .fk{color:var(--gruen)}
+.feedback.fast{background:var(--orange2);border:1.5px solid #f3c9a0}.feedback.fast .fk{color:#b5601c}
+.feedback.falsch{background:var(--rot2);border:1.5px solid #ecb7b1}.feedback.falsch .fk{color:var(--rot)}
+.wort{font-weight:700;font-size:1.15rem;letter-spacing:.02em}
+.falschbst{background:#f8c99a;color:#7a3a07;border-radius:3px;padding:0 1px}
+.musterbox{margin-top:16px;background:var(--teal2);border-radius:14px;padding:14px 16px}
+.ml{font-size:.82rem;color:var(--leise);text-transform:uppercase;letter-spacing:.05em;margin-top:10px}
+.ml:first-child{margin-top:0}
+.muster{font-size:1.08rem;font-weight:500;margin-top:3px}
+.kws{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.kw{border-radius:999px;padding:3px 11px;font-size:.9rem}
+.kw.ja{background:var(--gruen2);color:var(--gruen);border:1px solid #a9d8bb}
+.kw.nein{background:#fff;color:var(--leise);border:1px dashed #b9b2a3}
+.schreib{margin-top:10px;background:var(--orange2);border-radius:10px;padding:8px 12px;font-size:.95rem}
+.selbst button.bad{border-color:#ecb7b1}.selbst button.mid{border-color:#f3c9a0}.selbst button.okb{border-color:#a9d8bb;background:var(--gruen2)}
+.selbst button:disabled{opacity:.5}
+details.tipp{margin-top:12px;color:var(--leise)}
+details.tipp summary{cursor:pointer}
+.ende{text-align:center;padding:10px}
+.ende .gross{font-size:2.6rem;font-weight:800;color:var(--teal)}
+.ende .btns{justify-content:center}
+.fehlerliste{text-align:left;display:inline-block;margin:0 auto}
+.info{margin-top:10px;font-size:1.15rem;min-height:1.6em}
+.zettel dt{font-weight:700;margin-top:12px}
+.zettel dd{margin:3px 0 0 0;padding-left:14px;border-left:3px solid var(--teal2)}
+.tab{border-collapse:collapse}.tab td{padding:4px 18px 4px 0;border-bottom:1px solid var(--linie)}
+.konf{position:fixed;top:-12px;width:9px;height:14px;border-radius:2px;z-index:99;animation:fall 2.6s ease-in forwards;pointer-events:none}
+@keyframes fall{to{top:105vh;transform:rotate(720deg) translateX(40px)}}
+
+
+.satz{font-size:1.5rem;font-weight:600;margin:8px 0 6px;line-height:2}
+.quelle{font-size:1.35rem;font-weight:600;background:var(--teal2);border-radius:12px;padding:10px 16px;margin:6px 0 4px;display:inline-block}
+.quelle.inl{font-size:1.2rem;margin-top:8px}
+.tag{background:var(--orange2);color:#a3561a;border-radius:7px;padding:1px 8px;font-weight:600;margin-left:6px}
+input.luecke{font:inherit;font-size:1.35rem;font-weight:600;color:var(--teal);border:0;border-bottom:3px solid var(--teal);background:#f4f5fc;border-radius:6px 6px 0 0;padding:2px 8px;outline:none;text-align:center;min-width:4ch;max-width:100%}
+input.luecke.lang{text-align:left;width:100%!important;font-size:1.25rem;border:2px solid var(--linie);border-radius:12px;padding:10px 14px;background:#fff;color:var(--tinte)}
+input.luecke.lang:focus{border-color:var(--teal)}
+input.luecke.ok{border-color:var(--gruen);background:var(--gruen2);color:var(--gruen)}
+input.luecke.bad{border-color:var(--rot);background:var(--rot2);color:var(--rot)}
+.satzfeld{margin-top:12px}
+.gap{display:inline-block;min-width:3ch;color:var(--leise)}
+.gap.gefuellt{color:var(--gruen);border-bottom:3px solid var(--gruen)}
+.emo-gross{font-size:2.6rem;line-height:1.1}
+.plural{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin:10px 0;font-size:1.35rem}
+.pl-teil{text-align:center}
+.pfeil{font-size:2rem;color:var(--leise)}
+.bildgross{max-width:360px;margin:4px auto 6px;background:#fff;border:1.5px solid var(--linie);border-radius:14px}
+svg.szene{display:block;width:100%;height:auto}
+.emo{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.prepwahl{grid-template-columns:repeat(4,1fr)}
+.prepwahl button{justify-content:center;font-weight:600}
+.bildwahl{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+@media(max-width:700px){.bildwahl,.prepwahl{grid-template-columns:repeat(2,1fr)}}
+.bildwahl button{padding:6px;background:#fff}
+.bildwahl button.ok{background:var(--gruen2);border-color:var(--gruen);border-width:3px}
+.bildwahl button.bad{background:var(--rot2);border-color:var(--rot);border-width:3px}
+.gebaut{min-height:56px;border:2px dashed var(--linie);border-radius:12px;padding:12px 14px;font-size:1.35rem;font-weight:600;margin-bottom:12px}
+.gebaut.ok{border-color:var(--gruen);background:var(--gruen2)}.gebaut.bad{border-color:var(--rot);background:var(--rot2)}
+.gebaut .leer{font-weight:400;color:var(--leise);font-size:1rem}
+.kacheln{display:flex;flex-wrap:wrap;gap:8px}
+.kacheln button{font-size:1.2rem;font-weight:600;padding:9px 16px;background:#f4f5fc}
+.kacheln button:disabled{opacity:.25}
+.regeln{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.regeln.links{text-align:left}
+.regel{background:var(--karte);border:1.5px solid var(--linie);border-left:5px solid var(--teal);border-radius:12px;padding:12px 16px}
+.regel .rt{font-weight:700;color:var(--teal);margin-bottom:4px}
+.regel ul{margin:6px 0 0;padding-left:20px}
+.regel .falle{margin-top:8px;background:var(--rot2);border-radius:8px;padding:4px 10px;font-size:.92rem}
+#rbox .regel{margin-top:12px;grid-column:1/-1}
+.bildleiste{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:14px 0}
+.bildleiste figure{margin:0;background:#fff;border:1.5px solid var(--linie);border-radius:12px;padding:4px;text-align:center}
+.bildleiste figcaption{font-size:.95rem;padding-bottom:4px}
+.schwach{margin-top:16px;background:var(--orange2);border:1.5px solid #f3c9a0;border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+button.klein{padding:5px 14px;font-size:.9rem;margin-left:auto}
+.karte-btn.gemischt{background:var(--teal2)}
+.feedback .fbtns{grid-row:1/span 2;grid-column:2;display:flex;gap:8px}
+.feedback .fbtns button{padding:12px 18px}
+#rbox{grid-column:1/-1}
+.hinw{background:#fff8;border-radius:8px;padding:4px 10px;margin-bottom:6px}
+.btns.mitte{justify-content:center}
+.tab th{text-align:left;padding:4px 18px 4px 0;color:var(--leise);font-weight:500}
+.tab.gross td{font-size:1.05rem}
+
+.beispiel{color:var(--leise);font-size:.95rem;margin:-6px 0 10px}
+.bildzeile{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:8px 0}
+.figur{text-align:center;background:#fff;border:1.5px solid var(--linie);border-radius:14px;padding:8px 14px;min-width:84px}
+.figur .emo-gross{font-size:3rem}
+.fname{font-weight:700;margin-top:2px}
+.haken{font-size:2.4rem;font-weight:800;width:56px;height:56px;border-radius:50%;display:grid;place-items:center}
+.haken.ja{background:var(--gruen2);color:var(--gruen)}.haken.nein{background:var(--rot2);color:var(--rot)}
+.zaehlbild{font-size:2.3rem;display:flex;flex-wrap:wrap;gap:4px;max-width:420px;margin:6px 0 10px}
+.impicon{position:relative;font-size:3.6rem;width:96px;height:96px;display:grid;place-items:center;background:#fff;border:1.5px solid var(--linie);border-radius:16px}
+.impicon .verbot{position:absolute;inset:0;display:grid;place-items:center;font-size:4.6rem;opacity:.85}
+</style>
+</head>
+<body>
+<main id="main"></main>
+<script>
+// ===================== INHALTE: English Revision =====================
+// Stoff laut Lehrerin: verb "be" (positive and negative), plural, prepositions of place,
+// imperative, have/has (not) got. Abgeglichen mit MORE! 1, Units 1–4 (Student's Book + Workbook).
+
+const THEMEN = [
+  { id: "be", name: "verb „be“", sub: "am · is · are – und verneint", icon: "🙋" },
+  { id: "have", name: "have got / has got", sub: "positiv und verneint", icon: "🏴‍☠️" },
+  { id: "plural", name: "Plural", sub: "one frog – two frogs", icon: "🐸" },
+  { id: "prep", name: "Prepositions of place", sub: "in · on · under · behind …", icon: "📦" },
+  { id: "imp", name: "Imperative", sub: "Stand up! · Don't speak!", icon: "📣" },
+];
+
+// Jede abgefragte Regel hat einen Merkkasten (sonst kann man sie nicht nachbessern).
+const REGELN = {
+  "be.am": { thema: "be", name: "I → am",
+    text: "Nur <b>I</b> bekommt <b>am</b>. Kurzform: <b>I'm</b>.", bsp: ["I <b>am</b> eleven. → I<b>'m</b> eleven.", "I<b>'m</b> in class 1C."] },
+  "be.is": { thema: "be", name: "he / she / it → is",
+    text: "<b>he, she, it</b> bekommen <b>is</b>. Auch ein Name oder <i>ein</i> Tier/Ding: Mike = he, Sue = she, the frog = it.", bsp: ["He<b>'s</b> in class 4A. (He <b>is</b> …)", "The parrot <b>is</b> on the car."] },
+  "be.are": { thema: "be", name: "you / we / they → are",
+    text: "<b>you, we, they</b> bekommen <b>are</b>. Auch alles in der Mehrzahl: Rahim and Sue = they, the monkeys = they.", bsp: ["We<b>'re</b> from York. (We <b>are</b> …)", "Rahim and Sue <b>are</b> 11."] },
+  "be.kurz": { thema: "be", name: "Kurzformen von be",
+    text: "Statt <b>am / is / are</b> schreibt man oft die Kurzform mit Apostroph.",
+    tab: [["I am", "I'm"], ["you are", "you're"], ["he is", "he's"], ["she is", "she's"], ["it is", "it's"], ["we are", "we're"], ["they are", "they're"]] },
+  "be.not": { thema: "be", name: "be verneinen: not dahinter",
+    text: "Das <b>not</b> kommt <b>hinter</b> am / is / are – nie davor! Kurzformen: <b>isn't</b> (= is not), <b>aren't</b> (= are not), <b>I'm not</b>. (Es gibt kein „amn't“.)",
+    bsp: ["Richard <b>isn't</b> hot. He's cold.", "We <b>aren't</b> late.", "I<b>'m not</b> tired."],
+    falle: "Falsch: <s>She not is happy.</s> · <s>She don't happy.</s>" },
+  "have.have": { thema: "have", name: "I / you / we / they → have got",
+    text: "<b>I, you, we, they</b> (und alles in der Mehrzahl) bekommen <b>have got</b>. Kurzform: <b>'ve got</b>.", bsp: ["I <b>have got</b> a cat. → I<b>'ve got</b> a cat.", "They <b>have got</b> a big ship."] },
+  "have.has": { thema: "have", name: "he / she / it → has got",
+    text: "<b>he, she, it</b> (und ein Name oder <i>ein</i> Tier/Ding) bekommen <b>has got</b>. Kurzform: <b>'s got</b>.", bsp: ["She <b>has got</b> red hair. → She<b>'s got</b> red hair.", "Blackbeard <b>has got</b> a ship."] },
+  "have.not": { thema: "have", name: "have got verneinen",
+    text: "Das <b>not</b> kommt zwischen have/has und got: <b>haven't got</b> und <b>hasn't got</b>.",
+    bsp: ["I <b>haven't got</b> a red ship.", "Tamara <b>hasn't got</b> a laptop."],
+    falle: "he / she / it → <b>hasn't</b> got (nicht haven't). Und das <b>got</b> nicht vergessen!" },
+  "pl.s": { thema: "plural", name: "Plural: einfach -s",
+    text: "Meistens hängt man in der Mehrzahl einfach ein <b>-s</b> an.", bsp: ["a dog → 4 dog<b>s</b>", "a bear → 7 bear<b>s</b>"] },
+  "pl.y": { thema: "plural", name: "Plural: -y wird zu -ies",
+    text: "Endet ein Nomen auf Mitlaut + <b>y</b> (z. B. -by), wird daraus <b>-ies</b>. <b>Aber:</b> Steht ein Selbstlaut vor dem y (a, e, o, u), kommt nur <b>-s</b> dazu.", bsp: ["a baby → 8 bab<b>ies</b>", "<b>Aber:</b> a boy → 3 boy<b>s</b>"] },
+  "pl.es": { thema: "plural", name: "Plural: -es",
+    text: "Endet ein Nomen auf <b>s, ss, sh, ch</b> oder <b>x</b>, hängt man <b>-es</b> an – sonst könnte man es nicht aussprechen.", bsp: ["bus → bus<b>es</b>", "box → box<b>es</b>", "sandwich → sandwich<b>es</b>"] },
+  "pl.irr": { thema: "plural", name: "Ausnahmen (irregular plurals)",
+    text: "Diese Wörter bekommen kein -s – sie muss man auswendig lernen. Die ersten vier stehen in deinem Buch.",
+    tab: [["a child", "five children"], ["a fish", "three fish"], ["one foot", "two feet"], ["one tooth", "five teeth"], ["a man", "men"], ["a woman", "women"], ["a mouse", "mice"]] },
+  "prep.in": { thema: "prep", name: "in = in", text: "<b>in</b> – drinnen.", bsp: ["It's <b>in</b> the box."] },
+  "prep.on": { thema: "prep", name: "on = auf", text: "<b>on</b> – oben drauf.", bsp: ["The parrot is <b>on</b> the car."] },
+  "prep.under": { thema: "prep", name: "under = unter", text: "<b>under</b> – darunter.", bsp: ["There's a dog <b>under</b> the desk."] },
+  "prep.next": { thema: "prep", name: "next to = neben", text: "<b>next to</b> – daneben. Immer zwei Wörter!", bsp: ["He's <b>next to</b> a giraffe."] },
+  "prep.behind": { thema: "prep", name: "behind = hinter", text: "<b>behind</b> – dahinter. Man sieht oft nur ein Stück davon.", bsp: ["It's <b>behind</b> the tree."] },
+  "prep.front": { thema: "prep", name: "in front of = vor", text: "<b>in front of</b> – davor. Drei Wörter!", bsp: ["The tree is <b>in front of</b> you."] },
+  "imp.pos": { thema: "imp", name: "Imperativ (Befehlsform)",
+    text: "So sagst du, dass jemand etwas <b>tun soll</b>: Du nimmst die <b>Grundform</b> des Verbs und stellst sie <b>an den Anfang</b>. Kein <i>you</i> davor!", bsp: ["<b>Stand</b> up!", "<b>Close</b> the window!", "<b>Open</b> your books!"] },
+  "imp.neg": { thema: "imp", name: "Verneinter Imperativ: Don't …",
+    text: "So sagst du, dass jemand etwas <b>nicht tun soll</b>: <b>Don't</b> (= do not) vor die Grundform.", bsp: ["<b>Don't</b> stand up!", "<b>Don't</b> speak.", "<b>Don't</b> be late."],
+    falle: "Falsch: <s>Not speak!</s> · <s>Don't speaking!</s> · <s>You don't speak!</s>" },
+};
+
+// ---------- Satzbausteine (Wörter aus MORE! 1, Units 1–4) ----------
+const SUBJ = [
+  { s: "I", p: "I", k: "I" },
+  { s: "you", p: "you", k: "pl" },
+  { s: "he", p: "he", k: "3" }, { s: "she", p: "she", k: "3" }, { s: "it", p: "it", k: "3", tier: true },
+  { s: "we", p: "we", k: "pl" }, { s: "they", p: "they", k: "pl" },
+  { s: "Mike", p: "he", k: "3" }, { s: "Sue", p: "she", k: "3" }, { s: "Ben", p: "he", k: "3" }, { s: "Mia", p: "she", k: "3" },
+  { s: "Miss Baker", p: "she", k: "3" }, { s: "Mr Nibbs", p: "he", k: "3" }, { s: "my sister", p: "she", k: "3" }, { s: "my brother", p: "he", k: "3" },
+  { s: "the parrot", p: "it", k: "3", tier: true }, { s: "the dog", p: "it", k: "3", tier: true }, { s: "the frog", p: "it", k: "3", tier: true },
+  { s: "Rahim and Sue", p: "they", k: "pl" }, { s: "Sam and Catherine", p: "they", k: "pl" }, { s: "my friends", p: "they", k: "pl" },
+  { s: "the children", p: "they", k: "pl" }, { s: "the monkeys", p: "they", k: "pl", tier: true }, { s: "the penguins", p: "they", k: "pl", tier: true },
+];
+const GEFUEHLE = [
+  { w: "happy", e: "😀" }, { w: "sad", e: "😢" }, { w: "angry", e: "😠" }, { w: "scared", e: "😱" }, { w: "bored", e: "🥱" },
+  { w: "tired", e: "😴" }, { w: "hot", e: "🥵" }, { w: "cold", e: "🥶" }, { w: "excited", e: "🤩" }, { w: "nervous", e: "😬" },
+];
+const BE_PRAED = ["happy", "sad", "angry", "scared", "bored", "tired", "hungry", "nervous", "excited", "cold", "hot", "eleven", "in class 1C",
+  "from England", "from London", "at the zoo", "at home", "late", "in the classroom", "very proud"];
+const BE_PRAED_TIER = ["happy", "hungry", "tired", "scared", "at the zoo", "in the tree", "small", "big", "beautiful", "on the car"];
+const HAVE_OBJ = ["red hair", "long hair", "blue eyes", "green eyes", "a big nose", "a cat", "a dog", "a laptop", "a tablet", "a new car",
+  "a skateboard", "a sister", "a brother", "a big house", "a lot of homework", "a pencil case", "a ship", "a parrot", "a wooden leg", "big feet"];
+const HAVE_OBJ_TIER = ["green eyes", "a long tail", "big ears", "four legs", "a small nose", "big teeth"];
+// Bildkarten für have got: Name, Gesicht, Ding (Emoji, Wort)
+const KARTEN_LEUTE = [["Sheila", "👧", "3", "she"], ["Mary", "👩", "3", "she"], ["James", "👦", "3", "he"], ["Ken", "🧑", "3", "he"], ["Julia", "👧", "3", "she"],
+  ["Marcus", "👨", "3", "he"], ["Greybeard", "🧔", "3", "he"], ["Tamara", "👩‍🦰", "3", "she"], ["Fred and Frank", "🧔🧔", "pl", "they"], ["Tom and Lisa", "👦👧", "pl", "they"]];
+// Leute für „Correct the sentences“ (Workbook S. 34)
+const KORR_LEUTE = [["Richard", "he", "3"], ["Sharon", "she", "3"], ["Mr Nibbs", "he", "3"], ["Paula", "she", "3"], ["Mehmet", "he", "3"], ["William", "he", "3"],
+  ["Jane and Harry", "they", "pl"], ["Louis and Rachel", "they", "pl"], ["Anna and Mary", "they", "pl"]];
+const KARTEN_DINGE = [["🐈", "a cat"], ["🐕", "a dog"], ["💻", "a laptop"], ["🚢", "a ship"], ["🎩", "a hat"], ["🍎", "an apple"], ["⚽", "a ball"],
+  ["🐊", "a crocodile"], ["🛹", "a skateboard"], ["🦜", "a parrot"], ["🚲", "a bike"], ["📚", "a lot of books"], ["🍦", "a big ice cream"], ["🐒", "two monkeys"]];
+
+// ---------- Plural ----------
+// [Einzahl, Mehrzahl, Regel, Emoji]
+const PLURAL = [
+  ["gorilla", "gorillas", "pl.s", "🦍"], ["frog", "frogs", "pl.s", "🐸"], ["cat", "cats", "pl.s", "🐈"], ["dog", "dogs", "pl.s", "🐕"],
+  ["bear", "bears", "pl.s", "🐻"], ["insect", "insects", "pl.s", "🐞"], ["crocodile", "crocodiles", "pl.s", "🐊"], ["giraffe", "giraffes", "pl.s", "🦒"],
+  ["parrot", "parrots", "pl.s", "🦜"], ["monkey", "monkeys", "pl.y", "🐒"], ["penguin", "penguins", "pl.s", "🐧"], ["lion", "lions", "pl.s", "🦁"],
+  ["book", "books", "pl.s", "📕"], ["chair", "chairs", "pl.s", "🪑"], ["ball", "balls", "pl.s", "⚽"], ["banana", "bananas", "pl.s", "🍌"],
+  ["tablet", "tablets", "pl.s", "📱"], ["pencil case", "pencil cases", "pl.s", "👝"], ["pencil", "pencils", "pl.s", "✏️"], ["ruler", "rulers", "pl.s", "📏"],
+  ["apple", "apples", "pl.s", "🍎"], ["car", "cars", "pl.s", "🚗"], ["train", "trains", "pl.s", "🚂"], ["tree", "trees", "pl.s", "🌳"],
+  ["baby", "babies", "pl.y", "👶"], ["boy", "boys", "pl.y", "👦"], ["family", "families", "pl.y", "👪"], ["butterfly", "butterflies", "pl.y", "🦋"],
+  ["strawberry", "strawberries", "pl.y", "🍓"], ["party", "parties", "pl.y", "🎉"], ["key", "keys", "pl.y", "🔑"], ["day", "days", "pl.y", "📅"], ["toy", "toys", "pl.y", "🧸"],
+  ["bus", "buses", "pl.es", "🚌"], ["box", "boxes", "pl.es", "📦"], ["watch", "watches", "pl.es", "⌚"], ["sandwich", "sandwiches", "pl.es", "🥪"],
+  ["glass", "glasses", "pl.es", "🥛"], ["paintbrush", "paintbrushes", "pl.es", "🖌️"], ["fox", "foxes", "pl.es", "🦊"],
+  ["child", "children", "pl.irr", "🧒"], ["fish", "fish", "pl.irr", "🐟"], ["foot", "feet", "pl.irr", "🦶"], ["tooth", "teeth", "pl.irr", "🦷"],
+  ["man", "men", "pl.irr", "👨"], ["woman", "women", "pl.irr", "👩"], ["mouse", "mice", "pl.irr", "🐁"],
+];
+const ZAHLWORT = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+
+// ---------- Präpositionen (Buch: in, on, under, behind, in front of, next to) ----------
+// obj: Dinge, bei denen sich die Präposition gut zeichnen lässt
+const PREPS = [
+  { id: "in", wort: "in", regel: "prep.in", obj: ["box", "car", "tree"] },
+  { id: "on", wort: "on", regel: "prep.on", obj: ["table", "box", "car"] },
+  { id: "under", wort: "under", regel: "prep.under", obj: ["table", "car"] },
+  { id: "next", wort: "next to", regel: "prep.next", obj: ["box", "table", "car", "tree"] },
+  { id: "behind", wort: "behind", regel: "prep.behind", obj: ["box", "tree", "car"] },
+  { id: "front", wort: "in front of", regel: "prep.front", obj: ["box", "car", "tree"] },
+];
+const DINGE = [{ n: "cat", e: "🐈" }, { n: "dog", e: "🐕" }, { n: "frog", e: "🐸" }, { n: "parrot", e: "🦜" }, { n: "monkey", e: "🐒" },
+  { n: "penguin", e: "🐧" }, { n: "mouse", e: "🐁" }, { n: "ball", e: "⚽" }];
+
+// ---------- Imperativ (Klassenzimmer-Anweisungen aus Unit 1) ----------
+const IMP_POS = ["Stand up.", "Sit down.", "Open your books.", "Close your books.", "Open the window.", "Close the window.", "Close the door.",
+  "Take out your books.", "Take out your scissors.", "Take out your pencil case.", "Clean the board.", "Switch on your tablets.",
+  "Switch off your tablets.", "Be quiet.", "Listen to the guide.", "Feed the penguins."];
+const IMP_NEG = ["Don't speak.", "Don't sing.", "Don't stand up.", "Don't sit down.", "Don't open your books.", "Don't take out your books.",
+  "Don't write on the desk.", "Don't be late.", "Don't open the window.", "Don't run around."];
+// Bild + deutscher Hinweis → Anweisung (wie Workbook S. 8, Übung 13)
+const IMP_BILD = [
+  ["🧍", "aufstehen", "Stand up."], ["🪑", "sich hinsetzen", "Sit down."], ["📖", "die Bücher aufmachen", "Open your books."],
+  ["📕", "die Bücher zumachen", "Close your books."], ["🪟", "das Fenster aufmachen", "Open the window."], ["🚪", "die Tür zumachen", "Close the door."],
+  ["✂️", "die Schere herausnehmen", "Take out your scissors."], ["🧽", "die Tafel putzen", "Clean the board."], ["📱", "die Tablets einschalten", "Switch on your tablets."],
+  ["🤫", "nicht reden", "Don't speak."], ["🎤", "nicht singen", "Don't sing."], ["✍️", "nicht auf den Tisch schreiben", "Don't write on the desk."],
+  ["⏰", "nicht zu spät kommen", "Don't be late."], ["🧍", "nicht aufstehen", "Don't stand up."], ["🪑", "sich nicht hinsetzen", "Don't sit down."],
+  ["📖", "die Bücher nicht aufmachen", "Don't open your books."],
+];
+const IMP_SITU = [
+  { q: "In der Klasse ist es sehr laut. Die Lehrerin sagt:", r: "Be quiet, please!", f: ["You are quiet, please!", "Don't be quiet, please!", "Quiet be, please!"] },
+  { q: "Die Schülerinnen sollen nicht miteinander reden:", r: "Don't speak!", f: ["Not speak!", "Don't speaking!", "You don't speak!"] },
+  { q: "Es ist kalt und das Fenster ist offen. Du sagst zu deinem Bruder:", r: "Close the window, please.", f: ["Closes the window, please.", "You close the window, please.", "Don't close the window, please."] },
+  { q: "Alle sollen ihre Schere herausnehmen:", r: "Take out your scissors.", f: ["Takes out your scissors.", "You take out your scissors.", "Taking out your scissors."] },
+  { q: "Die Lehrerin will, dass alle aufstehen:", r: "Stand up, please.", f: ["Stands up, please.", "You stand up, please.", "Don't stand up, please."] },
+  { q: "Im Zoo: Hunde dürfen hier nicht herumlaufen.", r: "Don't run around!", f: ["Not run around!", "Don't runs around!", "Run around!"] },
+  { q: "Niemand soll auf den Tisch schreiben:", r: "Don't write on the desk!", f: ["Not write on the desk!", "Don't writing on the desk!", "Write on the desk!"] },
+  { q: "Morgen ist der Ausflug. Die Lehrerin sagt: Kommt nicht zu spät!", r: "Don't be late!", f: ["Not be late!", "Don't are late!", "Be late!"] },
+];
+
+"use strict";
+// ===================== English Revision – App =====================
+const TESTTAG = new Date(2026, 10, 17); // Dienstag, 17. November 2026
+const KEY = "englrev1c_v1";
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+function anzahl(n, ein, mehr) { return n + " " + (n === 1 ? ein : mehr); }
+
+// ---------- Speicher ----------
+let S = { r: {}, log: [], ton: true };
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) { }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+function rec(id, ok) { const it = S.r[id] || (S.r[id] = { s: 0, ok: 0, w: 0 }); if (ok) { it.s++; it.ok++; } else { it.s = 0; it.w++; } it.t = Date.now(); save(); }
+const SITZT = 3;
+const sitzt = (id) => (S.r[id]?.s || 0) >= SITZT;
+function prio(id) { const it = S.r[id]; if (!it) return 1; if (it.s === 0) return 0; return it.s >= SITZT ? 3 + it.s : 2; }
+const regelnVon = (thema) => Object.keys(REGELN).filter((k) => REGELN[k].thema === thema);
+
+// ---------- Ton & Konfetti ----------
+let AC = null;
+function ton(ok) {
+  if (!S.ton) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    (ok ? [660, 880] : [300, 220]).forEach((f, i) => {
+      const o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; o.connect(g); g.connect(AC.destination);
+      const t = AC.currentTime + i * 0.11; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18); o.start(t); o.stop(t + 0.2);
+    });
+  } catch (e) { }
+}
+function konfetti() {
+  const cols = ["#e8822a", "#3949ab", "#c62828", "#f2c14e", "#2e8b57"];
+  for (let i = 0; i < 60; i++) { const d = document.createElement("div"); d.className = "konf"; d.style.left = Math.random() * 100 + "vw"; d.style.background = pick(cols); d.style.animationDelay = Math.random() * 0.6 + "s"; document.body.appendChild(d); setTimeout(() => d.remove(), 3200); }
+}
+
+// ---------- Text prüfen ----------
+function norm(s) { return String(s).normalize("NFC").replace(/[’‘´`]/g, "'").replace(/\s+/g, " ").replace(/\s*([.!?,])/g, "$1").replace(/[.!?\s]+$/, "").trim(); }
+function levM(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d;
+}
+const lev = (a, b) => levM(a, b)[a.length][b.length];
+function diffHTML(eingabe, richtig) {
+  const a = eingabe, b = richtig, d = levM(a.toLowerCase(), b.toLowerCase());
+  let i = a.length, j = b.length; const mark = Array(b.length).fill(false);
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && d[i][j] === d[i - 1][j - 1] + (a[i - 1].toLowerCase() === b[j - 1].toLowerCase() ? 0 : 1)) { if (a[i - 1] !== b[j - 1]) mark[j - 1] = true; i--; j--; }
+    else if (j > 0 && d[i][j] === d[i][j - 1] + 1) { mark[j - 1] = true; j--; }
+    else { i--; if (j > 0) mark[Math.min(j, b.length - 1)] = true; }
+  }
+  return [...b].map((c, k) => mark[k] ? `<span class="falschbst">${esc(c)}</span>` : esc(c)).join("");
+}
+// satz=true: ganzer Satz (Großschreibung am Anfang zählt), sonst Lückenwort
+function pruefe(eingabe, accepts, satz) {
+  const e = norm(eingabe); const acc = accepts.map(norm);
+  if (!e) return { res: "falsch", best: acc[0] };
+  for (const a of acc) if (e === a) return { res: "ok", best: a };
+  for (const a of acc) if (e.toLowerCase() === a.toLowerCase()) {
+    if (!satz) return { res: "ok", best: a };
+    return { res: "fast", best: a, eingabe: e, grund: "Am Satzanfang schreibt man groß." };
+  }
+  let best = null, bd = 99;
+  for (const a of acc) { const v = lev(e.toLowerCase(), a.toLowerCase()); if (v < bd) { bd = v; best = a; } }
+  const grenze = best.length <= 4 ? 0 : best.length <= 7 ? 1 : 2;
+  // Ein Apostroph mehr oder weniger ist ein Schreibfehler, kein Grammatikfehler
+  if (bd <= grenze || e.replace(/'/g, "").toLowerCase() === best.replace(/'/g, "").toLowerCase())
+    return { res: "fast", best, eingabe: e, grund: "Fast! Achte genau auf die Schreibweise." };
+  return { res: "falsch", best: acc[0], eingabe: e };
+}
+// Steht die geübte Form (z. B. "isn't", "hasn't got", "Don't run") genau so im Satz? Apostroph egal.
+function kernStimmt(v, t) {
+  if (!t.kern) return true;
+  const e = norm(v).toLowerCase().replace(/'/g, "");
+  return t.kern.some((k) => { const kk = k.toLowerCase().replace(/'/g, ""); return t.anfang ? e.startsWith(kk) : (" " + e + " ").includes(k.startsWith("'") ? kk + " " : " " + kk + " "); });
+}
+// typische Fehler erkennen und auf Deutsch erklären
+function fehlerHinweis(regel, eingabe, ctx = {}) {
+  const e = " " + norm(eingabe).toLowerCase() + " ";
+  if (regel === "be.not" || regel.startsWith("be.")) {
+    if (/ not (am|is|are) /.test(e)) return "Das <b>not</b> kommt <b>hinter</b> am / is / are – nicht davor.";
+    if (/ (don't|doesn't|do not|does not) /.test(e)) return "Bei <b>be</b> braucht man kein don't / doesn't: einfach <b>isn't</b> oder <b>aren't</b>.";
+    if (/amn't/.test(e)) return "„amn't“ gibt es nicht. Richtig: <b>I'm not</b> oder <b>I am not</b>.";
+    if (ctx.k === "3" && / (are|aren't) /.test(e)) return `<b>${esc(ctx.s)}</b> = ${ctx.p} → <b>is</b> / <b>isn't</b>.`;
+    if (ctx.k === "pl" && / (is|isn't) /.test(e)) return `<b>${esc(ctx.s)}</b> = ${ctx.p} → <b>are</b> / <b>aren't</b>.`;
+  }
+  if (regel.startsWith("have.")) {
+    if (/ (don't|doesn't) have /.test(e)) return "Wir üben <b>have got</b>: also <b>haven't got</b> / <b>hasn't got</b>.";
+    if (/ not (have|has) /.test(e)) return "Das <b>not</b> kommt hinter have / has: <b>haven't got</b>, <b>hasn't got</b>.";
+    if (ctx.k === "3" && / (have|haven't) /.test(e)) return `<b>${esc(ctx.s)}</b> = ${ctx.p} → <b>has</b> got / <b>hasn't</b> got.`;
+    if (ctx.k !== "3" && / (has|hasn't) /.test(e)) return `<b>${esc(ctx.s)}</b> = ${ctx.p} → <b>have</b> got / <b>haven't</b> got.`;
+    if (!/ got /.test(e)) return "Vergiss das <b>got</b> nicht!";
+  }
+  if (regel.startsWith("imp.")) {
+    if (/^ not /.test(e)) return "Verneint wird mit <b>Don't</b>, nicht mit „Not“.";
+    if (/^ you /.test(e)) return "Beim Imperativ steht kein <b>you</b> am Anfang.";
+    if (/ don't \w+ing /.test(e)) return "Nach <b>Don't</b> kommt die Grundform – ohne -ing.";
+    if (regel === "imp.pos" && /^ (don't|do not) /.test(e)) return "Positiv heißt: <b>ohne Don't</b>.";
+    if (ctx.ziel) { const soll = norm(ctx.ziel).toLowerCase().split(" "), ist = norm(eingabe).toLowerCase().split(" ");
+      for (let i = 0; i < Math.min(soll.length, ist.length); i++) if (ist[i] === soll[i] + "s" || ist[i] === soll[i] + "es") return `Beim Imperativ steht die Grundform: <b>${soll[i]}</b>, ohne -s.`; }
+  }
+  return "";
+}
+
+// ---------- Grammatik-Helfer ----------
+function pluralHinweis(t, e) {
+  if (e === t.pl) return "";
+  if (t.regel === "pl.irr" && /s$/.test(e) && !/s$/.test(t.pl)) return `<b>${t.sg}</b> ist eine Ausnahme – kein -s!`;
+  if (t.regel === "pl.y" && /ys$/.test(e) && /ies$/.test(t.pl)) return "Vor dem y steht ein Mitlaut → <b>-ies</b>.";
+  if (t.regel === "pl.y" && /ies$/.test(e) && /ys$/.test(t.pl)) return "Vor dem y steht ein Selbstlaut (a, e, o, u) → nur <b>-s</b>.";
+  if (t.regel === "pl.es" && !/es$/.test(e)) return "Nach s, ss, sh, ch, x → <b>-es</b>.";
+  if (e === t.sg) return "Das ist noch die Einzahl!";
+  return "";
+}
+const BE = { I: "am", "3": "is", pl: "are" };
+const BE_NOT = { I: ["'m not", "am not"], "3": ["isn't", "is not"], pl: ["aren't", "are not"] };
+const BE_KURZ = { I: "I'm", you: "you're", he: "he's", she: "she's", it: "it's", we: "we're", they: "they're" };
+const regelBe = (k) => ({ I: "be.am", "3": "be.is", pl: "be.are" }[k]);
+const grund = (sub, form) => sub.k === "I" ? `<b>I</b> → <b>${form}</b>` : sub.s === sub.p ? `<b>${sub.s}</b> → <b>${form}</b>` : `<b>${esc(sub.s)}</b> = ${sub.p} → <b>${form}</b>`;
+function subjekt(k, fuerHave) { return pick(SUBJ.filter((x) => x.k === k && !(fuerHave && x.s === "it"))); }
+const praed = (sub) => pick(sub.tier ? BE_PRAED_TIER : BE_PRAED);
+const objekt = (sub) => pick(sub.tier ? HAVE_OBJ_TIER : HAVE_OBJ);
+function beSatzLang(sub, P, neg) { return cap(`${sub.s} ${neg ? BE[sub.k] + " not" : BE[sub.k]} ${P}.`); }
+function beSatzKurz(sub, P) { // verneinte Kurzform
+  if (sub.k === "I") return `I'm not ${P}.`;
+  return cap(`${sub.s} ${sub.k === "3" ? "isn't" : "aren't"} ${P}.`);
+}
+function beVarianten(sub, P) { // alle richtigen verneinten Sätze
+  const v = [beSatzKurz(sub, P), beSatzLang(sub, P, true)];
+  if (BE_KURZ[sub.s]) v.push(cap(`${BE_KURZ[sub.s]} not ${P}.`)); // she's not / they're not
+  return v;
+}
+
+// =====================================================
+// AUFGABEN-GENERATOREN – je Regel
+// =====================================================
+const GEN = {};
+function luecke(regel, satzMitLuecke, accept, erklaer, extra = {}) { return { typ: "luecke", regel, satz: satzMitLuecke, accept, erklaer, ...extra }; }
+function wahl(regel, frage, richtig, falsch, erklaer, extra = {}) { return { typ: "wahl", regel, frage, opts: shuffle([[richtig, true], ...falsch.map((f) => [f, false])]), richtig, erklaer, ...extra }; }
+
+for (const k of ["I", "3", "pl"]) {
+  GEN[regelBe(k)] = () => {
+    const sub = subjekt(k), P = praed(sub), form = BE[k];
+    const g = GEFUEHLE.find((x) => x.w === P), bild = g ? g.e : "";
+    const satz = cap(`${sub.s} ___ ${P}.`);
+    if (Math.random() < 0.3) return wahl(regelBe(k), satz, form, ["am", "is", "are"].filter((x) => x !== form), grund(sub, form), { ctx: sub, satzLuecke: true, emoji: bild });
+    return luecke(regelBe(k), satz, [form], grund(sub, form), { ctx: sub, bild });
+  };
+}
+GEN["be.kurz"] = () => {
+  const p = pick(Object.keys(BE_KURZ)); const lang = `${p} ${p === "I" ? "am" : ["he", "she", "it"].includes(p) ? "is" : "are"}`;
+  return { typ: "frei", regel: "be.kurz", frage: `Schreib die Kurzform: <b>${esc(lang)}</b>`, accept: [BE_KURZ[p]], satz: false, erklaer: `${esc(lang)} → <b>${BE_KURZ[p]}</b>` };
+};
+// „Correct the sentences“: Bild zeigt das echte Gefühl, der Satz behauptet ein falsches
+function korrektur() {
+  const [name, p, k] = pick(KORR_LEUTE), [falsch, echt] = shuffle(GEFUEHLE).slice(0, 2);
+  const P = cap(p), negs = k === "3" ? ["isn't", "is not"] : ["aren't", "are not"], poss = k === "3" ? [`${P} is`, `${P}'s`, `${name} is`] : [`${P} are`, `${P}'re`, `${name} are`];
+  const acc = [];
+  for (const s of [name, P]) for (const n of negs) for (const q of poss) acc.push(`${s} ${n} ${falsch.w}. ${q} ${echt.w}.`);
+  if (k === "3") for (const q of poss) acc.push(`${P}'s not ${falsch.w}. ${q} ${echt.w}.`);
+  const richtig = `${P} ${negs[0]} ${falsch.w}. ${poss[1]} ${echt.w}.`;
+  return { typ: "frei", regel: "be.not", frage: "Schau dir das Bild an und <b>verbessere</b> den Satz:", beispiel: "Richard is hot. 🥶 → He isn't hot. He's cold.",
+    bild: echt.e, bildName: name, quelle: `${name} ${k === "3" ? "is" : "are"} ${falsch.w}.`, accept: acc, satz: true, ctx: { s: name, p, k },
+    kern: k === "3" ? ["isn't", "is not", "'s not"] : ["aren't", "are not"], erklaer: `Richtig: <b>${esc(richtig)}</b>` };
+}
+GEN["be.not"] = () => {
+  const k = pick(["I", "3", "3", "pl", "pl"]), sub = subjekt(k), P = praed(sub);
+  const r = Math.random();
+  if (r < 0.4) {
+    const kurz = BE_NOT[k][0], lang = BE_NOT[k][1];
+    const satz = cap(`${sub.s} ___ ${P}.`);
+    const acc = k === "I" ? ["am not"] : [kurz, lang];
+    return luecke("be.not", satz, acc, `${grund(sub, kurz)} (lang: ${lang})`, { ctx: sub, hinweis: "(not)", ichLuecke: k === "I" });
+  }
+  if (r < 0.55) return korrektur();
+  if (r < 0.8) {
+    const quelle = beSatzLang(sub, P, false);
+    return { typ: "frei", regel: "be.not", frage: "Mach den Satz <b>negativ</b>:", quelle, accept: beVarianten(sub, P), satz: true, ctx: sub, kern: k === "I" ? ["'m not", "am not"] : [BE_NOT[k][0], BE_NOT[k][1], "'s not", "'re not"], erklaer: `Richtig: <b>${esc(beSatzKurz(sub, P))}</b> oder <b>${esc(beSatzLang(sub, P, true))}</b>` };
+  }
+  const S = cap(sub.s), f = BE[k];
+  const falsch = k === "I" ? [`I amn't ${P}.`, `I not am ${P}.`, `I don't ${P}.`] : [`${S} not ${f} ${P}.`, `${S} ${k === "3" ? "doesn't" : "don't"} ${P}.`, `${S} ${k === "3" ? "aren't" : "isn't"} ${P}.`];
+  return wahl("be.not", "Welcher Satz ist <b>richtig</b>?", beSatzKurz(sub, P), falsch, `${esc(beSatzKurz(sub, P))} – ${REGELN["be.not"].name}`, { ctx: sub });
+};
+
+for (const [regel, k3] of [["have.have", false], ["have.has", true]]) {
+  GEN[regel] = () => {
+    if (Math.random() < 0.3) return haveKarte(regel);
+    const sub = subjekt(k3 ? "3" : pick(["I", "pl"]), true), O = objekt(sub), form = k3 ? "has" : "have";
+    const satz = cap(`${sub.s} ___ got ${O}.`);
+    if (Math.random() < 0.3) return wahl(regel, satz, form, [k3 ? "have" : "has", "is", "are"], grund(sub, form + " got"), { ctx: sub, satzLuecke: true });
+    return luecke(regel, satz, [form], grund(sub, form + " got"), { ctx: sub });
+  };
+}
+// Bildkarte: Person + Ding + ✓/✗ → ganzer Satz (wie Workbook S. 25, Übung 11)
+function haveKarte(regel) {
+  const pool = KARTEN_LEUTE.filter((x) => regel === "have.not" ? true : regel === "have.has" ? x[2] === "3" : x[2] === "pl");
+  const [name, gesicht, k, p] = pick(pool), [emo, ding] = pick(KARTEN_DINGE), hat = regel !== "have.not";
+  const P = cap(p), k3 = k === "3", acc = [];
+  for (const s of [name, P]) {
+    if (hat) { acc.push(`${s} ${k3 ? "has" : "have"} got ${ding}.`); if (k3) acc.push(`${s}'s got ${ding}.`); else if (s === P) acc.push(`${P}'ve got ${ding}.`); }
+    else acc.push(`${s} ${k3 ? "hasn't" : "haven't"} got ${ding}.`, `${s} ${k3 ? "has not" : "have not"} got ${ding}.`);
+  }
+  const richtig = hat ? `${name} ${k3 ? "has" : "have"} got ${ding}.` : `${name} ${k3 ? "hasn't" : "haven't"} got ${ding}.`;
+  return { typ: "karte", regel, name, gesicht, emo, hat, accept: acc, satz: true, ctx: { s: name, p, k },
+    kern: hat ? [k3 ? "has got" : "have got", k3 ? "'s got" : "'ve got"] : [k3 ? "hasn't got" : "haven't got", k3 ? "has not got" : "have not got"], erklaer: `Richtig: <b>${esc(richtig)}</b>` };
+}
+GEN["have.not"] = () => {
+  if (Math.random() < 0.35) return haveKarte("have.not");
+  const k = pick(["I", "3", "3", "pl"]), sub = subjekt(k, true), O = objekt(sub);
+  const k3 = k === "3", kurz = k3 ? "hasn't" : "haven't", lang = k3 ? "has not" : "have not";
+  const S = cap(sub.s), r = Math.random();
+  const richtig = `${S} ${kurz} got ${O}.`, varianten = [richtig, `${S} ${lang} got ${O}.`];
+  if (r < 0.4) return luecke("have.not", `${S} ___ got ${O}.`, [kurz, lang], `${grund(sub, kurz + " got")}`, { ctx: sub, hinweis: "(not)" });
+  if (r < 0.75) return { typ: "frei", regel: "have.not", frage: "Mach den Satz <b>negativ</b>:", quelle: `${S} ${k3 ? "has" : "have"} got ${O}.`, accept: varianten, satz: true, ctx: sub, kern: [kurz + " got", lang + " got"], erklaer: `Richtig: <b>${esc(richtig)}</b>` };
+  return wahl("have.not", "Welcher Satz ist <b>richtig</b>?", richtig, [`${S} ${k3 ? "haven't" : "hasn't"} got ${O}.`, `${S} ${k3 ? "doesn't" : "don't"} have got ${O}.`, `${S} not ${k3 ? "has" : "have"} got ${O}.`], `${grund(sub, kurz + " got")}`, { ctx: sub });
+};
+
+for (const regel of regelnVon("plural")) {
+  GEN[regel] = () => {
+    const [sg, pl, , emo] = pick(PLURAL.filter((p) => p[2] === regel));
+    if (Math.random() < 0.4) { const n = 2 + Math.floor(Math.random() * 7);
+      return { typ: "zaehlen", regel, sg, pl, emo, n, accept: [`${ZAHLWORT[n]} ${pl}`], erklaer: `${sg} (${n}) → <b>${ZAHLWORT[n]} ${pl}</b>` }; }
+    const z = pick(ZAHLWORT.slice(0, 4));
+    if (Math.random() < 0.25 && sg + "s" !== pl) {
+      const kand = [sg + "s", sg + "es", sg.replace(/y$/, "ies"), sg.replace(/fe?$/, "ves"), regel === "pl.irr" ? pl + "s" : sg + "s"];
+      const falsch = [...new Set(kand.filter((x) => x !== pl && x !== sg))].slice(0, 3);
+      return wahl(regel, `one ${sg} → ${z} ___`, pl, falsch, `${sg} → <b>${pl}</b>`, { emoji: emo, satzLuecke: true });
+    }
+    return { typ: "plural", regel, sg, pl, z, emo, erklaer: `${sg} → <b>${pl}</b>` };
+  };
+}
+
+for (const p of PREPS) {
+  GEN[p.regel] = () => {
+    const ding = pick(DINGE), obj = pick(p.obj);
+    const r = Math.random();
+    if (r < 0.3) {
+      const o = p.obj.includes("car") ? "car" : p.obj[0];
+      const andere = shuffle(PREPS.filter((q) => q !== p && q.obj.includes(o))).slice(0, 3);
+      return { typ: "bildwahl", regel: p.regel, prep: p, ding, bilder: shuffle([p, ...andere]).map((q) => ({ q, obj: o })), obj: o, erklaer: `The ${ding.n} is <b>${p.wort}</b> the ${o}.` };
+    }
+    return { typ: "prep", regel: p.regel, prep: p, ding, obj, tippen: r < 0.7, erklaer: `<b>${p.wort}</b> = ${REGELN[p.regel].name.split("= ")[1]}` };
+  };
+}
+
+function impTauschen(s) { return s.startsWith("Don't ") ? cap(s.slice(6)) : "Don't " + s.charAt(0).toLowerCase() + s.slice(1); }
+function impBild(neg) {
+  const [emo, de, en] = pick(IMP_BILD.filter((x) => x[2].startsWith("Don't") === neg));
+  return { typ: "impbild", regel: neg ? "imp.neg" : "imp.pos", emo, de, neg, accept: neg ? [en, en.replace("Don't", "Do not")] : [en], satz: true,
+    kern: neg ? ["don't", "do not"] : null, anfang: true, ctx: { ziel: en }, erklaer: `Richtig: <b>${esc(en)}</b>` };
+}
+GEN["imp.pos"] = () => {
+  if (Math.random() < 0.3) return impBild(false);
+  const r = Math.random();
+  if (r < 0.35) { const q = pick(IMP_NEG); const z = impTauschen(q); return { typ: "frei", regel: "imp.pos", frage: "Mach den Satz <b>positiv</b> (ohne Don't):", quelle: q, accept: [z], satz: true, ctx: { ziel: z }, erklaer: `Richtig: <b>${esc(z)}</b>` }; }
+  if (r < 0.65) return { typ: "ordnen", regel: "imp.pos", ziel: pick(IMP_POS), erklaer: REGELN["imp.pos"].name };
+  const s = pick(IMP_SITU.filter((x) => !x.r.includes("Don't")));
+  return wahl("imp.pos", esc(s.q), s.r, s.f, `<b>${esc(s.r)}</b>`);
+};
+GEN["imp.neg"] = () => {
+  if (Math.random() < 0.3) return impBild(true);
+  const r = Math.random();
+  if (r < 0.4) { const q = pick(IMP_POS); const z = impTauschen(q); return { typ: "frei", regel: "imp.neg", frage: "Mach den Satz <b>negativ</b>:", quelle: q, accept: [z, z.replace("Don't", "Do not")], satz: true, kern: ["don't", "do not"], anfang: true, ctx: { ziel: z }, erklaer: `Richtig: <b>${esc(z)}</b>` }; }
+  if (r < 0.65) return { typ: "ordnen", regel: "imp.neg", ziel: pick(IMP_NEG), erklaer: REGELN["imp.neg"].name };
+  const s = pick(IMP_SITU.filter((x) => x.r.includes("Don't")));
+  return wahl("imp.neg", esc(s.q), s.r, s.f, `<b>${esc(s.r)}</b>`);
+};
+const neueAufgabe = (regel) => GEN[regel]();
+
+// =====================================================
+// BILDER (Präpositionen)
+// =====================================================
+function kiste(x, w, y = 100, h = 53, offen = false) {
+  let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="#d9a066" stroke="#9c6b37" stroke-width="1.5"/>`;
+  if (offen) s += `<polygon points="${x},${y} ${x - 12},${y - 14} ${x + w * 0.35},${y - 14} ${x + w * 0.45},${y}" fill="#e6b47c" stroke="#9c6b37" stroke-width="1.2"/><polygon points="${x + w},${y} ${x + w + 12},${y - 14} ${x + w * 0.65},${y - 14} ${x + w * 0.55},${y}" fill="#e6b47c" stroke="#9c6b37" stroke-width="1.2"/>`;
+  else s += `<line x1="${x + w / 2}" y1="${y}" x2="${x + w / 2}" y2="${y + 14}" stroke="#b9834b" stroke-width="5"/>`;
+  return s;
+}
+function tisch() { return `<rect x="60" y="92" width="120" height="9" rx="2" fill="#a86f3e"/><rect x="68" y="101" width="7" height="52" fill="#8c5a30"/><rect x="165" y="101" width="7" height="52" fill="#8c5a30"/>`; }
+let CLIP = 0;
+function auto(mitInnen = "") {
+  const id = "fenster" + (++CLIP);
+  return `<path d="M58,124 L58,104 Q58,96 66,96 L86,96 L100,58 L152,58 L168,96 L184,96 Q192,96 192,104 L192,124 Z" fill="#d94b3d" stroke="#9e2f25" stroke-width="1.5"/>
+   <clipPath id="${id}"><polygon points="104,94 111,63 148,63 160,94"/></clipPath><polygon points="104,94 111,63 148,63 160,94" fill="#cfe8f7" stroke="#9e2f25" stroke-width="1"/>
+   <g clip-path="url(#${id})">${mitInnen}</g><line x1="122" y1="63" x2="122" y2="94" stroke="#9e2f25" stroke-width="2"/>
+   <circle cx="88" cy="139" r="14" fill="#333"/><circle cx="88" cy="139" r="6" fill="#aaa"/><circle cx="164" cy="139" r="14" fill="#333"/><circle cx="164" cy="139" r="6" fill="#aaa"/>
+   <rect x="186" y="102" width="6" height="7" fill="#ffd54f"/>`;
+}
+const stamm = `<rect x="110" y="80" width="20" height="73" fill="#8d5b34" stroke="#6b4426" stroke-width="1"/>`;
+const krone = `<circle cx="120" cy="58" r="38" fill="#5fa548"/><circle cx="92" cy="72" r="24" fill="#6db554"/><circle cx="148" cy="72" r="24" fill="#6db554"/>`;
+const emo = (e, x, y, s) => `<text x="${x}" y="${(y - s * 0.1).toFixed(1)}" font-size="${s}" text-anchor="middle" class="emo">${e}</text>`;
+const schatten = (x, y, rx) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="4" fill="#00000018"/>`;
+function szene(prepId, ding, obj) {
+  const e = ding.e, boden = `<line x1="0" y1="153" x2="240" y2="153" stroke="#d8cfbd" stroke-width="2"/>`;
+  const S = {
+    box: { in: () => emo(e, 122, 118, 42) + kiste(90, 64, 112, 41, true), on: () => kiste(92, 60) + emo(e, 122, 98, 40), next: () => kiste(70, 60) + emo(e, 170, 151, 40),
+      behind: () => emo(e, 150, 147, 38) + kiste(84, 58, 100, 53), front: () => kiste(94, 56, 92, 52) + schatten(124, 166, 26) + emo(e, 124, 168, 50) },
+    table: { on: () => tisch() + emo(e, 120, 90, 40), under: () => tisch() + emo(e, 120, 150, 38), next: () => tisch() + emo(e, 210, 151, 38) },
+    car: { in: () => auto(emo(e, 141, 97, 30)), on: () => auto() + emo(e, 126, 59, 32), under: () => auto() + emo(e, 126, 152, 27),
+      next: () => auto() + emo(e, 218, 152, 34), behind: () => emo(e, 198, 122, 36) + auto(), front: () => auto() + schatten(126, 170, 24) + emo(e, 126, 176, 46) },
+    tree: { in: () => stamm + krone + emo(e, 126, 74, 36) + `<circle cx="100" cy="72" r="11" fill="#5fa548"/>`, next: () => stamm + krone + emo(e, 200, 151, 36),
+      behind: () => emo(e, 138, 150, 36) + stamm + krone, front: () => stamm + krone + schatten(122, 168, 24) + emo(e, 122, 172, 46) },
+  };
+  return `<svg class="szene" viewBox="0 0 240 180">${boden}${S[obj][prepId]()}</svg>`;
+}
+// kleine Bild-Elemente
+function figur(emoGr, name) { return `<div class="figur"><div class="emo-gross">${emoGr}</div>${name ? `<div class="fname">${esc(name)}</div>` : ""}</div>`; }
+// =====================================================
+// BILDSCHIRME
+// =====================================================
+const main = () => $("#main");
+function zeige(html) { main().innerHTML = html; window.scrollTo(0, 0); }
+function tageBis() { const h = new Date(); h.setHours(0, 0, 0, 0); return Math.round((TESTTAG - h) / 86400000); }
+function balken(ids) { const n = ids.filter(sitzt).length; return `<div class="fbar"><div style="width:${100 * n / ids.length}%"></div></div><div class="fzahl">${n} von ${anzahl(ids.length, "Regel", "Regeln")} ${n === 1 ? "sitzt" : "sitzen"}</div>`; }
+function regelKarte(id) {
+  const r = REGELN[id];
+  return `<div class="regel"><div class="rt">${esc(r.name)}</div><div>${r.text}</div>${r.bsp ? `<ul>${r.bsp.map((b) => `<li>${b}</li>`).join("")}</ul>` : ""}${r.tab ? `<table class="tab">${r.tab.map(([a, b]) => `<tr><td>${a}</td><td>→</td><td><b>${b}</b></td></tr>`).join("")}</table>` : ""}${r.falle ? `<div class="falle">⚠️ ${r.falle}</div>` : ""}</div>`;
+}
+
+function home() {
+  SES = null;
+  const t = tageBis();
+  const tt = t > 1 ? `Noch <b>${t} Tage</b> bis zur Wiederholung` : t === 1 ? `<b>Morgen</b> ist die Wiederholung!` : t === 0 ? `<b>Heute</b> ist die Wiederholung – good luck!` : `Die Wiederholung ist vorbei.`;
+  const heute = new Date().toDateString(), runden = S.log.filter((l) => new Date(l.t).toDateString() === heute).length;
+  const schwach = Object.keys(REGELN).filter((id) => S.r[id] && S.r[id].w > 0 && !sitzt(id)).sort((a, b) => (S.r[b].w - S.r[b].ok) - (S.r[a].w - S.r[a].ok)).slice(0, 3);
+  zeige(`
+  <section class="hero"><div><h1>English Revision 1C</h1><p class="datum">Grammar · Tuesday, 17 November 2026</p></div>
+   <div class="count">${tt}${runden ? `<div class="heute">Heute schon ${anzahl(runden, "Runde", "Runden")} geübt</div>` : ""}</div></section>
+  ${schwach.length ? `<div class="schwach"><b>Das übst du am besten noch einmal:</b> ${schwach.map((id) => esc(REGELN[id].name)).join(" · ")} <button class="pri klein" data-go="schwach">Üben</button></div>` : ""}
+  <h2>Die fünf Themen</h2>
+  <div class="grid3">${THEMEN.map((th) => `<button class="karte-btn" data-go="thema:${th.id}"><span class="ico">${th.icon}</span><span class="kt">${esc(th.name)}</span><span class="ks">${esc(th.sub)}</span>${balken(regelnVon(th.id))}</button>`).join("")}
+   <button class="karte-btn gemischt" data-go="mix"><span class="ico">🔀</span><span class="kt">Alles gemischt</span><span class="ks">12 Aufgaben aus allen Themen</span>${balken(Object.keys(REGELN))}</button></div>
+  <h2>Extra</h2>
+  <div class="grid2">
+   <div class="karte-box"><div class="kopf"><span class="ico">📒</span><div><div class="kt">Lernzettel</div><div class="ks">Alle Regeln auf einen Blick</div></div></div><div class="btns"><button class="pri" data-go="zettel">Ansehen</button></div></div>
+   <div class="karte-box test"><div class="kopf"><span class="ico">🎯</span><div><div class="kt">Probetest</div><div class="ks">20 Aufgaben, 4 pro Thema – wie bei der Wiederholung</div></div></div><div class="btns"><button class="pri" data-go="probetest">Starten</button></div></div>
+  </div>
+  <footer><button class="link" data-go="ton">${S.ton ? "🔊 Ton an" : "🔈 Ton aus"}</button> · <button class="link" data-go="reset">Fortschritt löschen</button></footer>`);
+}
+
+function themaStart(id) {
+  const th = THEMEN.find((x) => x.id === id);
+  zeige(`<div class="leiste"><button class="zurueck" data-go="home">← Übersicht</button><h2>${th.icon} ${esc(th.name)}</h2></div>
+   <p class="hinweis">Lies dir die Regeln kurz durch – dann geht's los.</p>
+   <div class="regeln">${regelnVon(id).map(regelKarte).join("")}</div>
+   ${id === "prep" ? `<div class="bildleiste">${PREPS.map((p) => `<figure>${szene(p.id, DINGE[0], p.obj[0])}<figcaption><b>${p.wort}</b> the ${p.obj[0]}</figcaption></figure>`).join("")}</div>` : ""}
+   <div class="btns gross"><button class="pri" data-go="los:${id}">Los geht's →</button></div>`);
+  setTimeout(() => $(".btns.gross .pri")?.focus(), 30);
+}
+function themaAufgaben(id, n = 12) {
+  const rs = regelnVon(id).map((r) => [r, prio(r) + Math.random() * 0.9]).sort((a, b) => a[1] - b[1]).map((x) => x[0]);
+  const plan = [];
+  for (let i = 0; plan.length < n; i++) plan.push(rs[i % rs.length]);
+  return shuffle(plan).map(neueAufgabe);
+}
+function mixAufgaben(n = 12, nurSchwach) {
+  let rs = Object.keys(REGELN);
+  rs = rs.map((r) => [r, prio(r) + Math.random() * 1.5]).sort((a, b) => a[1] - b[1]).map((x) => x[0]);
+  if (nurSchwach) rs = rs.filter((r) => !sitzt(r)).slice(0, 4);
+  const plan = []; for (let i = 0; plan.length < n; i++) plan.push(rs[i % rs.length]);
+  return shuffle(plan).map(neueAufgabe);
+}
+function probetest() {
+  const plan = [];
+  for (const th of THEMEN) plan.push(...shuffle(regelnVon(th.id)).slice(0, 4).concat(regelnVon(th.id)).slice(0, 4));
+  return plan.map(neueAufgabe);
+}
+function lernzettel() {
+  zeige(`<div class="leiste"><button class="zurueck" data-go="home">← Übersicht</button><h2>Lernzettel</h2></div>
+   ${THEMEN.map((th) => `<h2>${th.icon} ${esc(th.name)}</h2><div class="regeln">${regelnVon(th.id).map(regelKarte).join("")}</div>${th.id === "prep" ? `<div class="bildleiste">${PREPS.map((p) => `<figure>${szene(p.id, DINGE[0], p.obj[0])}<figcaption><b>${p.wort}</b> the ${p.obj[0]}</figcaption></figure>`).join("")}</div>` : ""}`).join("")}
+   <h2>📋 be – alle Formen</h2>
+   <table class="tab gross"><tr><th></th><th>positiv</th><th>Kurzform</th><th>negativ</th></tr>
+   ${[["I", "am", "I'm", "I'm not"], ["you", "are", "you're", "you aren't"], ["he / she / it", "is", "he's / she's / it's", "he isn't"], ["we", "are", "we're", "we aren't"], ["they", "are", "they're", "they aren't"]].map((z) => `<tr><td>${z[0]}</td><td><b>${z[1]}</b></td><td>${z[2]}</td><td>${z[3]}</td></tr>`).join("")}</table>
+   <h2>📋 have got – alle Formen</h2>
+   <table class="tab gross"><tr><th></th><th>positiv</th><th>Kurzform</th><th>negativ</th></tr>
+   ${[["I / you / we / they", "have got", "'ve got", "haven't got"], ["he / she / it", "has got", "'s got", "hasn't got"]].map((z) => `<tr><td>${z[0]}</td><td><b>${z[1]}</b></td><td>${z[2]}</td><td>${z[3]}</td></tr>`).join("")}</table>
+   <div class="btns"><button class="pri" data-go="home">Zur Übersicht</button></div>`);
+}
+
+// =====================================================
+// SITZUNG
+// =====================================================
+let SES = null;
+function starte(titel, tasks, opt = {}) {
+  SES = { titel, tasks: tasks.map((t) => ({ ...t, versuch: 0 })), gesamt: tasks.length, fertig: 0, erstRichtig: 0, fehler: [], test: !!opt.test, nochmal: opt.nochmal, mod: opt.mod || titel };
+  zeige(`<div class="leiste"><button class="zurueck" id="abbruch">✕ Beenden</button><h2>${esc(titel)}</h2><div class="stand" id="stand"></div></div>
+   <div class="pbar"><div id="pb"></div></div><div id="aufgabe"></div><div id="fb"></div>`);
+  $("#abbruch").onclick = () => { if (SES && SES.fertig > 0) { S.log.push({ t: Date.now(), mod: SES.mod, r: SES.erstRichtig, g: SES.fertig }); save(); } home(); };
+  weiter();
+}
+function weiter() {
+  $("#fb").innerHTML = "";
+  if (!SES.tasks.length) return ende();
+  SES.cur = SES.tasks.shift();
+  $("#pb").style.width = (100 * SES.fertig / SES.gesamt) + "%";
+  $("#stand").textContent = `${Math.min(SES.fertig + 1, SES.gesamt)} / ${SES.gesamt}`;
+  const a = $("#aufgabe"); a.innerHTML = ""; a.className = "aufgabe";
+  if (SES.cur.versuch > 0) a.insertAdjacentHTML("beforeend", `<div class="nochmal">🔁 Gleiche Regel, neue Aufgabe</div>`);
+  RENDER[SES.cur.typ](a, SES.cur);
+}
+function antwort(res, html, hinweis) {
+  const t = SES.cur, ok = res === "ok";
+  rec(t.regel, ok);
+  if (t.versuch === 0) { SES.fertig++; if (ok) SES.erstRichtig++; else SES.fehler.push(t.regel); }
+  // Nachbessern über die Regel: neue Aufgabe zur selben Regel, nicht dieselbe Aufgabe
+  if (!ok && !SES.test && t.versuch < 2) SES.tasks.splice(Math.min(3, SES.tasks.length), 0, { ...neueAufgabe(t.regel), versuch: t.versuch + 1 });
+  ton(ok);
+  const kopf = ok ? pick(["Right!", "Great!", "Well done!", "Super!", "Excellent!"]) : res === "fast" ? "Fast!" : "Leider falsch.";
+  $("#fb").innerHTML = `<div class="feedback ${res}"><div class="fk">${ok ? "✓" : res === "fast" ? "≈" : "✗"} ${kopf}</div><div class="ft">${hinweis ? `<div class="hinw">💡 ${hinweis}</div>` : ""}${html || ""}</div>
+    <div class="fbtns">${ok ? "" : `<button id="rbtn">Regel ansehen</button>`}<button class="pri" id="wbtn">Weiter →</button></div><div id="rbox"></div></div>`;
+  $("#pb").style.width = (100 * SES.fertig / SES.gesamt) + "%";
+  $$("#aufgabe input, #aufgabe button").forEach((e) => e.disabled = true);
+  $("#aufgabe").classList.add("beantwortet");
+  const b = $("#wbtn"); b.onclick = weiter; setTimeout(() => b.isConnected && b.focus(), 30);
+  const rb = $("#rbtn"); if (rb) rb.onclick = () => { $("#rbox").innerHTML = regelKarte(t.regel); rb.remove(); };
+  $("#fb").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+function ende() {
+  const s = SES; S.log.push({ t: Date.now(), mod: s.mod, r: s.erstRichtig, g: s.gesamt }); save();
+  const q = s.erstRichtig / s.gesamt; if (q >= 0.8) konfetti();
+  const satz = q === 1 ? "Alles beim ersten Versuch richtig – brilliant!" : q >= 0.8 ? "Very good!" : q >= 0.5 ? "Gut! Die schwierigen Regeln kommen in der nächsten Runde wieder." : "Dranbleiben – mit jeder Runde wird es leichter.";
+  const fehl = [...new Set(s.fehler)];
+  $("#pb").style.width = "100%"; $("#fb").innerHTML = "";
+  $("#aufgabe").innerHTML = `<div class="ende"><div class="gross">${s.erstRichtig} von ${s.gesamt}</div><div>beim ersten Versuch richtig</div><p>${satz}</p>
+   ${fehl.length ? `<h3>Diese Regeln übst du noch:</h3><div class="regeln links">${fehl.map(regelKarte).join("")}</div>` : ""}
+   <div class="btns mitte"><button id="nochR">Noch eine Runde</button><button class="pri" id="zurR">Zur Übersicht</button></div></div>`;
+  $("#nochR").onclick = () => s.nochmal ? s.nochmal() : home();
+  $("#zurR").onclick = home; setTimeout(() => $("#zurR")?.focus(), 30);
+}
+
+// ---------- Renderer ----------
+const RENDER = {};
+function feld(platz, breite) { return `<input class="luecke" type="text" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" style="width:${breite}ch" placeholder="${esc(platz || "")}">`; }
+function mitPruefen(a, input, onSubmit) {
+  a.insertAdjacentHTML("beforeend", `<div class="btns"><button class="pri" id="pruef">Prüfen</button></div>`);
+  const los = () => { if (!input.value.trim()) { input.classList.add("wackel"); setTimeout(() => input.classList.remove("wackel"), 400); return; } onSubmit(input.value); };
+  $("#pruef", a).onclick = los; input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); los(); } });
+  setTimeout(() => input.focus(), 30);
+}
+function ergebnisText(r, erklaer) {
+  if (r.res === "ok") return erklaer;
+  if (r.res === "fast") return `${r.grund} Richtig: <span class="wort">${diffHTML(r.eingabe, r.best)}</span><br>${erklaer}`;
+  return erklaer;
+}
+RENDER.luecke = (a, t) => {
+  const breite = Math.max(...t.accept.map((x) => x.trim().length)) + 3;
+  a.insertAdjacentHTML("beforeend", `<div class="frage klein">Fill in the gap. ${t.hinweis ? `<span class="tag">${t.hinweis}</span>` : ""}</div><div class="satz">${t.bild ? `<span class="emo-gross">${t.bild}</span> ` : ""}${esc(t.satz).replace("___", feld("", breite))}</div>`);
+  const i = $("input", a);
+  mitPruefen(a, i, (v) => {
+    let r = pruefe(v, t.accept, false);
+    if (t.ichLuecke && /^'m not$/i.test(norm(v))) r = { res: "ok" };
+    if (r.res === "fast" && fehlerHinweis(t.regel, t.satz.replace("___", v), t.ctx || {})) r = { ...r, res: "falsch" };
+    i.classList.add(r.res === "ok" ? "ok" : "bad");
+    antwort(r.res, ergebnisText(r, t.erklaer), r.res === "ok" ? "" : fehlerHinweis(t.regel, t.satz.replace("___", v), t.ctx || {}));
+  });
+};
+RENDER.frei = (a, t) => {
+  a.insertAdjacentHTML("beforeend", `<div class="frage">${t.frage}</div>${t.beispiel ? `<div class="beispiel">Beispiel: ${esc(t.beispiel)}</div>` : ""}
+   ${t.bild ? `<div class="bildzeile">${figur(t.bild, t.bildName)}<div class="quelle">${esc(t.quelle)}</div></div>` : t.quelle ? `<div class="quelle">${esc(t.quelle)}</div>` : ""}
+   <div class="satzfeld">${feld(t.satz ? "Schreib den ganzen Satz …" : "", t.satz ? 40 : 14).replace('class="luecke"', 'class="luecke lang"')}</div>`);
+  const i = $("input", a);
+  mitPruefen(a, i, (v) => {
+    let r = pruefe(v, t.accept, t.satz);
+    const h = r.res === "ok" ? "" : fehlerHinweis(t.regel, v, t.ctx || {});
+    if (r.res === "fast" && (h || !kernStimmt(v, t))) r = { ...r, res: "falsch" };
+    i.classList.add(r.res === "ok" ? "ok" : "bad");
+    antwort(r.res, ergebnisText(r, t.erklaer), r.res === "falsch" ? h : "");
+  });
+};
+RENDER.wahl = (a, t) => {
+  const frage = t.satzLuecke ? `<div class="frage klein">Choose the right word.</div><div class="satz">${t.emoji ? `<span class="emo-gross">${t.emoji}</span> ` : ""}${esc(t.frage).replace("___", `<span class="gap">___</span>`)}</div>` : `<div class="frage">${t.frage}</div>`;
+  a.insertAdjacentHTML("beforeend", `${frage}<div class="wahl ${t.opts.length === 3 ? "drei" : ""}">${t.opts.map(([o, r], i) => `<button data-r="${r ? 1 : 0}"><span class="nr">${i + 1}</span>${esc(o)}</button>`).join("")}</div>`);
+  $$(".wahl button", a).forEach((b) => b.onclick = () => {
+    const ok = b.dataset.r === "1"; b.classList.add(ok ? "ok" : "bad"); if (!ok) $(".wahl button[data-r='1']", a).classList.add("ok");
+    if (t.satzLuecke) { const g = $(".gap", a); if (g) { g.textContent = t.richtig; g.classList.add("gefuellt"); } }
+    antwort(ok ? "ok" : "falsch", t.erklaer, ok ? "" : fehlerHinweis(t.regel, b.textContent.slice(1), t.ctx || {}));
+  });
+};
+RENDER.plural = (a, t) => {
+  a.insertAdjacentHTML("beforeend", `<div class="frage klein">Write the plural.</div>
+   <div class="plural"><div class="pl-teil"><div class="emo-gross">${t.emo}</div><div>one <b>${esc(t.sg)}</b></div></div><div class="pfeil">→</div>
+   <div class="pl-teil"><div class="emo-gross">${t.emo}${t.emo}${t.emo === "🧑‍🤝‍🧑" ? "" : t.z !== "two" ? t.emo : ""}</div><div>${t.z} ${feld("", t.pl.length + 3)}</div></div></div>`);
+  const i = $("input", a);
+  mitPruefen(a, i, (v) => {
+    const r = pruefe(v, [t.pl], false); i.classList.add(r.res === "ok" ? "ok" : "bad");
+    const h = r.res === "ok" ? "" : pluralHinweis(t, norm(v).toLowerCase());
+    if (r.res === "fast" && h) r.res = "falsch";
+    antwort(r.res, ergebnisText(r, t.erklaer), h);
+  });
+};
+RENDER.prep = (a, t) => {
+  const subj = "It's", ende = `the ${t.obj}`;
+  a.insertAdjacentHTML("beforeend", `<div class="frage">Where's the ${esc(t.ding.n)}?</div><div class="bildgross">${szene(t.prep.id, t.ding, t.obj)}</div>
+   <div class="satz">${subj} ${t.tippen ? feld("", 13) : `<span class="gap">______</span>`} ${ende}.</div>
+   ${t.tippen ? "" : `<div class="wahl prepwahl">${shuffle(PREPS).map((p) => `<button data-p="${p.id}">${p.wort}</button>`).join("")}</div>`}`);
+  if (t.tippen) {
+    const i = $("input", a);
+    mitPruefen(a, i, (v) => { const r = pruefe(v, [t.prep.wort], false); i.classList.add(r.res === "ok" ? "ok" : "bad"); antwort(r.res, ergebnisText(r, `${subj} <b>${t.prep.wort}</b> ${ende}. – ${t.erklaer}`), r.res === "ok" ? "" : (/^(next|in front)$/i.test(norm(v)) ? "Achtung: <b>next to</b> und <b>in front of</b> bestehen aus mehreren Wörtern." : "")); });
+  } else {
+    $$(".prepwahl button", a).forEach((b) => b.onclick = () => {
+      const ok = b.dataset.p === t.prep.id; b.classList.add(ok ? "ok" : "bad"); if (!ok) $(`.prepwahl button[data-p="${t.prep.id}"]`, a).classList.add("ok");
+      const g = $(".gap", a); g.textContent = t.prep.wort; g.classList.add("gefuellt");
+      antwort(ok ? "ok" : "falsch", `${subj} <b>${t.prep.wort}</b> ${ende}. – ${t.erklaer}`);
+    });
+  }
+};
+RENDER.bildwahl = (a, t) => {
+  const ende = `the ${t.obj}`;
+  a.insertAdjacentHTML("beforeend", `<div class="frage">Click the right picture:<br><span class="quelle inl">The ${esc(t.ding.n)} is ${t.prep.wort} ${ende}.</span></div>
+   <div class="bildwahl">${t.bilder.map((b, i) => `<button data-p="${b.q.id}">${szene(b.q.id, t.ding, b.obj)}</button>`).join("")}</div>`);
+  $$(".bildwahl button", a).forEach((b) => b.onclick = () => {
+    const ok = b.dataset.p === t.prep.id; b.classList.add(ok ? "ok" : "bad"); if (!ok) $(`.bildwahl button[data-p="${t.prep.id}"]`, a).classList.add("ok");
+    const gew = PREPS.find((p) => p.id === b.dataset.p);
+    antwort(ok ? "ok" : "falsch", ok ? t.erklaer : `Dein Bild zeigt <b>${gew.wort}</b>. Gesucht war <b>${t.prep.wort}</b>.`);
+  });
+};
+RENDER.ordnen = (a, t) => {
+  const ziel = norm(t.ziel), woerter = ziel.split(" ").map((w) => (w === "I" ? w : w.toLowerCase()));
+  let gew = [];
+  a.insertAdjacentHTML("beforeend", `<div class="frage">Put the words in the right order.</div><div class="gebaut"></div><div class="kacheln">${shuffle(woerter.map((w, i) => [w, i])).map(([w, i]) => `<button data-i="${i}">${esc(w)}</button>`).join("")}</div><div class="btns"><button id="zur">↺ Neu</button><button class="pri" id="pruef" disabled>Prüfen</button></div>`);
+  const zeichne = () => { $(".gebaut", a).innerHTML = gew.map((i) => `<span>${esc(woerter[i])}</span>`).join(" ") || `<span class="leer">Klicke die Wörter in der richtigen Reihenfolge an.</span>`; $$(".kacheln button", a).forEach((b) => b.disabled = gew.includes(+b.dataset.i)); $("#pruef", a).disabled = gew.length !== woerter.length; };
+  $$(".kacheln button", a).forEach((b) => b.onclick = () => { gew.push(+b.dataset.i); zeichne(); });
+  $("#zur", a).onclick = () => { gew = []; zeichne(); };
+  $("#pruef", a).onclick = () => {
+    const ein = gew.map((i) => woerter[i]).join(" "), ok = ein.toLowerCase() === ziel.toLowerCase();
+    $(".gebaut", a).classList.add(ok ? "ok" : "bad");
+    antwort(ok ? "ok" : "falsch", `Richtig: <b>${esc(t.ziel)}</b>`, ok ? "" : fehlerHinweis(t.regel, ein));
+  };
+  zeichne();
+};
+// gemeinsamer Ablauf für Aufgaben, bei denen ein ganzer Satz geschrieben wird
+function satzEingabe(a, t, platz) {
+  a.insertAdjacentHTML("beforeend", `<div class="satzfeld">${feld(platz, 40).replace('class="luecke"', 'class="luecke lang"')}</div>`);
+  const i = $("input", a);
+  mitPruefen(a, i, (v) => {
+    let r = pruefe(v, t.accept, true);
+    const h = r.res === "ok" ? "" : fehlerHinweis(t.regel, v, t.ctx || {});
+    if (r.res === "fast" && (h || !kernStimmt(v, t))) r = { ...r, res: "falsch" };
+    i.classList.add(r.res === "ok" ? "ok" : "bad");
+    antwort(r.res, ergebnisText(r, t.erklaer), r.res === "falsch" ? h : "");
+  });
+}
+RENDER.zaehlen = (a, t) => {
+  a.insertAdjacentHTML("beforeend", `<div class="frage">Schreib die Pluralform und das Zahlwort.</div><div class="beispiel">Beispiel: book (4) → four books</div>
+   <div class="zaehlbild">${Array(t.n).fill(`<span class="emo">${t.emo}</span>`).join("")}</div><div class="quelle">${esc(t.sg)} (${t.n})</div>
+   <div class="satzfeld">${feld("z. B. four books", 26).replace('class="luecke"', 'class="luecke lang"')}</div>`);
+  const i = $("input", a);
+  mitPruefen(a, i, (v) => {
+    let r = pruefe(v, t.accept, false); let h = "";
+    const e = norm(v).toLowerCase();
+    if (r.res !== "ok") {
+      if (/^\d/.test(e)) { h = "Schreib die Zahl als <b>Wort</b>: " + ZAHLWORT[t.n] + "."; if (e.replace(/^\d+\s*/, "") === t.pl) r = { ...r, res: "fast" }; }
+      else if (!e.startsWith(ZAHLWORT[t.n] + " ")) h = `${t.n} heißt <b>${ZAHLWORT[t.n]}</b>.`;
+      else { const w = e.slice(ZAHLWORT[t.n].length + 1); h = pluralHinweis(t, w); if (h) r = { ...r, res: "falsch" }; }
+    }
+    i.classList.add(r.res === "ok" ? "ok" : "bad"); antwort(r.res, ergebnisText(r, t.erklaer), h);
+  });
+};
+RENDER.karte = (a, t) => {
+  a.insertAdjacentHTML("beforeend", `<div class="frage">Wer hat was? Schreib den ganzen Satz.</div><div class="beispiel">Beispiel: Sheila 🐈 ✓ → Sheila has got a cat. · Ken 🎩 ✗ → Ken hasn't got a hat.</div>
+   <div class="bildzeile">${figur(t.gesicht, t.name)}<div class="pfeil">→</div>${figur(t.emo)}<div class="haken ${t.hat ? "ja" : "nein"}">${t.hat ? "✓" : "✗"}</div></div>`);
+  satzEingabe(a, t, `${t.name} …`);
+};
+RENDER.impbild = (a, t) => {
+  a.insertAdjacentHTML("beforeend", `<div class="frage">Was sagt die Lehrerin? Schreib die Anweisung auf Englisch.</div>
+   <div class="bildzeile"><div class="impicon">${t.emo}${t.neg ? `<span class="verbot">🚫</span>` : ""}</div><div class="quelle">${esc(t.de)}</div></div>`);
+  satzEingabe(a, t, t.neg ? "Don't …" : "");
+};
+document.addEventListener("keydown", (e) => {
+  if (!SES || e.target.tagName === "INPUT") return;
+  if (/^[1-9]$/.test(e.key)) { const b = $$("#aufgabe .wahl button:not(:disabled)")[+e.key - 1]; if (b) b.click(); }
+});
+
+// ---------- Navigation ----------
+function geh(z) {
+  const [a, b] = z.split(":");
+  if (a === "home") return home();
+  if (a === "thema") return themaStart(b);
+  if (a === "los") { const th = THEMEN.find((x) => x.id === b); const f = () => starte(th.name, themaAufgaben(b), { nochmal: f }); return f(); }
+  if (a === "mix") { const f = () => starte("Alles gemischt", mixAufgaben(12), { nochmal: f }); return f(); }
+  if (a === "schwach") { const f = () => starte("Schwierige Regeln", mixAufgaben(10, true), { nochmal: f }); return f(); }
+  if (a === "probetest") { const f = () => starte("Probetest", probetest(), { test: true, nochmal: f }); return f(); }
+  if (a === "zettel") return lernzettel();
+  if (a === "ton") { S.ton = !S.ton; save(); return home(); }
+  if (a === "reset") { if (confirm("Wirklich den ganzen Fortschritt löschen?")) { S = { r: {}, log: [], ton: S.ton }; save(); } return home(); }
+}
+document.addEventListener("click", (e) => { const b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); geh(b.dataset.go); } });
+home();
+
+</script>
+</body>
+</html>
