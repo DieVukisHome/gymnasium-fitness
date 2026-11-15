@@ -557,13 +557,14 @@ for (const regel of regelnVon("plural")) {
     const [sg, pl, , emo] = pick(PLURAL.filter((p) => p[2] === regel));
     if (Math.random() < 0.4) { const n = 2 + Math.floor(Math.random() * 7);
       return { typ: "zaehlen", regel, sg, pl, emo, n, accept: [`${ZAHLWORT[n]} ${pl}`], erklaer: `${sg} (${n}) → <b>${ZAHLWORT[n]} ${pl}</b>` }; }
-    const z = pick(ZAHLWORT.slice(0, 4));
+    const n = 2 + Math.floor(Math.random() * 3), z = ZAHLWORT[n]; // two, three oder four
     if (Math.random() < 0.25 && sg + "s" !== pl) {
       const kand = [sg + "s", sg + "es", sg.replace(/y$/, "ies"), sg.replace(/fe?$/, "ves"), regel === "pl.irr" ? pl + "s" : sg + "s"];
-      const falsch = [...new Set(kand.filter((x) => x !== pl && x !== sg))].slice(0, 3);
+      kand.push(sg); // „Mehrzahl = Einzahl“ ist ein echter Fehler (wie bei fish – fish)
+      const falsch = [...new Set(kand.filter((x) => x !== pl))].slice(0, 3);
       return wahl(regel, `one ${sg} → ${z} ___`, pl, falsch, `${sg} → <b>${pl}</b>`, { emoji: emo, satzLuecke: true });
     }
-    return { typ: "plural", regel, sg, pl, z, emo, erklaer: `${sg} → <b>${pl}</b>` };
+    return { typ: "plural", regel, sg, pl, z, n, emo, erklaer: `${sg} → <b>${pl}</b>` };
   };
 }
 
@@ -776,7 +777,7 @@ function mitPruefen(a, input, onSubmit) {
 }
 function ergebnisText(r, erklaer) {
   if (r.res === "ok") return erklaer;
-  if (r.res === "fast") return `${r.grund} Richtig: <span class="wort">${diffHTML(r.eingabe, r.best)}</span><br>${erklaer}`;
+  if (r.res === "fast") return `${r.grund || ""} Richtig: <span class="wort">${diffHTML(r.eingabe, r.best)}</span><br>${erklaer}`;
   return erklaer;
 }
 RENDER.luecke = (a, t) => {
@@ -814,12 +815,14 @@ RENDER.wahl = (a, t) => {
   });
 };
 RENDER.plural = (a, t) => {
-  a.insertAdjacentHTML("beforeend", `<div class="frage klein">Write the plural.</div>
+  a.insertAdjacentHTML("beforeend", `<div class="frage">Write the plural.</div><div class="beispiel">Schreib nur das Wort in der Mehrzahl – das Zahlwort steht schon da.</div>
    <div class="plural"><div class="pl-teil"><div class="emo-gross">${t.emo}</div><div>one <b>${esc(t.sg)}</b></div></div><div class="pfeil">→</div>
-   <div class="pl-teil"><div class="emo-gross">${t.emo}${t.emo}${t.emo === "🧑‍🤝‍🧑" ? "" : t.z !== "two" ? t.emo : ""}</div><div>${t.z} ${feld("", t.pl.length + 3)}</div></div></div>`);
+   <div class="pl-teil"><div class="emo-gross">${Array(t.n).fill(t.emo).join("")}</div><div>${t.z} ${feld("", t.pl.length + 7)}</div></div></div>`);
   const i = $("input", a);
   mitPruefen(a, i, (v) => {
-    const r = pruefe(v, [t.pl], false); i.classList.add(r.res === "ok" ? "ok" : "bad");
+    // Hat sie das Zahlwort trotzdem dazugeschrieben, ist das nicht falsch
+    const ohneZahl = norm(v).replace(new RegExp("^" + t.z + "\\s+", "i"), "");
+    const r = pruefe(ohneZahl, [t.pl], false); i.classList.add(r.res === "ok" ? "ok" : "bad");
     const h = r.res === "ok" ? "" : pluralHinweis(t, norm(v).toLowerCase());
     if (r.res === "fast" && h) r.res = "falsch";
     antwort(r.res, ergebnisText(r, t.erklaer), h);
@@ -878,7 +881,7 @@ function satzEingabe(a, t, platz) {
   });
 }
 RENDER.zaehlen = (a, t) => {
-  a.insertAdjacentHTML("beforeend", `<div class="frage">Schreib die Pluralform und das Zahlwort.</div><div class="beispiel">Beispiel: book (4) → four books</div>
+  a.insertAdjacentHTML("beforeend", `<div class="frage">Zähle und schreib das <b>Zahlwort</b> und die <b>Mehrzahl</b>.</div><div class="beispiel">Beispiel: book (4) → four books</div>
    <div class="zaehlbild">${Array(t.n).fill(`<span class="emo">${t.emo}</span>`).join("")}</div><div class="quelle">${esc(t.sg)} (${t.n})</div>
    <div class="satzfeld">${feld("z. B. four books", 26).replace('class="luecke"', 'class="luecke lang"')}</div>`);
   const i = $("input", a);
@@ -886,7 +889,8 @@ RENDER.zaehlen = (a, t) => {
     let r = pruefe(v, t.accept, false); let h = "";
     const e = norm(v).toLowerCase();
     if (r.res !== "ok") {
-      if (/^\d/.test(e)) { h = "Schreib die Zahl als <b>Wort</b>: " + ZAHLWORT[t.n] + "."; if (e.replace(/^\d+\s*/, "") === t.pl) r = { ...r, res: "fast" }; }
+      if (/^\d/.test(e)) { h = "Schreib die Zahl als <b>Wort</b>: " + ZAHLWORT[t.n] + "."; if (e.replace(/^\d+\s*/, "") === t.pl) r = { res: "fast", best: t.accept[0], eingabe: e, grund: "" }; }
+      else if (e === t.pl) { h = `Schreib auch das Zahlwort davor: <b>${ZAHLWORT[t.n]} ${t.pl}</b>.`; r = { res: "fast", best: t.accept[0], eingabe: e, grund: "" }; }
       else if (!e.startsWith(ZAHLWORT[t.n] + " ")) h = `${t.n} heißt <b>${ZAHLWORT[t.n]}</b>.`;
       else { const w = e.slice(ZAHLWORT[t.n].length + 1); h = pluralHinweis(t, w); if (h) r = { ...r, res: "falsch" }; }
     }
