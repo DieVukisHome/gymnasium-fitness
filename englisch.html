@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>English Revision 1C</title>
+<title>English 1C</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇧</text></svg>">
 <style>
 :root{--papier:#f6f2e9;--karte:#fffdf8;--tinte:#26323a;--leise:#6b7780;--teal:#3949ab;--teal2:#e8eaf6;--orange:#e8822a;--orange2:#fdeedd;--rot:#c8453b;--rot2:#fbe7e5;--gruen:#2e8b57;--gruen2:#e3f4ea;--linie:#e3dccd;--r:16px}
@@ -180,6 +180,14 @@ button.klein{padding:5px 14px;font-size:.9rem;margin-left:auto}
 .zaehlbild{font-size:2.3rem;display:flex;flex-wrap:wrap;gap:4px;max-width:420px;margin:6px 0 10px}
 .impicon{position:relative;font-size:3.6rem;width:96px;height:96px;display:grid;place-items:center;background:#fff;border:1.5px solid var(--linie);border-radius:16px}
 .impicon .verbot{position:absolute;inset:0;display:grid;place-items:center;font-size:4.6rem;opacity:.85}
+
+.vokwort{font-size:1.9rem;font-weight:700;margin:4px 0 8px}
+.vokwort.en{color:var(--teal)}
+details.plan{margin-top:16px;background:var(--karte);border:1.5px solid var(--linie);border-radius:14px;padding:10px 16px}
+details.plan summary{cursor:pointer;font-weight:700}
+details.plan .tab{margin-top:8px}
+.tab.wl{width:100%;margin-top:8px}.tab.wl td{vertical-align:top;padding:6px 14px 6px 0}.tab.wl td:last-child{color:var(--leise);font-size:.92rem}
+.tab.wl.links{margin:0 auto;text-align:left;width:auto}
 </style>
 </head>
 <body>
@@ -191,8 +199,10 @@ button.klein{padding:5px 14px;font-size:.9rem;margin-left:auto}
 
 const THEMEN = [
   { id: "be", name: "verb „be“", sub: "am · is · are – und verneint", icon: "🙋" },
+  { id: "beq", name: "verb „be“ – questions", sub: "Is she tired? – Yes, she is.", icon: "❓" },
   { id: "have", name: "have got / has got", sub: "positiv und verneint", icon: "🏴‍☠️" },
   { id: "plural", name: "Plural", sub: "one frog – two frogs", icon: "🐸" },
+  { id: "num", name: "Numbers 0–30", sub: "thirteen ≠ thirty", icon: "🔢" },
   { id: "prep", name: "Prepositions of place", sub: "in · on · under · behind …", icon: "📦" },
   { id: "imp", name: "Imperative", sub: "Stand up! · Don't speak!", icon: "📣" },
 ];
@@ -212,6 +222,17 @@ const REGELN = {
     text: "Das <b>not</b> kommt <b>hinter</b> am / is / are – nie davor! Kurzformen: <b>isn't</b> (= is not), <b>aren't</b> (= are not), <b>I'm not</b>. (Es gibt kein „amn't“.)",
     bsp: ["Richard <b>isn't</b> hot. He's cold.", "We <b>aren't</b> late.", "I<b>'m not</b> tired."],
     falle: "Falsch: <s>She not is happy.</s> · <s>She don't happy.</s>" },
+  "beq.frage": { thema: "beq", name: "Fragen mit be: am / is / are nach vorne",
+    text: "Bei einer Frage stellt man <b>am / is / are</b> an den Anfang – genau wie im Deutschen (<i>Bist du müde?</i>). Man braucht <b>kein do</b>.",
+    bsp: ["She is tired. → <b>Is</b> she tired?", "You are hungry. → <b>Are</b> you hungry?", "Mike is at home. → <b>Is</b> Mike at home?"],
+    falle: "Falsch: <s>Do you are hungry?</s> · <s>She is tired?</s> (das ist keine Frage)" },
+  "beq.antwort": { thema: "beq", name: "Kurzantworten mit be",
+    text: "Auf eine Ja/Nein-Frage antwortet man kurz: <b>Yes</b> oder <b>No</b>, dann das passende Fürwort und die Form von be.",
+    tab: [["Are you …?", "Yes, I am. / No, I'm not."], ["Is he / she / it …?", "Yes, she is. / No, she isn't."], ["Are they …?", "Yes, they are. / No, they aren't."]],
+    falle: "Bei <b>Yes</b> keine Kurzform: <b>Yes, she is.</b> – nicht <s>Yes, she's.</s>" },
+  "beq.wort": { thema: "beq", name: "Fragewörter mit be",
+    text: "Mit einem Fragewort steht es so: <b>Fragewort + is / are + …?</b>",
+    tab: [["What", "was – What's your name?"], ["Where", "wo – Where's the parrot?"], ["How", "wie – How are you?"], ["How old", "wie alt – How old are you?"], ["Why", "warum – Why are you tired?"]] },
   "have.have": { thema: "have", name: "I / you / we / they → have got",
     text: "<b>I, you, we, they</b> (und alles in der Mehrzahl) bekommen <b>have got</b>. Kurzform: <b>'ve got</b>.", bsp: ["I <b>have got</b> a cat. → I<b>'ve got</b> a cat.", "They <b>have got</b> a big ship."] },
   "have.has": { thema: "have", name: "he / she / it → has got",
@@ -229,6 +250,20 @@ const REGELN = {
   "pl.irr": { thema: "plural", name: "Ausnahmen (irregular plurals)",
     text: "Diese Wörter bekommen kein -s – sie muss man auswendig lernen. Die ersten vier stehen in deinem Buch.",
     tab: [["a child", "five children"], ["a fish", "three fish"], ["one foot", "two feet"], ["one tooth", "five teeth"], ["a man", "men"], ["a woman", "women"], ["a mouse", "mice"]] },
+  "num.bis12": { thema: "num", name: "Zahlen 0–12",
+    text: "Diese Zahlen muss man auswendig können – und richtig schreiben.",
+    tab: [["0", "zero"], ["1", "one"], ["2", "two"], ["3", "three"], ["4", "four"], ["5", "five"], ["6", "six"], ["7", "seven"], ["8", "eight"], ["9", "nine"], ["10", "ten"], ["11", "eleven"], ["12", "twelve"]],
+    falle: "Achtung: <b>two</b> (nicht tow), <b>eight</b>, <b>eleven</b>, <b>twelve</b>" },
+  "num.teen": { thema: "num", name: "Zahlen 13–19: -teen",
+    text: "Von 13 bis 19 enden alle Zahlen auf <b>-teen</b>.",
+    tab: [["13", "thirteen"], ["14", "fourteen"], ["15", "fifteen"], ["16", "sixteen"], ["17", "seventeen"], ["18", "eighteen"], ["19", "nineteen"]],
+    falle: "<b>thirteen</b> (nicht threeteen), <b>fifteen</b> (nicht fiveteen), <b>eighteen</b> hat nur <b>ein t</b>" },
+  "num.zwanzig": { thema: "num", name: "Zahlen 20–30: twenty-one …",
+    text: "Ab 21 kommt <b>zuerst der Zehner</b>, dann ein <b>Bindestrich</b>, dann der Einer – anders als im Deutschen (einundzwanzig).",
+    bsp: ["20 = <b>twenty</b>", "21 = <b>twenty-one</b>", "25 = <b>twenty-five</b>", "30 = <b>thirty</b>"],
+    falle: "<b>thirteen</b> = 13, aber <b>thirty</b> = 30 – nicht verwechseln!" },
+  "num.lesen": { thema: "num", name: "Zahlwörter lesen",
+    text: "Hör auf das Ende: <b>-teen</b> heißt 13–19, <b>-ty</b> heißt 20 oder 30.", bsp: ["thir<b>teen</b> = 13 · thir<b>ty</b> = 30", "twelve = 12 · twenty = 20"] },
   "prep.in": { thema: "prep", name: "in = in", text: "<b>in</b> – drinnen.", bsp: ["It's <b>in</b> the box."] },
   "prep.on": { thema: "prep", name: "on = auf", text: "<b>on</b> – oben drauf.", bsp: ["The parrot is <b>on</b> the car."] },
   "prep.under": { thema: "prep", name: "under = unter", text: "<b>under</b> – darunter.", bsp: ["There's a dog <b>under</b> the desk."] },
@@ -330,9 +365,189 @@ const IMP_SITU = [
   { q: "Morgen ist der Ausflug. Die Lehrerin sagt: Kommt nicht zu spät!", r: "Don't be late!", f: ["Not be late!", "Don't are late!", "Be late!"] },
 ];
 
+// ---------- Zahlen ----------
+const ZAHLEN = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+  "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "twenty-one", "twenty-two", "twenty-three", "twenty-four", "twenty-five", "twenty-six",
+  "twenty-seven", "twenty-eight", "twenty-nine", "thirty"];
+// typische falsche Schreibweisen als Auswahl-Fallen
+const ZAHL_FALLEN = { 2: ["tow", "too"], 8: ["eigth", "aight"], 11: ["eleeven", "elven"], 12: ["twelf", "tweleve"], 13: ["thirty", "threeteen"], 14: ["fourty", "forteen"],
+  15: ["fiveteen", "fifty"], 18: ["eightteen", "eighty"], 19: ["nineten", "ninety"], 20: ["twelve", "twendy"], 30: ["thirteen", "threety"] };
+
+// ---------- Fragen mit be ----------
+const BEQ_WORT = [
+  ["___ is the parrot? – It's on the car.", "Where"], ["___ are you? – I'm fine, thanks.", "How"], ["___ old are you? – I'm eleven.", "How"],
+  ["___ is your name? – My name is Bianca.", "What"], ["___ are you tired? – Because it's late.", "Why"], ["___ is your favourite colour? – It's purple.", "What"],
+  ["___ are my books? – They're under the desk.", "Where"], ["___ is Mike nervous? – Because it's the big day.", "Why"], ["___ is your email address?", "What"],
+  ["___ is Greybeard's ship? – It's next to the island.", "Where"], ["___ old is your brother? – He's nine.", "How"], ["___ is it? – It's a dream!", "What"],
+];
+
+// ===================== VOKABELN: MORE! 1, Workbook „MORE Words and Phrases“, Unit 1–4 =====================
+// [Unit, fett (1 = aktiv, selbst schreiben können), Englisch, Deutsch (Anzeige), erlaubte deutsche Antworten (|),
+//  weitere erlaubte englische Antworten (|), Beispielsatz aus dem Buch]
+const VOKABELN = [
+  // ---------- Unit 1 (WB S. 13) ----------
+  [1, 1, "to give", "geben", "geben", "", "Give me your school bag."],
+  [1, 0, "time", "Zeit", "Zeit", "", "It's time for school."],
+  [1, 1, "to understand", "verstehen", "verstehen", "", "I understand the question."],
+  [1, 1, "to write", "schreiben", "schreiben", "", "Write the numbers."],
+  [1, 0, "to enjoy", "genießen", "genießen", "", "Enjoy the music."],
+  [1, 1, "to listen", "zuhören", "zuhören|hören", "", "Listen to the song."],
+  [1, 1, "to love", "lieben", "lieben", "", "I love blue. It's my favourite colour."],
+  [1, 1, "more", "mehr", "mehr", "", "I want more!"],
+  [1, 1, "to read", "lesen", "lesen", "", "Read the text."],
+  [1, 1, "their", "ihr/e (von mehreren)", "ihr|ihre|ihr/e", "", "What's their address?"],
+  [1, 1, "to ask", "fragen", "fragen", "", "Can I ask you a question?"],
+  [1, 1, "(email) address", "(E-Mail-)Adresse", "Adresse|E-Mail-Adresse|Emailadresse|E-Mailadresse|Mailadresse", "address|email address|e-mail address", "My email address is sara@linkways.com."],
+  [1, 1, "How are you?", "Wie geht es dir?", "Wie geht es dir|Wie geht's dir|Wie gehts dir|Wie geht es Ihnen|Wie geht es euch|Wie geht's|Wie gehts", "", ""],
+  [1, 1, "I am (= I'm) fine.", "Es geht mir gut.", "Es geht mir gut|Mir geht es gut|Mir geht's gut|Mir gehts gut", "I am fine|I'm fine", ""],
+  [1, 1, "to meet", "kennenlernen; sich treffen", "kennenlernen|kennen lernen|treffen|sich treffen", "", "Nice to meet you!"],
+  [1, 1, "then", "dann, danach", "dann|danach", "", "Listen to the dialogue. Then read it."],
+  [1, 1, "your", "dein/e; Ihr/e; euer/eure", "dein|deine|Ihr|Ihre|euer|eure|dein/e", "", "What's your email address?"],
+  [1, 1, "to look", "sehen, schauen", "sehen|schauen|anschauen|ansehen|schau mal|gucken", "", "Look at the animals."],
+  [1, 1, "or", "oder", "oder", "", "Tick or correct the numbers."],
+  [1, 1, "to eat", "essen; fressen", "essen|fressen", "", "I eat insects."],
+  [1, 1, "to go", "gehen", "gehen", "", "I must go. Bye."],
+  [1, 1, "must", "müssen", "müssen|muss", "", "I must go."],
+  [1, 1, "how many", "wie viele", "wie viele|wieviele|wie viel", "", "How many frogs can you see?"],
+  [1, 0, "to hate", "hassen, nicht ausstehen können", "hassen|nicht ausstehen können|nicht mögen", "", "I hate pink."],
+  [1, 1, "here", "hier", "hier", "", "Here's your pencil case."],
+  [1, 1, "it", "es", "es", "", "It's yellow."],
+  [1, 1, "Let's …", "Lass(t) uns …", "lass uns|lasst uns|lass|lasst|lass(t) uns", "let's|let us", "Let's sing a song!"],
+  [1, 0, "midnight", "Mitternacht", "Mitternacht", "", "It's twelve o'clock – midnight."],
+  [1, 1, "our", "unser/e", "unser|unsere|unser/e", "", "This is our school."],
+  [1, 1, "favourite", "Lieblings-", "Lieblings-|Lieblings|Lieblingsfarbe", "", "Green is my favourite colour."],
+  [1, 1, "to find", "finden", "finden", "", "Can you find my school tie?"],
+  [1, 0, "light", "hell", "hell", "", "My favourite colour is light blue."],
+  [1, 0, "child", "Kind", "Kind", "", "The child is in class 1A."],
+  [1, 0, "to clean", "sauber machen, putzen", "sauber machen|saubermachen|putzen|reinigen", "", "Clean the board."],
+  [1, 1, "to close", "schließen, zumachen", "schließen|zumachen|zu machen", "", "Close the door."],
+  [1, 1, "to open", "öffnen, aufmachen", "öffnen|aufmachen|auf machen", "", "Open the window."],
+  [1, 1, "picture", "Bild", "Bild", "", "Look at the pictures."],
+  [1, 1, "to sit down", "sich (hin)setzen", "sich hinsetzen|hinsetzen|sich setzen|setzen|sich (hin)setzen", "", "Sit down, children."],
+  [1, 1, "to speak", "sprechen", "sprechen|reden", "", "Don't speak. Listen."],
+  [1, 1, "to stand up", "aufstehen", "aufstehen", "", "Don't stand up. Sit down."],
+  [1, 1, "to take out", "herausnehmen", "herausnehmen|rausnehmen|herausholen|rausholen", "", "Take out your books."],
+  [1, 1, "class", "(Schul-)Klasse", "Klasse|Schulklasse", "", "I'm in class 1A."],
+
+  // ---------- Unit 2 (WB S. 21) ----------
+  [2, 0, "zoo", "Zoo", "Zoo|Tiergarten", "", "There are many animals in the zoo."],
+  [2, 1, "beautiful", "schön, hübsch", "schön|hübsch", "", "The parrot is blue and yellow. It's beautiful."],
+  [2, 1, "behind", "hinter", "hinter", "", "The chair is behind the desk."],
+  [2, 1, "big", "groß", "groß", "", "There's a big giraffe."],
+  [2, 1, "in front of", "vor", "vor", "", "The tree is in front of you."],
+  [2, 1, "next to", "neben", "neben", "", "The parrot is next to the monkeys."],
+  [2, 1, "now", "jetzt", "jetzt|nun", "", "Where is it now?"],
+  [2, 1, "on", "auf", "auf", "", "Look! The parrot is on Buddy now."],
+  [2, 1, "there is (there's)", "es gibt, da ist (Einzahl)", "es gibt|da ist", "there is|there's", "There's a book on my desk."],
+  [2, 1, "there are", "es gibt, da sind (Mehrzahl)", "es gibt|da sind", "", "There are three books on my desk."],
+  [2, 1, "tree", "Baum", "Baum", "", "The monkeys are behind the tree."],
+  [2, 1, "under", "unter", "unter", "", "There's a book under my desk."],
+  [2, 0, "What is it?", "Was ist los?", "Was ist los|Was ist", "What is it|What's it", ""],
+  [2, 1, "where", "wo", "wo", "", "Where is it?"],
+  [2, 1, "small", "klein", "klein", "", "The monkey isn't big. It's small."],
+  [2, 0, "adult", "Erwachsene/r", "Erwachsener|Erwachsene|Erwachsene/r", "", "Adults are £14.40."],
+  [2, 1, "at", "bei; an; hier: in", "bei|an|in|im", "", "The children are at the zoo."],
+  [2, 0, "to bring", "(mit)bringen", "bringen|mitbringen", "", "Can I bring my dog, Buddy?"],
+  [2, 1, "but", "aber", "aber", "", "Dogs are welcome. But they can't run around."],
+  [2, 0, "to feed", "füttern", "füttern", "", "Let's go and feed the penguins."],
+  [2, 0, "guide", "(Reise-)Führer/in", "Führer|Führerin|Reiseführer|Reiseführerin|Führer/in", "", "Listen to the guide."],
+  [2, 0, "to run around", "herumlaufen", "herumlaufen|rumlaufen|herumrennen|umherlaufen", "", "Dogs are welcome, but they can't run around."],
+  [2, 1, "train", "Zug", "Zug", "", "Let's go on a train."],
+  [2, 0, "to", "zu; bis; vor; hier: in", "zu|bis|vor|in|nach", "", "Welcome to the wildlife park!"],
+  [2, 0, "welcome", "willkommen", "willkommen", "", "Welcome to London."],
+  [2, 1, "from", "aus", "aus|von", "", "They are from California."],
+  [2, 0, "year", "Jahr; Jahrgangsstufe", "Jahr|Jahrgangsstufe|Schulstufe|Schuljahr", "", "I'm in Year 7."],
+  [2, 1, "he", "er", "er", "", "He likes animals."],
+  [2, 1, "she", "sie (eine Frau / ein Mädchen)", "sie", "", "She is from England."],
+  [2, 0, "to talk", "sprechen, sich unterhalten", "sprechen|sich unterhalten|unterhalten|reden", "", "Talk about the boys and girls."],
+  [2, 1, "they", "sie (mehrere)", "sie", "", "Rahim and Sue are 11. They are from Manchester."],
+  [2, 1, "we", "wir", "wir", "", "We're Sophie and John."],
+  [2, 1, "for", "für", "für", "", "Here's a chant for you."],
+  [2, 1, "happy", "glücklich, fröhlich; zufrieden", "glücklich|fröhlich|zufrieden|froh", "", "Buddy is happy."],
+  [2, 0, "to let somebody out", "jemanden herauslassen", "jemanden herauslassen|herauslassen|rauslassen|jemanden rauslassen", "to let out|let out|let somebody out", "Let us out!"],
+  [2, 1, "us", "uns", "uns", "", "Can you see us?"],
+  [2, 1, "car", "Auto", "Auto", "", "The parrot is in the car."],
+  [2, 0, "At last.", "Endlich.", "Endlich", "At last", ""],
+  [2, 0, "How strange!", "Wie komisch!", "Wie komisch|Wie seltsam|Wie merkwürdig", "How strange", ""],
+  [2, 0, "Let me see.", "Lass mich mal schauen.", "Lass mich mal schauen|Lass mich schauen|Lass mich mal sehen|Lass mich sehen|Lass mal sehen|Lass mal schauen", "Let me see", ""],
+  [2, 0, "stone", "Stein", "Stein", "", "Colour your stone."],
+
+  // ---------- Unit 3 (WB S. 30) ----------
+  [3, 1, "also", "auch", "auch", "", "Tamara is also a pirate."],
+  [3, 0, "famous", "berühmt", "berühmt", "", "Greybeard is a famous pirate."],
+  [3, 1, "him", "ihm/ihn", "ihm|ihn|ihm/ihn", "", "Peter is nice. We like him."],
+  [3, 1, "his", "sein/e", "sein|seine|sein/e", "", "His pirate name is Blackbeard."],
+  [3, 1, "ship", "Schiff", "Schiff", "", "Greybeard has got a big ship."],
+  [3, 0, "to be scared (of)", "Angst haben (vor)", "Angst haben|Angst haben vor|sich fürchten", "to be scared|to be scared of|be scared|be scared of|scared", "The kids are scared of the ship."],
+  [3, 1, "very", "sehr", "sehr", "", "They are very scared."],
+  [3, 0, "strong", "stark, kräftig", "stark|kräftig", "", "Greybeard hasn't got a strong left leg."],
+  [3, 0, "captain", "Kapitän", "Kapitän|Kapitänin", "", "The captain has got a blue ship."],
+  [3, 1, "have got / has got", "haben", "haben|hat", "have got|has got|have got/has got", "I have got brown hair. Tamara has got red hair."],
+  [3, 0, "pretty", "hübsch", "hübsch|schön", "", "Polly is a pretty pirate."],
+  [3, 0, "purple", "violett, lila", "violett|lila", "", "She has got purple hair."],
+  [3, 1, "a lot of / lots of", "viel/e", "viel|viele|viel/e|eine Menge", "a lot of|lots of|a lot of/lots of", "She has got a lot of books about pirates."],
+  [3, 1, "bed", "Bett", "Bett", "", "Dana is in bed now."],
+  [3, 0, "dream", "Traum", "Traum", "", "It's a dream!"],
+  [3, 1, "tired", "müde", "müde", "", "Dana is in bed. She is tired."],
+  [3, 0, "to guess", "raten", "raten|erraten", "", "Listen and guess the pirate."],
+  [3, 0, "It's your turn.", "Du bist an der Reihe.", "Du bist an der Reihe|Du bist dran|Du bist am Zug", "It's your turn|It is your turn", ""],
+  [3, 1, "brother", "Bruder", "Bruder", "", "Fred is Frank's brother."],
+  [3, 0, "blonde", "blond", "blond", "blond", "He has got blonde hair."],
+  [3, 0, "real", "echt; wirklich", "echt|wirklich", "", "His left leg isn't real. It's wooden."],
+  [3, 1, "short", "klein (Mensch)", "klein|kurz", "", "Greybeard is short."],
+  [3, 1, "tall", "groß (Mensch)", "groß", "", "Tamara is tall."],
+  [3, 1, "wrong", "falsch, nicht in Ordnung", "falsch|nicht in Ordnung", "", "Say what's wrong."],
+  [3, 0, "Good idea.", "Gute Idee.", "Gute Idee", "Good idea", ""],
+  [3, 0, "true", "wahr", "wahr|richtig|stimmt", "", "Is it true?"],
+
+  // ---------- Unit 4 (WB S. 39) ----------
+  [4, 1, "after", "nach", "nach", "", "After school I meet my friends."],
+  [4, 1, "day", "Tag", "Tag", "", "On the big day, Mike is nervous."],
+  [4, 0, "end", "Ende", "Ende|Schluss", "", "At the end of the play, Mike is very happy."],
+  [4, 0, "fun", "Spaß", "Spaß", "", "It's great fun."],
+  [4, 0, "Go away!", "Geh weg!", "Geh weg|Gehe weg|Geht weg|Hau ab", "Go away", ""],
+  [4, 1, "to help", "helfen", "helfen", "", "Let me help you."],
+  [4, 1, "home", "zu/nach Hause; Zuhause", "zu Hause|nach Hause|Zuhause|zuhause|daheim|Heim", "", "Mike is at home."],
+  [4, 0, "It's no good.", "Es hat keinen Zweck.", "Es hat keinen Zweck|Es hat keinen Sinn|Das bringt nichts", "It's no good|It is no good", ""],
+  [4, 1, "mum", "Mama, Mutti", "Mama|Mutti|Mutter|Mami", "", "She is his mum."],
+  [4, 1, "next", "nächster/nächste/nächstes", "nächster|nächste|nächstes|nächste/r/s", "", "The next day."],
+  [4, 0, "still (not)", "immer noch (nicht)", "immer noch|immer noch nicht|noch immer|noch", "still|still not", "Miss Baker still isn't happy."],
+  [4, 0, "a day in the life of", "ein Tag im Leben von", "ein Tag im Leben von|ein Tag im Leben", "", "The story is about a day in the life of Richard."],
+  [4, 0, "to be asleep", "schlafen", "schlafen|eingeschlafen sein", "to be asleep|be asleep|asleep", "He's in bed and he's asleep."],
+  [4, 1, "early", "früh", "früh", "", "It's early. He's still in bed."],
+  [4, 0, "life (pl lives)", "Leben", "Leben", "life", "Elephants have a long life."],
+  [4, 0, "lunchtime", "Mittagspause", "Mittagspause|Mittagszeit|Mittag", "", "It's lunchtime. He's hungry."],
+  [4, 1, "sun", "Sonne", "Sonne", "", "The sun is out."],
+  [4, 0, "Are you OK?", "Geht's dir gut?", "Geht es dir gut|Geht's dir gut|Gehts dir gut|Geht es euch gut|Geht es Ihnen gut|Alles okay|Alles ok|Alles in Ordnung", "Are you OK|Are you okay", ""],
+  [4, 1, "homework (no pl)", "Hausaufgaben", "Hausaufgaben|Hausaufgabe|Hausübung|Hausübungen", "homework", "We have got a lot of homework today."],
+  [4, 0, "into", "in (… hinein)", "in|hinein|in hinein", "", "Go into the classroom!"],
+  [4, 0, "Oh dear!", "Du meine Güte!", "Du meine Güte|Oje|Oh je|O je|Ach du meine Güte|Ach je", "Oh dear", ""],
+  [4, 1, "room", "Zimmer, Raum", "Zimmer|Raum", "", "There's a rat in our room."],
+  [4, 1, "why", "warum", "warum|wieso|weshalb", "", "Why are you tired?"],
+  [4, 1, "bad", "schlecht, böse", "schlecht|böse", "", "Thursday and Friday aren't bad."],
+  [4, 1, "Don't be late.", "Komm nicht zu spät. / Sei pünktlich.", "Komm nicht zu spät|Kommt nicht zu spät|Sei pünktlich|Seid pünktlich|Sei nicht zu spät", "Don't be late|Do not be late", ""],
+  [4, 1, "tomorrow", "morgen", "morgen", "", "Tomorrow is Monday."],
+  [4, 1, "birthday", "Geburtstag", "Geburtstag", "", "Happy birthday, David!"],
+  [4, 1, "friend", "Freund/Freundin", "Freund|Freundin|Freund/in|Freund/Freundin", "", "Tom is his friend."],
+  [4, 0, "Be yourself.", "Sei du selbst.", "Sei du selbst|Sei du selber|Sei einfach du selbst", "Be yourself", ""],
+  [4, 0, "no one else", "niemand anders", "niemand anders|niemand sonst|kein anderer", "", "Be yourself and no one else."],
+  [4, 0, "bottle", "Flasche", "Flasche", "", "The feelings are in the bottle."],
+  [4, 0, "to get back", "zurückholen, zurückbekommen", "zurückholen|zurückbekommen|zurückkriegen", "", "I will get the feelings back."],
+  [4, 0, "mad", "wütend, zornig", "wütend|zornig|sauer", "", "I am nice, Bob is mad."],
+  [4, 0, "magic", "magisch", "magisch|Zauber-", "", "This is a magic bottle."],
+  [4, 0, "to rob", "stehlen; ausrauben", "stehlen|ausrauben|rauben", "", "I'm a monster and I rob feelings."],
+  [4, 0, "to break", "(zer)brechen", "brechen|zerbrechen|kaputt machen|kaputtmachen", "", "I must break the bottle."],
+  [4, 0, "to go to sleep", "schlafen gehen", "schlafen gehen|einschlafen", "", "Go back to sleep."],
+  [4, 1, "because", "weil", "weil|denn", "", "I'm happy because it's the weekend."],
+  [4, 0, "It's me.", "Ich bin's.", "Ich bin's|Ich bins|Ich bin es", "It's me|It is me", ""],
+  [4, 0, "Try it!", "Versuch es!", "Versuch es|Versuchs|Versuch's|Probier es|Probiers|Probier's", "Try it", ""],
+  [4, 0, "Let go!", "Lass los!", "Lass los|Lasst los", "Let go", ""],
+  [4, 0, "What's happening?", "Was ist (hier) los?", "Was ist los|Was ist hier los|Was passiert", "What's happening|What is happening", ""],
+];
+
 "use strict";
 // ===================== English Revision – App =====================
-const TESTTAG = new Date(2026, 10, 17); // Dienstag, 17. November 2026
+const TESTTAG = new Date(2026, 10, 23); // Probeschularbeit: Montag, 23. November 2026
 const KEY = "englrev1c_v1";
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -347,9 +562,10 @@ let S = { r: {}, log: [], ton: true };
 try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) { }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
 function rec(id, ok) { const it = S.r[id] || (S.r[id] = { s: 0, ok: 0, w: 0 }); if (ok) { it.s++; it.ok++; } else { it.s = 0; it.w++; } it.t = Date.now(); save(); }
-const SITZT = 3;
-const sitzt = (id) => (S.r[id]?.s || 0) >= SITZT;
-function prio(id) { const it = S.r[id]; if (!it) return 1; if (it.s === 0) return 0; return it.s >= SITZT ? 3 + it.s : 2; }
+// Grammatikregeln (mit immer neuen Aufgaben) sitzen nach 3 Treffern in Folge, eine einzelne Vokabel nach 2
+const schwelle = (id) => (id.startsWith("v:") ? 2 : 3);
+const sitzt = (id) => (S.r[id]?.s || 0) >= schwelle(id);
+function prio(id) { const it = S.r[id]; if (!it) return 1; if (it.s === 0) return 0; return it.s >= schwelle(id) ? 3 + it.s : 2; }
 const regelnVon = (thema) => Object.keys(REGELN).filter((k) => REGELN[k].thema === thema);
 
 // ---------- Ton & Konfetti ----------
@@ -397,12 +613,14 @@ function pruefe(eingabe, accepts, satz) {
     if (!satz) return { res: "ok", best: a };
     return { res: "fast", best: a, eingabe: e, grund: "Am Satzanfang schreibt man groß." };
   }
+  const ohneUml = (x) => x.toLowerCase().replace(/ä/g, "a").replace(/ö/g, "o").replace(/ü/g, "u").replace(/ß/g, "ss").replace(/ae/g, "a").replace(/oe/g, "o").replace(/ue/g, "u");
+  for (const a of acc) if (/[äöüß]/i.test(a) && ohneUml(e) === ohneUml(a)) return { res: "fast", best: a, eingabe: e, grund: "Achte auf die Umlaute (ä, ö, ü) und das ß." };
   let best = null, bd = 99;
   for (const a of acc) { const v = lev(e.toLowerCase(), a.toLowerCase()); if (v < bd) { bd = v; best = a; } }
   const grenze = best.length <= 4 ? 0 : best.length <= 7 ? 1 : 2;
   // Ein Apostroph mehr oder weniger ist ein Schreibfehler, kein Grammatikfehler
   if (bd <= grenze || e.replace(/'/g, "").toLowerCase() === best.replace(/'/g, "").toLowerCase())
-    return { res: "fast", best, eingabe: e, grund: "Fast! Achte genau auf die Schreibweise." };
+    return { res: "fast", best, eingabe: e, grund: "Achte genau auf die Schreibweise." };
   return { res: "falsch", best: acc[0], eingabe: e };
 }
 // Steht die geübte Form (z. B. "isn't", "hasn't got", "Don't run") genau so im Satz? Apostroph egal.
@@ -420,6 +638,16 @@ function fehlerHinweis(regel, eingabe, ctx = {}) {
     if (/amn't/.test(e)) return "„amn't“ gibt es nicht. Richtig: <b>I'm not</b> oder <b>I am not</b>.";
     if (ctx.k === "3" && / (are|aren't) /.test(e)) return `<b>${esc(ctx.s)}</b> = ${ctx.p} → <b>is</b> / <b>isn't</b>.`;
     if (ctx.k === "pl" && / (is|isn't) /.test(e)) return `<b>${esc(ctx.s)}</b> = ${ctx.p} → <b>are</b> / <b>aren't</b>.`;
+  }
+  if (regel === "beq.antwort") {
+    if (/^ yes, \w+('s|'re|'m) /.test(e)) return "Bei <b>Yes</b> keine Kurzform: <b>Yes, she is.</b> – nicht „Yes, she's.“";
+    if (ctx.ja === true && /^ no/.test(e)) return "Schau dir das Bild genau an – es stimmt!";
+    if (ctx.ja === false && /^ yes/.test(e)) return "Schau dir das Bild genau an – es stimmt nicht.";
+    if (ctx.p && !new RegExp(" " + ctx.p + "('| )").test(e)) return `In der Kurzantwort steht das Fürwort: <b>${ctx.p}</b> (${esc(ctx.s)} = ${ctx.p}).`;
+  }
+  if (regel === "beq.frage") {
+    if (/^ (do|does) /.test(e)) return "Bei <b>be</b> braucht es kein do: einfach <b>Is / Are</b> nach vorne.";
+    if (!/^ (is|are|am) /.test(e)) return "Bei der Frage kommt <b>is / are</b> an den Anfang.";
   }
   if (regel.startsWith("have.")) {
     if (/ (don't|doesn't) have /.test(e)) return "Wir üben <b>have got</b>: also <b>haven't got</b> / <b>hasn't got</b>.";
@@ -603,7 +831,80 @@ GEN["imp.neg"] = () => {
   const s = pick(IMP_SITU.filter((x) => x.r.includes("Don't")));
   return wahl("imp.neg", esc(s.q), s.r, s.f, `<b>${esc(s.r)}</b>`);
 };
-const neueAufgabe = (regel) => GEN[regel]();
+// ---------- Fragen mit be ----------
+function frageVon(sub, P) { const f = { I: "Am", "3": "Is", pl: "Are" }[sub.k]; const s = sub.s === "I" ? "I" : sub.s; return `${f} ${s} ${P}?`; }
+GEN["beq.frage"] = () => {
+  const sub = pick(SUBJ.filter((x) => x.k !== "I")), P = praed(sub);
+  const aussage = cap(`${sub.s} ${BE[sub.k]} ${P}.`), frage = frageVon(sub, P);
+  if (Math.random() < 0.35) return { typ: "ordnen", regel: "beq.frage", ziel: frage, erklaer: REGELN["beq.frage"].name };
+  return { typ: "frei", regel: "beq.frage", frage: "Mach eine <b>Frage</b> daraus:", quelle: aussage, accept: [frage, frage.replace(/\?$/, "")], satz: true,
+    kern: [BE[sub.k]], anfang: true, ctx: sub, erklaer: `Richtig: <b>${esc(frage)}</b>` };
+};
+function kurzAntworten(p, k, ja) {
+  const P = cap(p);
+  if (ja) return [`Yes, ${p} ${k === "3" ? "is" : k === "I" ? "am" : "are"}.`];
+  if (k === "I") return ["No, I'm not.", "No, I am not."];
+  return k === "3" ? [`No, ${p} isn't.`, `No, ${p} is not.`, `No, ${p}'s not.`] : [`No, ${p} aren't.`, `No, ${p} are not.`, `No, ${p}'re not.`];
+}
+GEN["beq.antwort"] = () => {
+  if (Math.random() < 0.4) { // Frage zu einem Präpositionsbild
+    const p = pick(PREPS), obj = pick(p.obj), ding = pick(DINGE.filter((d) => d.n !== "ball"));
+    const ja = Math.random() < 0.5, gefragt = ja ? p : pick(PREPS.filter((q) => q !== p && q.obj.includes(obj)));
+    const acc = kurzAntworten("it", "3", ja);
+    return { typ: "kurz", regel: "beq.antwort", bildSzene: { p: p.id, ding, obj }, frage: `Is the ${ding.n} ${gefragt.wort} the ${obj}?`, accept: acc, ja, ctx: { s: "the " + ding.n, p: "it", k: "3" }, erklaer: `Richtig: <b>${esc(acc[0])}</b>` };
+  }
+  const [name, p, k] = pick(KORR_LEUTE), g = pick(GEFUEHLE), ja = Math.random() < 0.5;
+  const gefragt = ja ? g : pick(GEFUEHLE.filter((x) => x !== g));
+  const acc = kurzAntworten(p, k, ja);
+  return { typ: "kurz", regel: "beq.antwort", bild: g.e, bildName: name, frage: `${k === "3" ? "Is" : "Are"} ${name} ${gefragt.w}?`, accept: acc, ja, ctx: { s: name, p, k }, erklaer: `Richtig: <b>${esc(acc[0])}</b>` };
+};
+GEN["beq.wort"] = () => {
+  const [satz, wort] = pick(BEQ_WORT);
+  return wahl("beq.wort", satz, wort, ["What", "Where", "How", "Why"].filter((x) => x !== wort), `<b>${wort}</b> – ${esc(satz.replace("___", wort))}`, { satzLuecke: true });
+};
+
+// ---------- Zahlen 0–30 ----------
+function zahlAufgabe(regel, n) {
+  const w = ZAHLEN[n], r = Math.random();
+  if (ZAHL_FALLEN[n] && r < 0.3) return wahl(regel, `Welches Wort ist die Zahl <b>${n}</b>?`, w, ZAHL_FALLEN[n].concat(ZAHLEN.filter((x, i) => Math.abs(i - n) === 1)).slice(0, 3), `${n} = <b>${w}</b>`);
+  if (r < 0.55 && n >= 2 && n <= 30) { // Rechnen
+    const a = 1 + Math.floor(Math.random() * (n - 1)), b = n - a;
+    return { typ: "frei", regel, frage: `Rechne und schreib das Ergebnis als <b>Wort</b>:`, quelle: `${ZAHLEN[a]} + ${ZAHLEN[b]} = ?`, accept: [w], satz: false, zahl: n, erklaer: `${a} + ${b} = ${n} = <b>${w}</b>` };
+  }
+  return { typ: "frei", regel, frage: `Schreib die Zahl als <b>Wort</b>:`, quelle: String(n), accept: [w], satz: false, zahl: n, erklaer: `${n} = <b>${w}</b>` };
+}
+GEN["num.bis12"] = () => zahlAufgabe("num.bis12", Math.floor(Math.random() * 13));
+GEN["num.teen"] = () => zahlAufgabe("num.teen", 13 + Math.floor(Math.random() * 7));
+GEN["num.zwanzig"] = () => zahlAufgabe("num.zwanzig", 20 + Math.floor(Math.random() * 11));
+GEN["num.lesen"] = () => {
+  // oft verwechselte Paare bevorzugt
+  const n = Math.random() < 0.5 ? pick([12, 13, 20, 30, 15, 18, 19, 3, 2]) : Math.floor(Math.random() * 31);
+  return { typ: "frei", regel: "num.lesen", frage: "Schreib die Zahl als <b>Ziffer</b>:", quelle: ZAHLEN[n], accept: [String(n)], satz: false, erklaer: `${ZAHLEN[n]} = <b>${n}</b>` };
+};
+const neueAufgabe = (regel) => (regel.startsWith("v:") ? vokAufgabe(regel) : GEN[regel]());
+
+// ---------- Vokabeln ----------
+const VOK = VOKABELN.map(([unit, fett, en, deZeig, deAcc, enAcc, satz], i) => {
+  const enListe = [en, ...enAcc.split("|").filter(Boolean)];
+  const ohneTo = en.startsWith("to ") ? [en.slice(3)] : [];
+  return { i, unit, fett, en, deZeig, deAcc: deAcc.split("|"), enAcc: [...new Set([...enListe, ...ohneTo])], satz };
+});
+const vokId = (v, dir) => `v:${v.unit}:${v.en}:${dir}`;
+const vokIds = (unit) => VOK.filter((v) => !unit || v.unit === unit).flatMap((v) => [vokId(v, "de"), vokId(v, "en")]);
+// Beispielsatz mit Lücke an der Stelle des Wortes (nur wenn das Wort darin vorkommt)
+function vokLuecke(v) {
+  if (!v.satz) return "";
+  const kern = v.en.replace(/^to /, "").replace(/\s*\(.*?\)/g, "").replace(/ \/ .*$/, "").replace(/[.!?…]+$/, "").trim();
+  if (!kern || kern.length < 2) return "";
+  const re = new RegExp("\\b" + kern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(s|es)?\\b", "i");
+  return re.test(v.satz) ? v.satz.replace(re, "___") : "";
+}
+function vokAufgabe(id) {
+  const [, unit, en, dir] = id.match(/^v:(\d):(.*):(de|en)$/);
+  const v = VOK.find((x) => x.unit === +unit && x.en === en);
+  return { typ: "vokabel", regel: id, v, dir, luecke: dir === "de" ? vokLuecke(v) : "" };
+}
+
 
 // =====================================================
 // BILDER (Präpositionen)
@@ -658,24 +959,54 @@ function regelKarte(id) {
 function home() {
   SES = null;
   const t = tageBis();
-  const tt = t > 1 ? `Noch <b>${t} Tage</b> bis zur Wiederholung` : t === 1 ? `<b>Morgen</b> ist die Wiederholung!` : t === 0 ? `<b>Heute</b> ist die Wiederholung – good luck!` : `Die Wiederholung ist vorbei.`;
+  const tt = t > 1 ? `Noch <b>${t} Tage</b> bis zur Probeschularbeit` : t === 1 ? `<b>Morgen</b> ist die Probeschularbeit!` : t === 0 ? `<b>Heute</b> ist die Probeschularbeit – good luck!` : `Die Probeschularbeit ist vorbei.`;
   const heute = new Date().toDateString(), runden = S.log.filter((l) => new Date(l.t).toDateString() === heute).length;
   const schwach = Object.keys(REGELN).filter((id) => S.r[id] && S.r[id].w > 0 && !sitzt(id)).sort((a, b) => (S.r[b].w - S.r[b].ok) - (S.r[a].w - S.r[a].ok)).slice(0, 3);
+  const schwerW = vokIds().filter((id) => S.r[id] && S.r[id].w > 0 && !sitzt(id)).length;
+  const UNITS = [[1, "Unit 1", "Workbook S. 13"], [2, "Unit 2", "Workbook S. 21"], [3, "Unit 3", "Workbook S. 30"], [4, "Unit 4", "Workbook S. 39"]];
   zeige(`
-  <section class="hero"><div><h1>English Revision 1C</h1><p class="datum">Grammar · Tuesday, 17 November 2026</p></div>
+  <section class="hero"><div><h1>English 1C</h1><p class="datum">Probeschularbeit · Montag, 23. November 2026</p></div>
    <div class="count">${tt}${runden ? `<div class="heute">Heute schon ${anzahl(runden, "Runde", "Runden")} geübt</div>` : ""}</div></section>
-  ${schwach.length ? `<div class="schwach"><b>Das übst du am besten noch einmal:</b> ${schwach.map((id) => esc(REGELN[id].name)).join(" · ")} <button class="pri klein" data-go="schwach">Üben</button></div>` : ""}
-  <h2>Die fünf Themen</h2>
+  <details class="plan"><summary>📅 Lernplan bis Montag</summary><table class="tab">
+   <tr><td><b>Sonntag Vormittag</b></td><td>Vokabeln Unit 1 und Unit 2</td></tr>
+   <tr><td><b>Sonntag Nachmittag</b></td><td>Vokabeln Unit 3 und Unit 4, dann Numbers</td></tr>
+   <tr><td><b>Sonntag Abend</b></td><td>verb „be“ – questions, dann die Probeschularbeit</td></tr>
+   <tr><td><b>Montag früh</b></td><td>nur „Das übst du am besten noch“ – 10 Minuten</td></tr></table></details>
+  ${schwach.length || schwerW ? `<div class="schwach"><b>Das übst du am besten noch:</b> ${schwach.map((id) => esc(REGELN[id].name)).join(" · ")}${schwach.length && schwerW ? " · " : ""}${schwerW ? anzahl(schwerW, "schwieriges Wort", "schwierige Wörter") : ""} <button class="pri klein" data-go="schwach">Üben</button></div>` : ""}
+  <h2>Vocabulary – Unit 1 bis 4</h2>
+  <p class="hinweis">Jedes Wort kommt in beide Richtungen dran: Deutsch → Englisch und Englisch → Deutsch.</p>
+  <div class="grid3">${UNITS.map(([u, n, th]) => `<div class="karte-box"><div class="kopf"><span class="ico">📗</span><div><div class="kt">${n}</div><div class="ks">${th} · ${anzahl(VOK.filter((v) => v.unit === u).length, "Wort", "Wörter")}</div></div></div>${balkenW(vokIds(u))}
+    <div class="btns"><button data-go="liste:${u}">Liste</button><button class="pri" data-go="vok:${u}">Üben</button></div></div>`).join("")}
+   <div class="karte-box gemischt"><div class="kopf"><span class="ico">🔀</span><div><div class="kt">Alle Units gemischt</div><div class="ks">12 Wörter, die schwierigsten zuerst</div></div></div>${balkenW(vokIds())}
+    <div class="btns"><button class="pri" data-go="vok:0">Üben</button></div></div></div>
+  <h2>Grammar</h2>
   <div class="grid3">${THEMEN.map((th) => `<button class="karte-btn" data-go="thema:${th.id}"><span class="ico">${th.icon}</span><span class="kt">${esc(th.name)}</span><span class="ks">${esc(th.sub)}</span>${balken(regelnVon(th.id))}</button>`).join("")}
-   <button class="karte-btn gemischt" data-go="mix"><span class="ico">🔀</span><span class="kt">Alles gemischt</span><span class="ks">12 Aufgaben aus allen Themen</span>${balken(Object.keys(REGELN))}</button></div>
+   <button class="karte-btn gemischt" data-go="mix"><span class="ico">🔀</span><span class="kt">Grammatik gemischt</span><span class="ks">12 Aufgaben aus allen Themen</span>${balken(Object.keys(REGELN))}</button></div>
   <h2>Extra</h2>
   <div class="grid2">
-   <div class="karte-box"><div class="kopf"><span class="ico">📒</span><div><div class="kt">Lernzettel</div><div class="ks">Alle Regeln auf einen Blick</div></div></div><div class="btns"><button class="pri" data-go="zettel">Ansehen</button></div></div>
-   <div class="karte-box test"><div class="kopf"><span class="ico">🎯</span><div><div class="kt">Probetest</div><div class="ks">20 Aufgaben, 4 pro Thema – wie bei der Wiederholung</div></div></div><div class="btns"><button class="pri" data-go="probetest">Starten</button></div></div>
+   <div class="karte-box"><div class="kopf"><span class="ico">📒</span><div><div class="kt">Lernzettel</div><div class="ks">Alle Grammatikregeln auf einen Blick</div></div></div><div class="btns"><button class="pri" data-go="zettel">Ansehen</button></div></div>
+   <div class="karte-box test"><div class="kopf"><span class="ico">🎯</span><div><div class="kt">Probeschularbeit üben</div><div class="ks">24 Aufgaben aus dem ganzen Stoff – Vokabeln und Grammatik</div></div></div><div class="btns"><button class="pri" data-go="probetest">Starten</button></div></div>
   </div>
   <footer><button class="link" data-go="ton">${S.ton ? "🔊 Ton an" : "🔈 Ton aus"}</button> · <button class="link" data-go="reset">Fortschritt löschen</button></footer>`);
 }
-
+function balkenW(ids) { const n = ids.filter(sitzt).length; return `<div class="fbar"><div style="width:${100 * n / ids.length}%"></div></div><div class="fzahl">${n} von ${ids.length} sitzen (beide Richtungen)</div>`; }
+function wortliste(u) {
+  const liste = VOK.filter((v) => v.unit === u);
+  zeige(`<div class="leiste"><button class="zurueck" data-go="home">← Übersicht</button><h2>Wortliste Unit ${u}</h2></div>
+   <p class="hinweis">Fett = diese Wörter musst du auch selbst schreiben können. Tipp: Deck eine Spalte mit der Hand ab und prüf dich selbst.</p>
+   <table class="tab wl"><tr><th>Englisch</th><th>Deutsch</th><th>Beispiel</th></tr>${liste.map((v) => `<tr><td>${v.fett ? `<b>${esc(v.en)}</b>` : esc(v.en)}${sitzt(vokId(v, "de")) && sitzt(vokId(v, "en")) ? " ✅" : ""}</td><td>${esc(v.deZeig)}</td><td><i>${esc(v.satz)}</i></td></tr>`).join("")}</table>
+   <div class="btns"><button class="pri" data-go="vok:${u}">Unit ${u} üben</button></div>`);
+}
+// Vokabelrunde: schwächste zuerst, fette Wörter vor den anderen, nie dasselbe Wort zweimal hintereinander in beide Richtungen
+function vokRunde(u, n = 12, nurSchwach) {
+  let ids = vokIds(u || 0);
+  if (nurSchwach) ids = ids.filter((id) => S.r[id] && S.r[id].w > 0 && !sitzt(id));
+  const fett = (id) => VOK.find((v) => id.startsWith(`v:${v.unit}:${v.en}:`)).fett;
+  const gew = ids.map((id) => [id, prio(id) + (fett(id) ? 0 : 0.6) + Math.random() * 0.8]).sort((x, y) => x[1] - y[1]);
+  const plan = [], woerter = new Set();
+  for (const [id] of gew) { const w = id.replace(/:(de|en)$/, ""); if (woerter.has(w)) continue; woerter.add(w); plan.push(id); if (plan.length >= n) break; }
+  return shuffle(plan).map(vokAufgabe);
+}
 function themaStart(id) {
   const th = THEMEN.find((x) => x.id === id);
   zeige(`<div class="leiste"><button class="zurueck" data-go="home">← Übersicht</button><h2>${th.icon} ${esc(th.name)}</h2></div>
@@ -699,9 +1030,13 @@ function mixAufgaben(n = 12, nurSchwach) {
   return shuffle(plan).map(neueAufgabe);
 }
 function probetest() {
-  const plan = [];
-  for (const th of THEMEN) plan.push(...shuffle(regelnVon(th.id)).slice(0, 4).concat(regelnVon(th.id)).slice(0, 4));
-  return plan.map(neueAufgabe);
+  // wie eine Schularbeit: zuerst Vokabeln (4 je Richtung), dann Grammatik aus jedem Thema
+  const de = shuffle(VOK.filter((v) => v.fett)).slice(0, 4).map((v) => vokAufgabe(vokId(v, "de")));
+  const en = shuffle(VOK).filter((v) => !de.some((d) => d.v === v)).slice(0, 4).map((v) => vokAufgabe(vokId(v, "en")));
+  const gram = [];
+  const je = { be: 2, beq: 3, have: 2, plural: 2, num: 3, prep: 2, imp: 2 };
+  for (const [th, k] of Object.entries(je)) gram.push(...shuffle(regelnVon(th)).concat(shuffle(regelnVon(th))).slice(0, k).map(neueAufgabe));
+  return [...de, ...en, ...gram];
 }
 function lernzettel() {
   zeige(`<div class="leiste"><button class="zurueck" data-go="home">← Übersicht</button><h2>Lernzettel</h2></div>
@@ -745,7 +1080,7 @@ function antwort(res, html, hinweis) {
   ton(ok);
   const kopf = ok ? pick(["Right!", "Great!", "Well done!", "Super!", "Excellent!"]) : res === "fast" ? "Fast!" : "Leider falsch.";
   $("#fb").innerHTML = `<div class="feedback ${res}"><div class="fk">${ok ? "✓" : res === "fast" ? "≈" : "✗"} ${kopf}</div><div class="ft">${hinweis ? `<div class="hinw">💡 ${hinweis}</div>` : ""}${html || ""}</div>
-    <div class="fbtns">${ok ? "" : `<button id="rbtn">Regel ansehen</button>`}<button class="pri" id="wbtn">Weiter →</button></div><div id="rbox"></div></div>`;
+    <div class="fbtns">${ok || !REGELN[t.regel] ? "" : `<button id="rbtn">Regel ansehen</button>`}<button class="pri" id="wbtn">Weiter →</button></div><div id="rbox"></div></div>`;
   $("#pb").style.width = (100 * SES.fertig / SES.gesamt) + "%";
   $$("#aufgabe input, #aufgabe button").forEach((e) => e.disabled = true);
   $("#aufgabe").classList.add("beantwortet");
@@ -757,9 +1092,11 @@ function ende() {
   const s = SES; S.log.push({ t: Date.now(), mod: s.mod, r: s.erstRichtig, g: s.gesamt }); save();
   const q = s.erstRichtig / s.gesamt; if (q >= 0.8) konfetti();
   const satz = q === 1 ? "Alles beim ersten Versuch richtig – brilliant!" : q >= 0.8 ? "Very good!" : q >= 0.5 ? "Gut! Die schwierigen Regeln kommen in der nächsten Runde wieder." : "Dranbleiben – mit jeder Runde wird es leichter.";
-  const fehl = [...new Set(s.fehler)];
+  const fehl = [...new Set(s.fehler)].filter((id) => REGELN[id]);
+  const fehlW = [...new Set(s.fehler.filter((id) => id.startsWith("v:")).map((id) => id.replace(/:(de|en)$/, "")))].map((w) => VOK.find((v) => `v:${v.unit}:${v.en}` === w)).filter(Boolean);
   $("#pb").style.width = "100%"; $("#fb").innerHTML = "";
   $("#aufgabe").innerHTML = `<div class="ende"><div class="gross">${s.erstRichtig} von ${s.gesamt}</div><div>beim ersten Versuch richtig</div><p>${satz}</p>
+   ${fehlW.length ? `<h3>Diese Wörter übst du noch:</h3><table class="tab wl links">${fehlW.map((v) => `<tr><td><b>${esc(v.en)}</b></td><td>${esc(v.deZeig)}</td></tr>`).join("")}</table>` : ""}
    ${fehl.length ? `<h3>Diese Regeln übst du noch:</h3><div class="regeln links">${fehl.map(regelKarte).join("")}</div>` : ""}
    <div class="btns mitte"><button id="nochR">Noch eine Runde</button><button class="pri" id="zurR">Zur Übersicht</button></div></div>`;
   $("#nochR").onclick = () => s.nochmal ? s.nochmal() : home();
@@ -880,6 +1217,39 @@ function satzEingabe(a, t, platz) {
     antwort(r.res, ergebnisText(r, t.erklaer), r.res === "falsch" ? h : "");
   });
 }
+RENDER.kurz = (a, t) => {
+  t.ctx = { ...t.ctx, ja: t.ja };
+  const bild = t.bildSzene ? `<div class="bildgross">${szene(t.bildSzene.p, t.bildSzene.ding, t.bildSzene.obj)}</div>` : `<div class="bildzeile">${figur(t.bild, t.bildName)}</div>`;
+  a.insertAdjacentHTML("beforeend", `<div class="frage">Schau dir das Bild an und antworte mit einer <b>Kurzantwort</b>.</div><div class="beispiel">Beispiel: Is Sue happy? 😀 → Yes, she is. · Is Sue sad? 😀 → No, she isn't.</div>
+   ${bild}<div class="quelle">${esc(t.frage)}</div>`);
+  satzEingabe(a, t, "Yes, … / No, …");
+};
+RENDER.vokabel = (a, t) => {
+  const v = t.v, deEn = t.dir === "de";
+  a.insertAdjacentHTML("beforeend", deEn
+    ? `<div class="frage klein">Wie heißt das auf <b>Englisch</b>?</div><div class="vokwort">${esc(v.deZeig)}</div>${t.luecke ? `<div class="beispiel">Im Buch: <i>${esc(t.luecke)}</i></div>` : ""}`
+    : `<div class="frage klein">Was heißt das auf <b>Deutsch</b>?</div><div class="vokwort en">${esc(v.en)}</div>${v.satz ? `<div class="beispiel">Im Buch: <i>${esc(v.satz)}</i></div>` : ""}`);
+  a.insertAdjacentHTML("beforeend", `<div class="satzfeld">${feld(deEn ? "auf Englisch …" : "auf Deutsch …", 30).replace('class="luecke"', 'class="luecke lang"')}</div>`);
+  const i = $("input", a);
+  mitPruefen(a, i, (eing) => {
+    let r, notiz = "";
+    if (deEn) {
+      r = pruefe(eing, v.enAcc, false);
+      if (r.res !== "ok") { // anderes Wort mit derselben deutschen Bedeutung? (groß = big / tall)
+        const anderes = VOK.find((x) => x !== v && x.deAcc.some((d) => v.deAcc.map((y) => y.toLowerCase()).includes(d.toLowerCase())) && pruefe(eing, x.enAcc, false).res === "ok");
+        if (anderes) { r = { res: "ok" }; notiz = `<br>„${esc(anderes.en)}“ passt auch – im Buch steht hier aber <b>${esc(v.en)}</b>.`; }
+      }
+    } else {
+      const teile = [eing, ...eing.split(/[,;\/]| und | oder /)].map((x) => x.trim()).filter(Boolean);
+      const res = teile.map((x) => pruefe(x, v.deAcc, false));
+      r = res.find((x) => x.res === "ok") || res.find((x) => x.res === "fast") || res[0];
+    }
+    i.classList.add(r.res === "ok" ? "ok" : "bad");
+    const loesung = deEn ? `<b>${esc(v.en)}</b> = ${esc(v.deZeig)}` : `<b>${esc(v.en)}</b> = <b>${esc(v.deZeig)}</b>`;
+    const fast = r.res === "fast" ? `${r.grund || ""} Richtig: <span class="wort">${diffHTML(r.eingabe || norm(eing), r.best)}</span><br>` : "";
+    antwort(r.res, fast + loesung + notiz + (v.satz ? `<br><i>${esc(v.satz)}</i>` : ""));
+  });
+};
 RENDER.zaehlen = (a, t) => {
   a.insertAdjacentHTML("beforeend", `<div class="frage">Zähle und schreib das <b>Zahlwort</b> und die <b>Mehrzahl</b>.</div><div class="beispiel">Beispiel: book (4) → four books</div>
    <div class="zaehlbild">${Array(t.n).fill(`<span class="emo">${t.emo}</span>`).join("")}</div><div class="quelle">${esc(t.sg)} (${t.n})</div>
@@ -919,8 +1289,10 @@ function geh(z) {
   if (a === "thema") return themaStart(b);
   if (a === "los") { const th = THEMEN.find((x) => x.id === b); const f = () => starte(th.name, themaAufgaben(b), { nochmal: f }); return f(); }
   if (a === "mix") { const f = () => starte("Alles gemischt", mixAufgaben(12), { nochmal: f }); return f(); }
-  if (a === "schwach") { const f = () => starte("Schwierige Regeln", mixAufgaben(10, true), { nochmal: f }); return f(); }
-  if (a === "probetest") { const f = () => starte("Probetest", probetest(), { test: true, nochmal: f }); return f(); }
+  if (a === "schwach") { const f = () => { const g = Object.keys(REGELN).some((id) => S.r[id] && S.r[id].w > 0 && !sitzt(id)) ? mixAufgaben(6, true) : []; const v = vokRunde(0, 12 - g.length, true); starte("Das übst du noch", shuffle([...g, ...v]).length ? shuffle([...g, ...v]) : mixAufgaben(10), { nochmal: f }); }; return f(); }
+  if (a === "vok") { const u = +b; const f = () => starte(u ? `Vokabeln Unit ${u}` : "Vokabeln gemischt", vokRunde(u), { nochmal: f }); return f(); }
+  if (a === "liste") return wortliste(+b);
+  if (a === "probetest") { const f = () => starte("Probeschularbeit", probetest(), { test: true, nochmal: f }); return f(); }
   if (a === "zettel") return lernzettel();
   if (a === "ton") { S.ton = !S.ton; save(); return home(); }
   if (a === "reset") { if (confirm("Wirklich den ganzen Fortschritt löschen?")) { S = { r: {}, log: [], ton: S.ton }; save(); } return home(); }
